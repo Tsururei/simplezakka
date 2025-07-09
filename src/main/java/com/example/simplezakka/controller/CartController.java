@@ -1,5 +1,5 @@
 package com.example.simplezakka.controller;
 
-public class CartCntroller {
+public class CartController {
     
 }
