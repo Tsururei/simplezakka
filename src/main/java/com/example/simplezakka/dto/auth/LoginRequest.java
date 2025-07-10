@@ -1,5 +1,15 @@
 package com.example.simplezakka.dto.auth;
 
-public class LoginRequest implements Serializable {
-    
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
+
+@Data
+public class LoginRequest {
+    @NotBlank(message = "メールアドレス")
+    @Email(message = "有効なメールアドレスを入力してください")
+    private String loginEmail;
+
+    @NotBlank(message = "パスワード")
+    private String loginPassword;
 }
