@@ -1,5 +1,6 @@
 package com.example.simplezakka.repository;
 
+import com.example.simplezakka.dto.auth.LoginRequest;
 import com.example.simplezakka.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;

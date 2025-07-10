@@ -8,8 +8,8 @@ import lombok.Data;
 public class LoginRequest {
     @NotBlank(message = "メールアドレス")
     @Email(message = "有効なメールアドレスを入力してください")
-    private String loginEmail;
+    private String LoginEmail;
 
     @NotBlank(message = "パスワード")
-    private String loginPassword;
+    private String LoginPassword;
 }
