@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html lang="ja"></html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>管理者ダッシュボード画面</title>
+<link rel="stylesheet" href="../css/admin-top.css">
+</head>
+
+<body>
+  <h1>WELCOME TO "TEINEI"</h1>
+
+  <h2>管理者ダッシュボード画面</h2>
+
+  <nav>
+    <ul>
+      <li><a href="SC9201.html">商品情報・カテゴリ編集</a></li>
+      <li><a href="SC9301.html">注文情報確認</a></li>
+      <li><a href="SC9401.html">管理者編集画面</a></li>
+    </ul>
+  </nav>
+  <button id="logout-button">ログアウト</button>
+
+  <script>
+  document.getElementById('logout-button').addEventListener('click', function() {
+    window.location.href = 'SC9001.html';
+  });
+  </script>
+
+
+</body>
+
+</html>
