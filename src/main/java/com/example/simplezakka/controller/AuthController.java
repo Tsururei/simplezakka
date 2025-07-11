@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-@Controller
+@RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -27,19 +27,20 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request, HttpSession session) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpSession session) {
         try {
             LoginResponse tokens = authService.findUserbyloginEmail(request);
 
-            session.setAttribute("accessToken",tokens.getAccessToken());
+            session.setAttribute("accessToken", tokens.getAccessToken());
             session.setAttribute("refreshToken", tokens.getRefreshToken());
-            return "redirect:/home.html";
-            
-        } catch (AuthenticationException e) {
-            session.setAttribute("loginError", "ログイン失敗 " + e.getMessage());
-            return "redirect:/index.html";
-        }
+
+        return ResponseEntity.ok(tokens);  // JSONを返す
+    } catch (AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body("ログイン失敗: " + e.getMessage());
     }
+}
+
 
     @PostMapping("/register")
     public String register(    

@@ -1,5 +1,3 @@
-const API_BASE = '/api';
-
 document.getElementById('login-btn').addEventListener('click', async function() {
       tryLogin();
   });
@@ -13,14 +11,20 @@ document.getElementById('guestlogin-btn').addEventListener('click', function() {
   });
 
 async function tryLogin() {
-      const response = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        loginName: loginName,
-        loginPassword: loginPassword
-    })
-  })
+  const loginName = document.getElementById('loginNameInput').value;
+  const loginPassword = document.getElementById('loginPasswordInput').value;
+
+  const response = await fetch('http://localhost:8080/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ loginName, loginPassword })
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    window.location.href = '/home.html';
+  } else {
+    const err = await response.text();
+    alert(err);
+  }
 };
