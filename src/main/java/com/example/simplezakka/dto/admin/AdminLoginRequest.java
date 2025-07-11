@@ -9,8 +9,8 @@ public class AdminLoginRequest {
 
     @NotBlank(message = "メールアドレスを入力してください")
     @Email(message = "メールアドレスの形式が正しくありません")
-    private String admin_email;
+    private String adminEmail;
 
     @NotBlank(message = "パスワードを入力してください")
-    private String admin_password;
+    private String adminPassword;
 }

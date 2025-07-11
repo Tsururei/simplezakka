@@ -6,13 +6,15 @@ import org.springframework.stereotype.Service;
 import com.example.simplezakka.dto.auth.LoginRequest;
 import com.example.simplezakka.dto.auth.LoginResponse;
 import com.example.simplezakka.dto.auth.UserSession;
+import com.example.simplezakka.dto.auth.RegisterRequest;
 import com.example.simplezakka.entity.User;
 import com.example.simplezakka.repository.UserRepository;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import com.example.simplezakka.exception.AuthenticationException;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {
@@ -36,12 +38,39 @@ public class AuthService {
         if (user.getUserPassword().equals(loginPassword)) {
             String accessToken = jwtTokenProvider.generateAccessToken(user);
             String refreshToken = jwtTokenProvider.generateRefreshToken(user);
+            Integer userId = user.getUserId();
 
-            return new LoginResponse(accessToken, refreshToken);
+            return new LoginResponse(accessToken, refreshToken, userId);
         }
         else {
             throw new AuthenticationException("パスワードが間違っています");
         }
     }
+
+    public LoginResponse registerUser(RegisterRequest request) {
+        String registerEmail = request.getRegisterEmail();
+        Optional<User> userOpt = userRepository.findByUserEmail(registerEmail);
+        if (userOpt.isEmpty()) {
+
+            User user = new User();
+            user.setUserEmail(registerEmail);
+            user.setUserAddress(request.getRegisterAddress());
+            user.setUserPassword(request.getRegisterPassword());
+            user.setUserName(request.getRegisterName());
+            user.setUserDate(LocalDateTime.now());
+
+            User savedUser = userRepository.save(user);
+
+            String accessToken = jwtTokenProvider.generateAccessToken(savedUser);
+            String refreshToken = jwtTokenProvider.generateRefreshToken(savedUser);
+            Integer userId = savedUser.getUserId();
+
+            return new LoginResponse(accessToken, refreshToken, userId);    
+        }
+        else {
+            throw new AuthenticationException("登録できませんでした");
+        }
+        
+    }    
 
 }

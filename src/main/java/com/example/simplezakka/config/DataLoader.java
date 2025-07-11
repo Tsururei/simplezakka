@@ -134,10 +134,10 @@ public class DataLoader implements CommandLineRunner {
         }
 
         Admin admin = Admin.builder()
-                .admin_id(UUID.randomUUID().toString())
-                .admin_name("管理者 太郎")
-                .admin_email(email)
-                .admin_password(("adminpass")) // 平文のまま保存
+                .adminId(UUID.randomUUID().toString())
+                .adminName("管理者 太郎")
+                .adminEmail(email)
+                .adminPassword(("adminpass")) // 平文のまま保存
                 .adminDate(LocalDateTime.now())
                 .build();
 
