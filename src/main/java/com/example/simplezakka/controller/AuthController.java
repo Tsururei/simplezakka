@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
@@ -33,15 +31,23 @@ public class AuthController {
             LoginResponse tokens = authService.findUserbyloginEmail(request);
             return ResponseEntity.ok(tokens);
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("認証失敗: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("認証失敗" + e.getMessage());
         }
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         try {
-            authService.registerUser(request);
-            
+            LoginResponse tokens = authService.registerUser(request);
+            return ResponseEntity.ok(tokens);
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("認証失敗" + e.getMessage());
+        }
     }
-    
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpSession session) {
+        session.removeAttribute("UserSession");
+        return ResponseEntity.noContent().build(); 
+    }
 }
