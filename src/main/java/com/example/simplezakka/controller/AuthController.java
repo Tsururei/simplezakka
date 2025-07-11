@@ -3,7 +3,6 @@ package com.example.simplezakka.controller;
 import com.example.simplezakka.dto.auth.LoginRequest;
 import com.example.simplezakka.dto.auth.LoginResponse;
 import com.example.simplezakka.dto.auth.RegisterRequest;
-import com.example.simplezakka.dto.auth.UserSession;
 import com.example.simplezakka.exception.AuthenticationException;
 import com.example.simplezakka.service.AuthService;
 import jakarta.servlet.http.HttpSession;
