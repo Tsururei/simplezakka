@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>管理者ログイン</title>
-  <link rel="stylesheet" href="admin-login.css" />
+  <link rel="stylesheet" href="../css/admin-login.css" />
 </head>
 
 <body>
@@ -17,7 +17,14 @@
       <label for="password">パスワード</label>
       <input type="password" id="password" name="password" required />
 
-      <button type="submit">ログイン</button>
+      <button id="login-button" type="button">ログイン</button>
+      
+      <script>
+      document.getElementById('login-button').addEventListener('click', function() {
+        window.location.href = 'admin-top.html';
+      });
+      </script>
+
     </form>
   </div>
 </body>

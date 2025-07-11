@@ -23,9 +23,9 @@ public class AdminAuthService {
         }
 
         return new AdminSession(
-                admin.getAdmin_id(),
-                admin.getAdmin_name(),
-                admin.getAdmin_email(),
+                admin.getAdminId(),
+                admin.getAdminName(),
+                admin.getAdminEmail(),
                 "ADMIN"
         );
     }

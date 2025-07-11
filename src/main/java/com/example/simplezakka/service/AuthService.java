@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import com.example.simplezakka.exception.AuthenticationException;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthService {

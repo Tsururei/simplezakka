@@ -24,8 +24,8 @@ public class AdminAuthController {
             HttpSession session
     ) {
         AdminSession adminSession = adminAuthService.authenticate(
-                request.getAdmin_email(),
-                request.getAdmin_password()
+                request.getAdminEmail(),
+                request.getAdminPassword()
         );
 
         // セッションに管理者情報を保存
@@ -33,7 +33,7 @@ public class AdminAuthController {
 
         // レスポンスを生成して返す
         AdminLoginResponse response = new AdminLoginResponse(
-                adminSession.getAdmin_name(),
+                adminSession.getAdminName(),
                 adminSession.getRole()
         );
         return ResponseEntity.ok(response);
