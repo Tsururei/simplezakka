@@ -11,26 +11,17 @@
   <h1>WELCOME TO "TEINEI"</h1>
 
   <h2>注文情報確認</h2>
-　
 
-  <button id="order-id-button">注文ID</button>
-　<form>
+
+  <form>
         <div>
-        <label for="email" class="form-label">メールアドレス</label>
+        <label for="order-id-label">注文ID</label>
         <input type="email" class="form-control" id="email" required />
+        <button type="submit">検索</button>
         </div>
-      
-    
-　</form>
+  </form>
 
-  <nav>
-    <ul>
-      <li><a href="SC9201.html">商品情報・カテゴリ編集</a></li>
-      <li><a href="SC9301.html">注文情報確認</a></li>
-      <li><a href="SC9401.html">管理者編集画面</a></li>
-    </ul>
-  </nav>
-  <button id="logout-button">ログアウト</button>
+  <div id="order-info" style="margin-top:20px;"></div>
 
   <script>
   document.getElementById('logout-button').addEventListener('click', function() {
