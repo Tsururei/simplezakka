@@ -15,6 +15,9 @@ public class RegisterRequest {
     @NotBlank(message = "パスワード")
     private String registerPassword;
 
+    @NotBlank(message = "氏名")
+    private String registerName;
+
     @NotBlank(message = "住所")
     private String registerAddress;
 }

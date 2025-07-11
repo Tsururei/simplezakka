@@ -57,14 +57,14 @@ public class AuthService {
             user.setUserEmail(registerEmail);
             user.setUserAddress(request.getRegisterAddress());
             user.setUserPassword(request.getRegisterPassword());
+            user.setUserName(request.getRegisterName());
             user.setUserDate(LocalDateTime.now());
-            userRepository.save(user);
 
             User savedUser = userRepository.save(user);
 
             String accessToken = jwtTokenProvider.generateAccessToken(savedUser);
             String refreshToken = jwtTokenProvider.generateRefreshToken(savedUser);
-            Integer userId = user.getUserId();
+            Integer userId = savedUser.getUserId();
 
             return new LoginResponse(accessToken, refreshToken, userId);    
         }
