@@ -1,14 +1,17 @@
 package com.example.simplezakka.dto.auth;
 
+import lombok.Data;
+
+@Data
 public class LoginResponse {
     private String accessToken;
     private String refreshToken;
+    private Integer userId;
 
-    public LoginResponse(String accessToken, String refreshToken) {
+    public LoginResponse(String accessToken, String refreshToken, Integer userId) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
+        this.userId = userId;
     }
-
-    // getter は最低限必要（Lombok @Getter でもOK）
 }
 
