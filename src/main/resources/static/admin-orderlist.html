@@ -1,52 +1,41 @@
 <!DOCTYPE HTML>
-<html lang="ja"></html>
-
+<html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>管理者注文情報確認画面</title>
-<link rel="stylesheet" href="../css/admin-top.css">
+  <meta charset="UTF-8">
+  <title>管理者注文情報確認画面</title>
+  <link rel="stylesheet" href="admin-top.css">
 </head>
 
 <body>
   <h1>WELCOME TO "TEINEI"</h1>
-
   <h2>注文情報確認</h2>
 
-
-  <form>
-        <div>
-        <label for="order-id-label">注文ID</label>
-        <input type="email" class="form-control" id="email" required />
-        <button type="submit">検索</button>
-        </div>
+  <form id="search-form">
+    <label for="product-id-input">商品ID</label>
+    <input type="text" id="product-id-input" required />
+    <button type="submit">検索</button>
   </form>
 
   <div id="order-info" style="margin-top:20px;"></div>
 
   <script>
-  document.getElementById('logout-button').addEventListener('click', function() {
-    window.location.href = 'admin-login.html';
-  });
-
-
-    // 仮の注文データ（実際はサーバーから取得）
     const orders = [
       {
-        order_id: "A001",
-        user_id: "U123",
-        buyer_name: "山田 太郎",
-        buyer_email: "yamada@example.com",
-        buyer_address: "東京都新宿区1-2-3",
-        ship_name: "山田 太郎",
-        ship_address: "東京都新宿区1-2-3",
-        ship_fee: 500,
-        total_price: 15500,
+        order_id: "",
+        user_id: "",
+        buyer_name: "坂口あやの",
+        buyer_email: "sakaguchi@example.com",
+        buyer_address: "和歌山県田舎市1-2-3",
+        ship_name: "坂口あやの",
+        ship_address: "和歌山県田舎市1-2-3",
+        ship_fee: 700,
+        total_price: ,
         pay_method: "代引き",
         order_date: "2025-07-10 10:00",
         order_status: "処理中",
-        detail_id: "D001",
-        product_id: "P1001",
-        product_quantity: 1
+        detail_id: "",
+        product_id: "",
+        product_quantity: 
       },
       {
         order_id: "A002",
@@ -70,7 +59,7 @@
     document.getElementById("search-form").addEventListener("submit", function(event) {
       event.preventDefault();
       const inputId = document.getElementById("product-id-input").value.trim();
-      const resultDiv = document.getElementById("order-result");
+      const resultDiv = document.getElementById("order-info");
 
       const matchedOrders = orders.filter(order => order.product_id === inputId);
 
@@ -105,11 +94,5 @@
       resultDiv.innerHTML = tableHtml;
     });
   </script>
-
 </body>
-</html>
-
-
-</body>
-
 </html>
