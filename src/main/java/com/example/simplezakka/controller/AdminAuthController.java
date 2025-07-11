@@ -24,10 +24,10 @@ public class AdminAuthController {
         try {
             AdminSession adminSession = adminAuthService.authenticate(email, password);
             session.setAttribute("ADMIN_SESSION", adminSession);
-            return "redirect:/admin";  // 管理画面トップへリダイレクト
+            return "redirect:/admin-top.html";  // 管理画面トップへリダイレクト
         } catch (Exception e) {
-            // 認証失敗時（例：ログイン画面に戻す or エラーメッセージ表示）
-            return "redirect:/admin-login.html?error";
+            // 認証失敗時（ログイン画面に戻す）
+            return "redirect:/admin-login.html";
         }
     }
 
