@@ -1,28 +1,39 @@
 package com.example.simplezakka.config;
 
 import com.example.simplezakka.entity.Product;
+import com.example.simplezakka.entity.Admin;
 import com.example.simplezakka.repository.ProductRepository;
+import com.example.simplezakka.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class DataLoader implements CommandLineRunner {
 
     private final ProductRepository productRepository;
+    private final AdminRepository adminRepository;
+
 
     @Autowired
-    public DataLoader(ProductRepository productRepository) {
+    public DataLoader(
+        ProductRepository productRepository,
+        AdminRepository adminRepository
+    ) {
         this.productRepository = productRepository;
+        this.adminRepository = adminRepository;
     }
 
     @Override
     public void run(String... args) {
         loadSampleProducts();
+        loadSampleAdmin();
     }
 
     private void loadSampleProducts() {
@@ -116,6 +127,23 @@ public class DataLoader implements CommandLineRunner {
         productRepository.saveAll(products);
     }
     
+    private void loadSampleAdmin(){
+        String email = "admin@example.com";
+        if(adminRepository.findByAdminEmail(email).isPresent()){
+            return;//すでに登録済みならスキップ
+        }
+
+        Admin admin = Admin.builder()
+                .admin_id(UUID.randomUUID().toString())
+                .admin_name("管理者 太郎")
+                .admin_email(email)
+                .admin_password(("adminpass")) // 平文のまま保存
+                .adminDate(LocalDateTime.now())
+                .build();
+
+            adminRepository.save(admin);
+    }
+
     private Product createProduct(String name, String description, Integer price, Integer stock, String imageUrl, Boolean isRecommended) {
         Product product = new Product();
         product.setName(name);
