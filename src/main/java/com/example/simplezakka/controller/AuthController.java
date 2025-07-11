@@ -42,7 +42,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request, HttpSession session) {
+    public String register(    
+        @RequestParam("user_name") String userName,
+        @RequestParam("user_address") String userAddress,
+        @RequestParam("user_email") String userEmail,
+        @RequestParam("user_password") String userPassword,
+        HttpSession session) {
+        
+        RegisterRequest request = new RegisterRequest();
+        request.setRegisterName(userName);
+        request.setRegisterAddress(userAddress);
+        request.setRegisterEmail(userEmail);
+        request.setRegisterPassword(userPassword);
+
         try {
             LoginResponse tokens = authService.registerUser(request);
             session.setAttribute("accessToken",tokens.getAccessToken());
