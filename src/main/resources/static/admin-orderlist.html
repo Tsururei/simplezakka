@@ -19,80 +19,62 @@
   <div id="order-info" style="margin-top:20px;"></div>
 
   <script>
-    const orders = [
-      {
-        order_id: "",
-        user_id: "",
-        buyer_name: "坂口あやの",
-        buyer_email: "sakaguchi@example.com",
-        buyer_address: "和歌山県田舎市1-2-3",
-        ship_name: "坂口あやの",
-        ship_address: "和歌山県田舎市1-2-3",
-        ship_fee: 700,
-        total_price: ,
-        pay_method: "代引き",
-        order_date: "2025-07-10 10:00",
-        order_status: "処理中",
-        detail_id: "",
-        product_id: "",
-        product_quantity: 
-      },
-      {
-        order_id: "A002",
-        user_id: "U456",
-        buyer_name: "佐藤 花子",
-        buyer_email: "sato@example.com",
-        buyer_address: "大阪府大阪市北区1-2-3",
-        ship_name: "佐藤 花子",
-        ship_address: "大阪府大阪市北区1-2-3",
-        ship_fee: 800,
-        total_price: 9800,
-        pay_method: "振込",
-        order_date: "2025-07-11 14:30",
-        order_status: "未処理",
-        detail_id: "D002",
-        product_id: "P2002",
-        product_quantity: 2
-      }
-    ];
+  const orders = [
+    {
+      order_id: "12345",
+      user_id: "abcde",
+      buyer_name: "坂口あやの",
+      buyer_email: "sakaguchi@example.com",
+      buyer_address: "和歌山県田舎市1-2-3",
+      ship_name: "坂口あやの",
+      ship_address: "和歌山県田舎市1-2-3",
+      ship_fee: 700,
+      total_price: 10000,
+      pay_method: "代引き",
+      order_date: "2025-07-10 10:00",
+      order_status: "処理中",
+      detail_id: "D001",
+      product_id: "P1001",
+      product_quantity: 1
+    }
 
-    document.getElementById("search-form").addEventListener("submit", function(event) {
-      event.preventDefault();
-      const inputId = document.getElementById("product-id-input").value.trim();
-      const resultDiv = document.getElementById("order-info");
+  ];
 
-      const matchedOrders = orders.filter(order => order.product_id === inputId);
+  document.getElementById("search-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const inputId = document.getElementById("product-id-input").value.trim();
+    const resultDiv = document.getElementById("order-info");
 
-      if (matchedOrders.length === 0) {
-        resultDiv.innerHTML = `<p style="color:red;">商品ID「${inputId}」の注文は見つかりませんでした。</p>`;
-        return;
-      }
+    const matchedOrders = orders.filter(order => order.product_id === inputId);
 
-      let tableHtml = `
-        <table>
-          <thead>
-            <tr>
-              <th>注文ID</th><th>会員ID</th><th>購入者氏名</th><th>メールアドレス</th><th>購入者住所</th>
-              <th>配送先氏名</th><th>配送先住所</th><th>送料</th><th>合計金額</th><th>決済方法</th>
-              <th>注文日時</th><th>注文ステータス</th><th>注文詳細ID</th><th>商品ID</th><th>数量</th>
-            </tr>
-          </thead>
-          <tbody>
-      `;
+    if (matchedOrders.length === 0) {
+      resultDiv.innerHTML = `<p style="color:red;">商品ID「${inputId}」の注文は見つかりませんでした。</p>`;
+      return;
+    }
 
-      matchedOrders.forEach(order => {
-        tableHtml += `
+    let tableHtml = `
+      <table border="1" cellspacing="0" cellpadding="5">
+        <thead>
           <tr>
-            <td>${order.order_id}</td><td>${order.user_id}</td><td>${order.buyer_name}</td><td>${order.buyer_email}</td><td>${order.buyer_address}</td>
-            <td>${order.ship_name}</td><td>${order.ship_address}</td><td>${order.ship_fee}</td><td>${order.total_price}</td><td>${order.pay_method}</td>
-            <td>${order.order_date}</td><td>${order.order_status}</td><td>${order.detail_id}</td><td>${order.product_id}</td><td>${order.product_quantity}</td>
+            <th>注文ID</th><th>会員ID</th><th>購入者氏名</th><th>メールアドレス</th><th>購入者住所</th>
+            <th>配送先氏名</th><th>配送先住所</th><th>送料</th><th>合計金額</th><th>決済方法</th>
+            <th>注文日時</th><th>注文ステータス</th><th>注文詳細ID</th><th>商品ID</th><th>数量</th>
           </tr>
-        `;
-      });
+        </thead>
+        <tbody>
+    `;
 
-      tableHtml += "</tbody></table>";
-      resultDiv.innerHTML = tableHtml;
+    matchedOrders.forEach(order => {
+      tableHtml += `
+        <tr>
+          <td>${order.order_id}</td><td>${order.user_id}</td><td>${order.buyer_name}</td><td>${order.buyer_email}</td><td>${order.buyer_address}</td>
+          <td>${order.ship_name}</td><td>${order.ship_address}</td><td>${order.ship_fee}</td><td>${order.total_price}</td><td>${order.pay_method}</td>
+          <td>${order.order_date}</td><td>${order.order_status}</td><td>${order.detail_id}</td><td>${order.product_id}</td><td>${order.product_quantity}</td>
+        </tr>
+      `;
     });
-  </script>
-</body>
-</html>
+
+    tableHtml += "</tbody></table>";
+    resultDiv.innerHTML = tableHtml;
+  });
+</script>
