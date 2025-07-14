@@ -1,6 +1,7 @@
 package com.example.simplezakka.dto.cart;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Map;
 
@@ -10,13 +11,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-static @Data
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor 
 public class CartDto implements Serializable{
     private Integer cartId;
     private Integer userId;
     private Map<Integer, CartItem> cartItems;
-    private BIgDecimal totalPrice;
+    private BigDecimal totalPrice;
     private Integer totalQuantity;
+
+    public void removeUserItem(Integer userId) {
+        items.remove(userId);
+        calculateTotals();
+    }
+        public void calculateTotals() {
+        totalQuantity = 0;
+        totalPrice = 0;
+    }
 }

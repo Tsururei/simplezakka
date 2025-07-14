@@ -18,7 +18,6 @@ import java.util.Optional;
 public class CartService {
 
     private static final String CART_SESSION_KEY = "cart";
-    private final DbCartrepository dbCartrepository;
     private final ProductRepository productRepository;
     
     @Autowired
@@ -51,59 +50,6 @@ public class CartService {
             
             cart.addItem(item);
             session.setAttribute(CART_SESSION_KEY, cart);
-            
-            return cart;
-        }
-        
-        return null;
-    }
-    
-    public Cart updateItemQuantity(String itemId, Integer quantity, HttpSession session) {
-        Cart cart = getCartFromSession(session);
-        cart.updateQuantity(itemId, quantity);
-        session.setAttribute(CART_SESSION_KEY, cart);
-        return cart;
-    }
-    
-    public Cart removeItemFromCart(String itemId, HttpSession session) {
-        Cart cart = getCartFromSession(session);
-        cart.removeItem(itemId);
-        session.setAttribute(CART_SESSION_KEY, cart);
-        return cart;
-    }
-    
-    public void clearCart(HttpSession session) {
-        session.removeAttribute(CART_SESSION_KEY);
-    }
-
-    @Autowired
-    public UserCartService(DbCartrepository dbCartrepository, ProductRepository productRepository) {
-        this.dbCartrepository = dbCartrepository;
-        this.productRepository = productRepository;
-    }
-    public Cart getCartFromDb(CartDto cartDto) {
-        Integer userId = cartDto.getUserId();
-        Optional<Cart> cartOpt = dbCartrepository.findByUserId(userId);
-        Cart cart = cartOpt.get();
-        return cart;
-    }
-    
-    public Cart addItemToUserCart(Integer productId, Integer quantity, CartDto cartDto) {
-        Optional<Product> productOpt = productRepository.findById(productId);
-        
-        if (productOpt.isPresent()) {
-            Product product = productOpt.get();
-            Cart cart = getCartFromDb(cartDto);
-            
-            CartItem item = new CartItem();
-            item.setProductId(product.getProductId());
-            item.setName(product.getName());
-            item.setPrice(product.getPrice());
-            item.setImageUrl(product.getImageUrl());
-            item.setQuantity(quantity);
-            
-            cart.addItem(item);
-            dbCartrepository.save(cart);
             
             return cart;
         }

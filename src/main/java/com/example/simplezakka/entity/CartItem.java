@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import org.springframework.cglib.core.Local;
 
- @Entity
+@Entity
 @Table(name = "cart")
 @Data
 @NoArgsConstructor
@@ -20,4 +20,5 @@ public class CartItem {
 
     @Column(name = "cart_quantity")
     private Integer cartQuantity;
+
 }
