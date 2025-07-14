@@ -5,6 +5,7 @@ import com.example.simplezakka.dto.cart.CartDto;
 import com.example.simplezakka.dto.cart.CartItemInfo;
 import com.example.simplezakka.dto.cart.CartItemQuantityDto;
 import com.example.simplezakka.entity.Cart;
+import com.example.simplezakka.entity.CartItemEntity;
 import com.example.simplezakka.service.UserCartService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +35,7 @@ public class UserCartController {
         CartGuest cart = userCartService.addItemToUserCart(
                 cartItemInfo.getProductId(),
                 cartItemInfo.getQuantity(),
-                cartDto,
-
+                cartDto
         );
         
         if (cart == null) {

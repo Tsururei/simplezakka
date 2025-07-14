@@ -7,18 +7,15 @@ import lombok.NoArgsConstructor;
 import org.springframework.cglib.core.Local;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "cart_item")
 @Data
 @NoArgsConstructor
-public class CartItem {
+public class CartItemEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_itemid")
     private Integer cartItemId;
-
-    @Column(name = "cart_id")
-    private Integer cartId;
 
     @Column(name = "product_id")
     private Integer productId;
@@ -26,4 +23,7 @@ public class CartItem {
     @Column(name = "cart_quantity")
     private Integer cartQuantity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cartId")
+    private Cart cart;
 }
