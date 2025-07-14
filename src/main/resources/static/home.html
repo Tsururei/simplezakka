@@ -25,7 +25,7 @@
       <div class="py-1 border-bottom">
         <div class="container position-relative" style="min-height: 40px;"><!-- 高さ調整もお好みで -->
             <!-- 子に position-absolute で右寄せ -->
-             <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-saize: 0.9rem; text-align: right;">
+             <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 0.9rem; text-align: right;">
                 <strong>090-1234-5678</strong><br>
                 <strong>sample@example.com</strong>
               
@@ -48,28 +48,76 @@
   <!-- 3行目：カテゴリタブ -->
   <div class="border-top">
     <div class="container">
-      <ul class="nav nav-tabs">
-        <ul class="nav-nav-tabs" role="tablist">
-        <il class="nav-item" role="presentation">
-            <button class="nav-link active" id="stationery-tab" data-bs-togle="tab" data-bs-target="stationery" type="button" role="tab" aria-controls="stationery" aria-selected="true">
+      
+        <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" 
+            id="stationery-tab" 
+            data-bs-toggle="tab" 
+            data-bs-target="#stationery" 
+            type="button" 
+            role="tab" 
+            aria-controls="stationery" 
+            aria-selected="true">
         文房具
             </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="kitchen-tab" data-bs-toggle="tab" data-bs-target='#kitchen' type="button" role="tab" aria-controls="kitchen" aria-selected="false"
+          <button class="nav-link" 
+          id="kitchen-tab" 
+          data-bs-toggle="tab" 
+          data-bs-target='#kitchen' 
+          type="button" 
+          role="tab" 
+          aria-controls="kitchen" 
+          aria-selected="false">
           キッチン用品
+          </button>
         </li>
       </ul>
     </div>
   </div>
 </header>
+<!-- タブ切り替えコンテンツ -->
+<div class="tab-content container pt-4">
 
-    <div id="main-content">
-        <!-- ここにコンテンツが動的に表示される -->
-        <div id="products-container" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-            <!-- 商品リストがここに表示される -->
+  <!-- 文房具 -->
+<div class="tab-pane fade show active" id="stationery" role="tabpanel" aria-labelledby="stationery-tab">
+  <div id="products-container" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+    <!-- JavaScriptがここに商品カードを表示 -->
+  </div>
+</div>
+
+      <div class="col">
+        <div class="card h-100">
+          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="商品画像">
+          <div class="card-body">
+            <h5 class="card-title">ノート</h5>
+            <p class="card-text">シンプルなデザインのノートです。</p>
+            <button class="btn btn-primary">カートに追加</button>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
+
+  <!-- キッチン用品 -->
+  <div class="tab-pane fade" id="kitchen" role="tabpanel" aria-labelledby="kitchen-tab">
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+      <!-- キッチン用品の商品カードをここに表示 -->
+      <div class="col">
+        <div class="card h-100">
+          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="商品画像">
+          <div class="card-body">
+            <h5 class="card-title">マグカップ</h5>
+            <p class="card-text">かわいいマグカップです。</p>
+            <button class="btn btn-primary">カートに追加</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- 商品詳細モーダル -->
