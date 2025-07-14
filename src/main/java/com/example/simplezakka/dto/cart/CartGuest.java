@@ -3,14 +3,19 @@ package com.example.simplezakka.dto.cart;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Data
-public class Cart implements Serializable {
+public class CartGuest implements Serializable {
     private Map<String, CartItem> items = new LinkedHashMap<>();
     private int totalQuantity;
     private int totalPrice;
+    private Integer cartId;
+    private Integer userId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     
     public void addItem(CartItem item) {
         String itemId = String.valueOf(item.getProductId());

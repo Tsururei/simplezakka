@@ -48,13 +48,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 商品一覧を表示する関数
     function displayProducts(products) {
-        const container = document.getElementById('products-container');
-        container.innerHTML = '';
-        
-        products.forEach(product => {
-            const card = document.createElement('div');
-            card.className = 'col';
-            card.innerHTML = `
+    // 文房具とキッチン用品のコンテナを取得
+    const stationeryContainer = document.getElementById('stationery-products-container');
+    const kitchenContainer = document.getElementById('kitchen-products-container');
+
+    // コンテナの中身を空にする
+    stationeryContainer.innerHTML = '';
+    kitchenContainer.innerHTML = '';
+
+    products.forEach(product => {
+        // 商品カードのHTMLを作成
+        const cardHtml = `
+            <div class="col">
                 <div class="card product-card">
                     <img src="${product.imageUrl || 'https://via.placeholder.com/300x200'}" class="card-img-top" alt="${product.name}">
                     <div class="card-body">
@@ -63,15 +68,26 @@ document.addEventListener('DOMContentLoaded', function() {
                         <button class="btn btn-outline-primary view-product" data-id="${product.productId}">詳細を見る</button>
                     </div>
                 </div>
-            `;
-            container.appendChild(card);
-            
-            // 詳細ボタンのイベント設定
-            card.querySelector('.view-product').addEventListener('click', function() {
-                fetchProductDetail(product.productId);
-            });
+            </div>
+        `;
+
+        // 商品名で振り分け
+        if (product.name === 'タンブラー' || product.name === 'コースター' || product.name === '保存容器セット') {
+            kitchenContainer.insertAdjacentHTML('beforeend', cardHtml);
+        } else {
+            stationeryContainer.insertAdjacentHTML('beforeend', cardHtml);
+        }
+    });
+
+    // 挿入した全ての詳細ボタンにクリックイベントを登録
+    document.querySelectorAll('.view-product').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            fetchProductDetail(id);
         });
-    }
+    });
+}
+
     
     // 商品詳細を取得する関数
     async function fetchProductDetail(productId) {
