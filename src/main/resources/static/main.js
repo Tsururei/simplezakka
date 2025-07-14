@@ -49,9 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 商品一覧を表示する関数
     function displayProducts(products) {
     // 文房具とキッチン用品のコンテナを取得
-    const stationeryContainer = document.getElementById('stationery-products-container');
-    const kitchenContainer = document.getElementById('kitchen-products-container');
-
+  const stationeryContainer = document.querySelector('.stationery-products');
+  const kitchenContainer = document.querySelector('.kitchen-products');
     // コンテナの中身を空にする
     stationeryContainer.innerHTML = '';
     kitchenContainer.innerHTML = '';
@@ -72,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         // 商品名で振り分け
-        if (product.name === 'タンブラー' || product.name === 'コースター' || product.name === '保存容器セット') {
+        if (product.name === 'ステンレスタンブラー' || product.name === '木製コースター（4枚セット）' || product.name === 'ガラス保存容器セット') {
             kitchenContainer.insertAdjacentHTML('beforeend', cardHtml);
         } else {
             stationeryContainer.insertAdjacentHTML('beforeend', cardHtml);

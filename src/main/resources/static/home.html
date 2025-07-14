@@ -18,14 +18,15 @@
     <div class="container">
         <!-- Welcome メッセージ（中央・大きめ） -->
       <span class="fs-5 fw-bold">
-        Welcome to TEINEI </span>
+        Welcome to 'TEINEI' </span>
       </div>
 
       <!--ユーザー情報（右寄せ・小さめ）-->
       <div class="py-1 border-bottom">
         <div class="container position-relative" style="min-height: 40px;"><!-- 高さ調整もお好みで -->
-            <!-- 子に position-absolute で右寄せ -->
+            <!--position    position-absolute で右寄せ -->
              <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 0.9rem; text-align: right;">
+                <strong>お問い合わせ先</strong><br>
                 <strong>090-1234-5678</strong><br>
                 <strong>sample@example.com</strong>
               
@@ -37,11 +38,13 @@
   <div class="container d-flex align-items-center justify-content-between py-2 border-bottom">
     <a href="/mypage" class="fs-3 fw-bold text-decoration-none">マイページ</a>
     <div>
-      <a href="/" class="btn btn-outline-primary me-2">ホーム</a>
-      <a href="/cart" class="btn btn-outline-success position-relative">
-        カート
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+        <a href="/home.html" class="btn btn-outline-primary me-2">ホーム</a>
+
+      <a href="#" id="cart-btn" class="btn btn-outline-success position-relative">
+  カート
+  <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
       </a>
+
     </div>
   </div>
 
@@ -83,38 +86,16 @@
 
   <!-- 文房具 -->
 <div class="tab-pane fade show active" id="stationery" role="tabpanel" aria-labelledby="stationery-tab">
-  <div id="products-container" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+  <div class="stationery-products row row-cols-1 row-cols-md-3 g-4 mb-5">
     <!-- JavaScriptがここに商品カードを表示 -->
   </div>
 </div>
-
-      <div class="col">
-        <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="商品画像">
-          <div class="card-body">
-            <h5 class="card-title">ノート</h5>
-            <p class="card-text">シンプルなデザインのノートです。</p>
-            <button class="btn btn-primary">カートに追加</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- キッチン用品 -->
   <div class="tab-pane fade" id="kitchen" role="tabpanel" aria-labelledby="kitchen-tab">
-    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+   <div class="kitchen-products row row-cols-1 row-cols-md-3 g-4 mb-5">
       <!-- キッチン用品の商品カードをここに表示 -->
-      <div class="col">
-        <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="商品画像">
-          <div class="card-body">
-            <h5 class="card-title">マグカップ</h5>
-            <p class="card-text">かわいいマグカップです。</p>
-            <button class="btn btn-primary">カートに追加</button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -166,17 +147,17 @@
                 <form id="order-form" class="needs-validation" novalidate>
                     <div class="mb-3">
                         <label for="name" class="form-label">購入者氏名</label>
-                        <input type="text" class="form-control" id="buyer_name" required>
+                        <input type="text" class="form-control" id="name" required>
                         <div class="invalid-feedback">購入者氏名を入力してください</div>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">購入者住所</label>
-                        <input type="text" class="form-control" id="buyer_address" required>
+                        <input type="text" class="form-control" id="address" required>
                         <div class="invalid-feedback">購入者住所を入力してください</div>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">購入者メールアドレス</label>
-                        <input type="email" class="form-control" id="buyer_email" required>
+                        <input type="email" class="form-control" id="email" required>
                         <div class="invalid-feedback">有効なメールアドレスを入力してください</div>
                     </div>
                     <div class="mb-3">
