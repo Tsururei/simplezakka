@@ -1,5 +1,6 @@
 package com.example.simplezakka.dto.cart;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import lombok.AllArgsConstructor;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class CartItemDto {
     private String productId;
     private String productName;
-    private DecimalFormat productPrice;
+    private BigDecimal productPrice;
     private Integer cartQuantity;
-    private DecimalFormat subTotal;
+    private BigDecimal subTotal;
 }

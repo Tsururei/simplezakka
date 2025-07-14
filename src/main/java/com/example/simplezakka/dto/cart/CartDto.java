@@ -4,16 +4,19 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.Map;
 
+import org.hibernate.validator.internal.constraintvalidators.bv.number.bound.decimal.DecimalMaxValidatorForBigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+static @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CartDto implements Serializable{
-    private String cart_id;
-    private Map<String, CartItem> cartItems;
-    private DecimalFormat total_price;
-    private Integer total_quantity;
+    private Integer cartId;
+    private Integer userId;
+    private Map<Integer, CartItem> cartItems;
+    private BIgDecimal totalPrice;
+    private Integer totalQuantity;
 }
