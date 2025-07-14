@@ -1,11 +1,9 @@
 package com.example.simplezakka.service;
 
-import org.hibernate.annotations.processing.Find;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.simplezakka.dto.auth.LoginRequest;
 import com.example.simplezakka.dto.auth.LoginResponse;
-import com.example.simplezakka.dto.auth.UserSession;
 import com.example.simplezakka.dto.auth.RegisterRequest;
 import com.example.simplezakka.entity.User;
 import com.example.simplezakka.repository.UserRepository;
@@ -14,7 +12,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import com.example.simplezakka.exception.AuthenticationException;
-import jakarta.servlet.http.HttpSession;
 
 @Service
 public class AuthService {
@@ -27,8 +24,8 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider; 
     }
     public LoginResponse findUserbyloginEmail(LoginRequest loginRequest) {
-        String loginEmail = loginRequest.getLoginEmail();
-        String loginPassword = loginRequest.getLoginPassword();
+        String loginEmail = loginRequest.getUserEmail();
+        String loginPassword = loginRequest.getUserPassword();
         Optional<User> userOpt = userRepository.findByUserEmail(loginEmail);
         if (userOpt.isEmpty()) {
             throw new AuthenticationException("ユーザーが見つかりません");
