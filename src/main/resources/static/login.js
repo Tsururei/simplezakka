@@ -11,7 +11,7 @@ document.getElementById('guestlogin-btn').addEventListener('click', function() {
   });
 
 async function tryLogin() {
-  const loginName = document.getElementById('loginNameInput').value;
+  const loginEmail = document.getElementById('loginEmailInput').value;
   const loginPassword = document.getElementById('loginPasswordInput').value;
 
   const response = await fetch('http://localhost:8080/api/auth/login', {
