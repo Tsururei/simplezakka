@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.cglib.core.Local;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "cart_item")
 @Data
 @NoArgsConstructor
 public class CartItem {
