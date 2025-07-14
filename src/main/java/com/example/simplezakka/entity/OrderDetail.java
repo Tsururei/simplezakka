@@ -26,10 +26,15 @@ public class OrderDetail {
     private Integer productId;
 
     @Column(nullable = false)
+    private String productName;
+
+    @Column(nullable = false)
+    private BigDecimal price;
+
+    @Column(nullable = false)
     private int quantity;
 
     @Column(nullable = false)
     private BigDecimal unitPrice;
 
-    // createdAt, updatedAt を追加する場合はここに
 }

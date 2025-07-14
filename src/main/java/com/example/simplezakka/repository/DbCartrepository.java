@@ -1,5 +1,5 @@
 package com.example.simplezakka.repository;
-import com.example.simplezakka.dto.cart.Cart;
+import com.example.simplezakka.entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

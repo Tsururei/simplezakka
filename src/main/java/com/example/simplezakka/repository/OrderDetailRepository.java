@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Integer> {
 
-    // Order エンティティ内の orderId を使って検索
+    // ✅ Order エンティティの orderId を使って関連する明細一覧を取得
     List<OrderDetail> findByOrder_OrderId(Integer orderId);
 }
-

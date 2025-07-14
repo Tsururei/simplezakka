@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.math.BigDecimal;
 
 @Service
 public class OrderService {
@@ -71,9 +72,9 @@ public class OrderService {
             );
 
             OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setProduct(product);
+            orderDetail.setProductId(product.getProductId());
             orderDetail.setProductName(product.getName());
-            orderDetail.setPrice(product.getPrice());
+            orderDetail.setPrice(BigDecimal.valueOf(product.getPrice()));
             orderDetail.setQuantity(cartItem.getQuantity());
 
             order.addOrderDetail(orderDetail);
@@ -88,7 +89,7 @@ public class OrderService {
                     "商品ID: " + product.getProductId() +
                     ", 商品名: " + product.getName() +
                     ", 要求数量: " + cartItem.getQuantity()
-                    // 必要であれば、考えられる原因（競合など）を示すメッセージを追加
+    
                 );
             }
         }
