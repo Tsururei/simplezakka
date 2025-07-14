@@ -20,13 +20,4 @@ public class CartDto implements Serializable{
     private Map<Integer, CartItem> cartItems;
     private BigDecimal totalPrice;
     private Integer totalQuantity;
-
-    public void removeUserItem(Integer userId) {
-        items.remove(userId);
-        calculateTotals();
-    }
-        public void calculateTotals() {
-        totalQuantity = 0;
-        totalPrice = 0;
-    }
 }
