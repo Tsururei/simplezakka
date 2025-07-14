@@ -16,9 +16,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const kitchenContainer = document.querySelector('.kitchen-products').parentElement; // tab-pane
 
     // 初期表示
-    allProductsContainer.style.display = 'flex'; // または 'block'
-    stationeryContainer.style.display = 'none';
+    allProductsContainer.style.display = 'flex';  // 全商品表示
     kitchenContainer.style.display = 'none';
+    interiorContainer.style.display = 'none';
+
 
     // タブ切り替え
     document.querySelectorAll('.nav-tabs button').forEach(button => {
@@ -80,50 +81,54 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 商品一覧を表示する関数
-   function displayProducts(products) {
+function displayProducts(products) {
     const allProductsContainer = document.getElementById('all-products'); // 全商品表示用
-    const stationeryContainer = document.querySelector('.stationery-products');
     const kitchenContainer = document.querySelector('.kitchen-products');
-    
-    // 中身を空にする
+    const interiorContainer = document.querySelector('.interior-products');
+
+
     allProductsContainer.innerHTML = '';
     stationeryContainer.innerHTML = '';
     kitchenContainer.innerHTML = '';
 
     products.forEach(product => {
-        const cardHtml = `...`; // 省略：既存のカードHTML生成コード
+        const cardHtml = `
+            <div class="col">
+                <div class="card product-card">
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/300x200'}" class="card-img-top" alt="${product.name}">
+                    <div class="card-body">
+                        <h5 class="card-title">${product.name}</h5>
+                        <p class="card-text">¥${product.price.toLocaleString()}</p>
+                        <button class="btn btn-outline-primary view-product" data-id="${product.productId}">詳細を見る</button>
+                    </div>
+                </div>
+            </div>
+        `;
 
-        // 全商品コンテナに追加
         allProductsContainer.insertAdjacentHTML('beforeend', cardHtml);
 
-        // 既存のカテゴリ振り分けもそのまま
-        if (product.name === 'ステンレスタンブラー' || product.name === '木製コースター（4枚セット）' || product.name === 'ガラス保存容器セット') {
+        if (
+          product.name === 'ステンレスタンブラー' ||
+          product.name === '木製コースター（4枚セット）' ||
+          product.name === 'ガラス保存容器セット'
+        ) {
             kitchenContainer.insertAdjacentHTML('beforeend', cardHtml);
         } else {
             stationeryContainer.insertAdjacentHTML('beforeend', cardHtml);
         }
     });
 
-    // 詳細ボタンのイベント登録（allProductsContainer内も含めて）
-    allProductsContainer.querySelectorAll('.view-product').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const id = e.currentTarget.dataset.id;
-            fetchProductDetail(id);
-        });
-    });
-    stationeryContainer.querySelectorAll('.view-product').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const id = e.currentTarget.dataset.id;
-            fetchProductDetail(id);
-        });
-    });
-    kitchenContainer.querySelectorAll('.view-product').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const id = e.currentTarget.dataset.id;
-            fetchProductDetail(id);
+    // 詳細ボタンのイベント登録
+    [allProductsContainer, stationeryContainer, kitchenContainer].forEach(container => {
+        container.querySelectorAll('.view-product').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const id = e.currentTarget.dataset.id;
+                fetchProductDetail(id);
+            });
         });
     });
 }
+
 
 
     
