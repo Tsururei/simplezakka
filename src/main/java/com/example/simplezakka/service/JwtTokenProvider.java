@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
 import com.example.simplezakka.entity.User;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -38,4 +37,5 @@ public class JwtTokenProvider {
         byte[] keyBytes = Base64.getDecoder().decode("MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=");
         return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
+    
 }

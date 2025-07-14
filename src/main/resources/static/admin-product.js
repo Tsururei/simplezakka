@@ -3,8 +3,8 @@ const productList = document.getElementById("product-list");
 const modal = document.getElementById("modal");
 
 let products = [
-  { categoryId: "A1", productId: "P001", image: "", name: "商品A", price: 1200, desc: "説明A" },
-  { categoryId: "B2", productId: "P002", image: "", name: "商品B", price: 2400, desc: "説明B" },
+  { categoryId: "A1", productId: "P001", image: "aroma-diffuser.png", name: "アロマディフーザー", price: 1200, desc: "説明A" },
+  { categoryId: "B2", productId: "P002", image: "cotton-blanket.png", name: "コットンブランケット", price: 2400, desc: "説明B" },
 ];
 
 function renderProducts() {

@@ -38,72 +38,47 @@
  </div>
 
  <script>
-
-  const orders = [
-    {
-      order_id: "A001",
-      buyer_name: "坂口あやの",
-      ship_address: "和歌山県田舎市1-2-3",
-      total_price: 15000,
-      order_status: "処理中",
-      buyer_email: "sakaguchi@example.com",
-      pay_method: "代引き",
-      order_date: "2025-07-10 10:00",
-      detail: "商品A 1個、商品B 2個"
-    },
-    {
-      order_id: "A002",
-      buyer_name: "つるれい",
-      ship_address: "千葉県端っこ市1-2-3",
-      total_price: 9800,
-      order_status: "未処理",
-      buyer_email: "tsururei@example.com",
-      pay_method: "振込",
-      order_date: "2025-07-11 14:30",
-      detail: "商品C 2個"
-    }
-  ];
+  async function fetchOrders() {
+    const response = await fetch('/api/orders');
+    const orders = await response.json();
+    displayOrders(orders);
+  }
 
   const tbody = document.querySelector("#orders-table tbody");
   const modal = document.getElementById("order-modal");
   const modalBody = document.getElementById("modal-body");
 
-  function displayOrders() {
+  function displayOrders(orders) {
     tbody.innerHTML = "";
     orders.forEach(order => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td><button class="order-id-btn" data-id="${order.order_id}">${order.order_id}</button></td>
-        <td>${order.buyer_name}</td>
-        <td>${order.order_date}</td>
-        <td>¥${order.total_price.toLocaleString()}</td>
-        <td>${order.order_status}</td>
+        <td><button class="order-id-btn" data-id="${order.orderId}">${order.orderId}</button></td>
+        <td>${order.customerName}</td>
+        <td>${order.orderDate}</td>
+        <td>¥${order.totalAmount.toLocaleString()}</td>
+        <td>${order.status}</td>
       `;
       tbody.appendChild(tr);
     });
   }
 
-
   function showModal(orderId) {
-    const order = orders.find(o => o.order_id === orderId);
+    const order = orders.find(o => o.orderId === orderId);
     if (!order) return;
 
     modalBody.innerHTML = `
-      <p><strong>注文ID:</strong> ${order.order_id}</p>
-      <p><strong>購入者名:</strong> ${order.buyer_name}</p>
-      <p><strong>配送先住所:</strong> ${order.ship_address}</p>
-      <p><strong>購入代金:</strong> ¥${order.total_price.toLocaleString()}</p>
-      <p><strong>注文ステータス:</strong> ${order.order_status}</p>
-      <p><strong>メールアドレス:</strong> ${order.buyer_email}</p>
-      <p><strong>決済方法:</strong> ${order.pay_method}</p>
-      <p><strong>注文日時:</strong> ${order.order_date}</p>
-      <p><strong>詳細:</strong> ${order.detail}</p>
+      <p><strong>注文ID:</strong> ${order.orderId}</p>
+      <p><strong>購入者名:</strong> ${order.customerName}</p>
+      <p><strong>配送先住所:</strong> ${order.shippingAddress}</p>
+      <p><strong>購入代金:</strong> ¥${order.totalAmount.toLocaleString()}</p>
+      <p><strong>注文ステータス:</strong> ${order.status}</p>
+      <p><strong>メールアドレス:</strong> ${order.customerEmail}</p>
+      <p><strong>注文日時:</strong> ${order.orderDate}</p>
+      <p><strong>詳細:</strong> ${order.orderDetails.map(d => `${d.productName} ${d.quantity}個`).join(", ")}</p>
     `;
     modal.style.display = "flex";
   }
-
-
-
 
   tbody.addEventListener("click", e => {
     if (e.target.classList.contains("order-id-btn")) {
@@ -112,12 +87,14 @@
     }
   });
 
-  displayOrders();
+
+  fetchOrders();
+
 
   window.addEventListener("click", e => {
     if (e.target === modal) {
       modal.style.display = "none";
     }
   });
- </script>
+</script>
 </body>
