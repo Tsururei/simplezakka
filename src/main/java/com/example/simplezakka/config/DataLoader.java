@@ -2,8 +2,13 @@ package com.example.simplezakka.config;
 
 import com.example.simplezakka.entity.Product;
 import com.example.simplezakka.entity.Admin;
+import com.example.simplezakka.entity.User;
 import com.example.simplezakka.repository.ProductRepository;
 import com.example.simplezakka.repository.AdminRepository;
+import com.example.simplezakka.repository.UserRepository;
+
+import jakarta.persistence.GenerationType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -19,15 +24,18 @@ public class DataLoader implements CommandLineRunner {
 
     private final ProductRepository productRepository;
     private final AdminRepository adminRepository;
+    private final UserRepository userRepository;
 
 
     @Autowired
     public DataLoader(
         ProductRepository productRepository,
-        AdminRepository adminRepository
+        AdminRepository adminRepository,
+        UserRepository userRepository
     ) {
         this.productRepository = productRepository;
         this.adminRepository = adminRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -142,6 +150,24 @@ public class DataLoader implements CommandLineRunner {
                 .build();
 
             adminRepository.save(admin);
+    }
+
+    private void loadSampleUser(){
+        String email = "user@example.com";
+        if(userRepository.findByUserEmail(email).isPresent()){
+            return;//すでに登録済みならスキップ
+        }
+
+        User user = User.builder()
+                .userId(123456789)
+                .userName("消費者 太郎")
+                .userEmail(email)
+                .userPassword(("userpass")) // 平文のまま保存
+                .userAddress(("東京都品川区1-2-3"))
+                .userDate(LocalDateTime.now())
+                .build();
+
+            userRepository.save(user);
     }
 
     private Product createProduct(String name, String description, Integer price, Integer stock, String imageUrl, Boolean isRecommended) {
