@@ -27,8 +27,8 @@ public class AuthService {
         this.jwtTokenProvider = jwtTokenProvider; 
     }
     public LoginResponse findUserbyloginEmail(LoginRequest loginRequest) {
-        String loginEmail = loginRequest.getLoginEmail();
-        String loginPassword = loginRequest.getLoginPassword();
+        String loginEmail = loginRequest.getUserEmail();
+        String loginPassword = loginRequest.getUserPassword();
         Optional<User> userOpt = userRepository.findByUserEmail(loginEmail);
         if (userOpt.isEmpty()) {
             throw new AuthenticationException("ユーザーが見つかりません");
