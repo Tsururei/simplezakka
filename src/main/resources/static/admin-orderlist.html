@@ -3,41 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <title>管理者注文情報確認画面</title>
-  <link rel="stylesheet" href="admin-top.css">
+  <link rel="stylesheet" href="admin-orderlist.css">
 </head>
+
+
 
 <body>
   <h1>WELCOME TO "TEINEI"</h1>
   <h2>注文情報確認</h2>
 
-  <style>
-  table { border-collapse: collapse; width: 100%; }
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-  th { background-color: #eee; }
-  .order-id-btn {
-    color: blue; cursor: pointer; text-decoration: underline; background: none; border: none; padding: 0; font: inherit;
-  }
-  
-  .modal {
-    display: none; 
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    justify-content: center; align-items: center;
-  }
-  .modal-content {
-    background: white; padding: 20px; border-radius: 5px; max-width: 500px; width: 90%;
-  }
-  .close-btn {
-    float: right; cursor: pointer; font-weight: bold; font-size: 20px;
-  }
-</style>
-</head>
-<body>
 
-<h1>注文情報一覧</h1>
 
-<table id="orders-table">
+
+
+ <h3>注文情報一覧</h3>
+
+ <table id="orders-table">
   <thead>
     <tr>
       <th>注文ID</th>
@@ -50,19 +31,18 @@
   <tbody>
     
   </tbody>
-</table>
+ </table>
 
-<div id="order-modal" class="modal">
+ <div id="order-modal" class="modal">
   <div class="modal-content">
-    <span id="close-modal" class="close-btn">&times;</span>
     <h2>注文詳細情報</h2>
     <div id="modal-body">
     
     </div>
   </div>
-</div>
+ </div>
 
-<script>
+ <script>
 
   const orders = [
     {
@@ -92,7 +72,6 @@
   const tbody = document.querySelector("#orders-table tbody");
   const modal = document.getElementById("order-modal");
   const modalBody = document.getElementById("modal-body");
-  const closeModalBtn = document.getElementById("close-modal");
 
   function displayOrders() {
     tbody.innerHTML = "";
@@ -101,7 +80,7 @@
       tr.innerHTML = `
         <td><button class="order-id-btn" data-id="${order.order_id}">${order.order_id}</button></td>
         <td>${order.buyer_name}</td>
-        <td>${order.ship_address}</td>
+        <td>${order.order_date}</td>
         <td>¥${order.total_price.toLocaleString()}</td>
         <td>${order.order_status}</td>
       `;
@@ -129,9 +108,7 @@
   }
 
 
-  closeModalBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-  });
+
 
   tbody.addEventListener("click", e => {
     if (e.target.classList.contains("order-id-btn")) {
@@ -147,4 +124,5 @@
       modal.style.display = "none";
     }
   });
-</script>
+ </script>
+</body>

@@ -34,7 +34,7 @@ public class AuthController {
             session.setAttribute("accessToken", tokens.getAccessToken());
             session.setAttribute("refreshToken", tokens.getRefreshToken());
 
-        return ResponseEntity.ok(tokens);  // JSONを返す
+        return ResponseEntity.ok(tokens); 
     } catch (AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                              .body("ログイン失敗: " + e.getMessage());
@@ -43,7 +43,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public String register(    
+    public ResponseEntity<?> register(    
         @RequestParam("user_name") String userName,
         @RequestParam("user_address") String userAddress,
         @RequestParam("user_email") String userEmail,
@@ -60,10 +60,11 @@ public class AuthController {
             LoginResponse tokens = authService.registerUser(request);
             session.setAttribute("accessToken",tokens.getAccessToken());
             session.setAttribute("refreshToken", tokens.getRefreshToken());
-            return "redirect:/home.html";
+            return ResponseEntity.ok(tokens); 
         } catch (AuthenticationException e) {
             session.setAttribute("registerError","登録失敗" + e.getMessage());
-            return "redirect:/index.html";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body("接続失敗: " + e.getMessage());
         }
     }
 

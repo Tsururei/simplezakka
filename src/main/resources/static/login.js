@@ -11,13 +11,13 @@ document.getElementById('guestlogin-btn').addEventListener('click', function() {
   });
 
 async function tryLogin() {
-  const loginName = document.getElementById('loginNameInput').value;
+  const loginEmail = document.getElementById('loginEmailInput').value;
   const loginPassword = document.getElementById('loginPasswordInput').value;
 
   const response = await fetch('http://localhost:8080/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ loginName, loginPassword })
+    body: JSON.stringify({ loginEmail, loginPassword })
   });
 
   if (response.ok) {
