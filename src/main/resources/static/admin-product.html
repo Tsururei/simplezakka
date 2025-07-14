@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>商品情報・カテゴリ編集</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+      background-color: #fff;
+    }
+
+    h1 {
+      display: inline-block;
+      padding: 0.3em 1.0em;
+    }
+
+    button {
+      padding: 0.7em 9.0em;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #999;
+      margin: 1em 0;
+      background-color: #eee;
+      cursor: pointer;
+    }
+
+    #product-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      max-height: 60vh;
+      overflow-y: auto;
+      border-top: 1px solid #ccc;
+      padding-top: 1rem;
+    }
+
+    .product-card {
+      border: 1px solid #efdbdb;
+      border-radius: 8px;
+      width: 45%;
+      padding: 1rem;
+      box-sizing: border-box;
+    }
+
+    .product-card input,
+    .product-card textarea {
+      width: 100%;
+      margin-bottom: 1em;
+      padding: 0.3em;
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      margin-bottom: 0.5em;
+    }
+
+    #save-button {
+      background-color: #005577;
+      color: white;
+    }
+
+    /* モーダル */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 1.5rem;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 8px;
+    }
+
+    .modal-content input,
+    .modal-content textarea {
+      width: 100%;
+      margin-bottom: 0.5em;
+    }
+
+    .modal-content button {
+      margin-top: 1em;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    
+  </style>
+</head>
+<body>
+
+<h1>商品情報・カテゴリ編集</h1>
+
+<br>
+<button onclick="openModal()">＋ 新規商品情報登録</button>
+
+<p>削除編集はこちら↓</p>
+<button type="button" id="save-button">変更を保存</button>
+
+<script>
+  const saveBtn = document.getElementById("save-button");
+
+  saveBtn.addEventListener("click", async () => {
+    const dataToSave = products;
+
+    try {
+      const response = await fetch("/api/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSave),
+      });
+
+      if (response.ok) {
+        // 保存成功 → ページをリロード
+        location.reload();
+      } else {
+        alert("保存に失敗しました");
+      }
+    } catch (error) {
+      console.error("エラー:", error);
+      alert("通信エラーが発生しました");
+    }
+  });
+</script>
+
+<div id="product-list">
+  <!-- 商品カードがここに表示される -->
+</div>
+
+<!-- モーダル -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>新規商品登録</h3>
+    </div>
+    <input type="text" id="new-category-id" placeholder="カテゴリID">
+    <input type="text" id="new-product-id" placeholder="商品ID">
+    <input type="file" id="new-image">
+    <input type="text" id="new-name" placeholder="商品名">
+    <input type="number" id="new-price" placeholder="価格">
+    <textarea id="new-desc" placeholder="商品説明"></textarea>
+    <button onclick="registerProduct()">登録</button>
+    <button onclick="closeModal()">キャンセル</button>
+  </div>
+</div>
+
+<script>
+  const productList = document.getElementById("product-list");
+  const modal = document.getElementById("modal");
+
+  let products = [
+    { categoryId: "A1", productId: "P001", image: "", name: "商品A", price: 1200, desc: "説明A" },
+    { categoryId: "B2", productId: "P002", image: "", name: "商品B", price: 2400, desc: "説明B" },
+  ];
+
+  function renderProducts() {
+    productList.innerHTML = "";
+    products.forEach((p, i) => {
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+        <input value="${p.categoryId}" placeholder="カテゴリID" onchange="products[${i}].categoryId = this.value">
+        <input value="${p.productId}" placeholder="商品ID" onchange="products[${i}].productId = this.value">
+        <img src="${p.image || 'https://via.placeholder.com/150'}" alt="画像">
+        <input value="${p.name}" placeholder="商品名" onchange="products[${i}].name = this.value">
+        <input type="number" value="${p.price}" placeholder="価格" onchange="products[${i}].price = this.value">
+        <textarea placeholder="商品説明" onchange="products[${i}].desc = this.value">${p.desc}</textarea>
+      `;
+      productList.appendChild(card);
+    });
+  }
+
+  function openModal() {
+    modal.style.display = "flex";
+  }
+
+  function closeModal() {
+    modal.style.display = "none";
+    document.querySelectorAll("#modal input, #modal textarea").forEach(e => e.value = "");
+  }
+
+  function registerProduct() {
+    const categoryId = document.getElementById("new-category-id").value;
+    const productId = document.getElementById("new-product-id").value;
+    const name = document.getElementById("new-name").value;
+    const price = document.getElementById("new-price").value;
+    const desc = document.getElementById("new-desc").value;
+    const image = ""; // 実際の画像アップロード処理は別途
+
+    if (categoryId && productId && name && price) {
+      products.push({ categoryId, productId, name, price, desc, image });
+      renderProducts();
+      closeModal();
+    } else {
+      alert("必須項目を入力してください");
+    }
+  }
+
+  renderProducts();
+</script>
+
+</body>
+</html>

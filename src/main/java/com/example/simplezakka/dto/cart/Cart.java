@@ -54,4 +54,9 @@ public class Cart implements Serializable {
             totalPrice += item.getSubtotal();
         }
     }
+    public void clear() {
+        items.clear();
+        calculateTotals();
+    }
+
 }
