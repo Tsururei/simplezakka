@@ -1,8 +1,12 @@
 package com.example.simplezakka.service;
 
 import com.example.simplezakka.dto.cart.Cart;
+import com.example.simplezakka.dto.cart.CartDto;
 import com.example.simplezakka.dto.cart.CartItem;
+import com.example.simplezakka.dto.cart.CartItemDto;
+import com.example.simplezakka.dto.cart.CartItemInfoDto;
 import com.example.simplezakka.entity.Product;
+import com.example.simplezakka.repository.DbCartrepository;
 import com.example.simplezakka.repository.ProductRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +18,6 @@ import java.util.Optional;
 public class CartService {
 
     private static final String CART_SESSION_KEY = "cart";
-    
     private final ProductRepository productRepository;
     
     @Autowired
