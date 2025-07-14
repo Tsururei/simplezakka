@@ -51,16 +51,20 @@
       padding: 0.3em;
     }
 
-    .product-card img {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      margin-bottom: 0.5em;
-    }
-
     #save-button {
       background-color: #005577;
       color: white;
+    }
+
+    .product-card img {
+    width: 100%;
+    height: 400px; /* お好みで調整可 */
+    object-fit: contain; /* 縦横比を保って枠内に収める */
+    border: 1px solid #ccc; /* 枠線 */
+    border-radius: 8px;      /* 角丸 */
+    background-color: #f9f9f9; /* 画像が小さいとき背景で補う */
+    padding: 4px;
+    box-sizing: border-box;
     }
 
     /* モーダル */
@@ -164,8 +168,8 @@
   const modal = document.getElementById("modal");
 
   let products = [
-    { categoryId: "A1", productId: "P001", image: "", name: "商品A", price: 1200, desc: "説明A" },
-    { categoryId: "B2", productId: "P002", image: "", name: "商品B", price: 2400, desc: "説明B" },
+    { categoryId: "A1", productId: "P001", image: "/images/aroma-diffuser.png", name: "商品A", price: 1200, desc: "説明A" },
+    { categoryId: "B2", productId: "P002", image: "/images/cotton-blanket.png", name: "商品B", price: 2400, desc: "説明B" },
   ];
 
   function renderProducts() {
@@ -200,7 +204,7 @@
     const name = document.getElementById("new-name").value;
     const price = document.getElementById("new-price").value;
     const desc = document.getElementById("new-desc").value;
-    const image = ""; // 実際の画像アップロード処理は別途
+    
 
     if (categoryId && productId && name && price) {
       products.push({ categoryId, productId, name, price, desc, image });
