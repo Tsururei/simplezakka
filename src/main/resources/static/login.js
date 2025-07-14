@@ -1,6 +1,8 @@
-document.getElementById('login-btn').addEventListener('click', async function() {
-      tryLogin();
-  });
+document.getElementById('login-btn').addEventListener('click', async function(event) {
+  event.preventDefault();  // これでフォームの送信を止める
+  tryLogin();
+});
+
 
 document.getElementById('register-link').addEventListener('click', function() {
     window.location.href = 'register.html';
@@ -11,18 +13,18 @@ document.getElementById('guestlogin-btn').addEventListener('click', function() {
   });
 
 async function tryLogin() {
-  const loginEmail = document.getElementById('loginEmailInput').value;
-  const loginPassword = document.getElementById('loginPasswordInput').value;
+  const userEmail = document.getElementById('userEmailInput').value;
+  const userPassword = document.getElementById('userPasswordInput').value;
 
   const response = await fetch('http://localhost:8080/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ loginEmail, loginPassword })
+    body: JSON.stringify({ userEmail, userPassword })
   });
 
   if (response.ok) {
     const data = await response.json();
-    window.location.href = '/home.html';
+    window.location.href = 'home.html';
   } else {
     const err = await response.text();
     alert(err);

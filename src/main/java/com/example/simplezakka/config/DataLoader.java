@@ -160,7 +160,6 @@ public class DataLoader implements CommandLineRunner {
         }
 
         User user = User.builder()
-                .userId(123456789)
                 .userName("消費者 太郎")
                 .userEmail(email)
                 .userPassword(("userpass")) // 平文のまま保存
