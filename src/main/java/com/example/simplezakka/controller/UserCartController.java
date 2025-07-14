@@ -1,9 +1,10 @@
 package com.example.simplezakka.controller;
 
-import com.example.simplezakka.dto.cart.Cart;
+import com.example.simplezakka.dto.cart.CartGuest;
 import com.example.simplezakka.dto.cart.CartDto;
 import com.example.simplezakka.dto.cart.CartItemInfo;
 import com.example.simplezakka.dto.cart.CartItemQuantityDto;
+import com.example.simplezakka.entity.Cart;
 import com.example.simplezakka.service.UserCartService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,19 +22,20 @@ public class UserCartController {
     }
     
     @GetMapping
-    public ResponseEntity<Cart> getCart(CartDto cartDto) {
-        Cart cart = userCartService.getCartFromDb(cartDto);
+    public ResponseEntity<CartGuest> getCart(CartDto cartDto) {
+        CartGuest cart = userCartService.getCartFromDb(cartDto);
         return ResponseEntity.ok(cart);
     }
     
     @PostMapping
-    public ResponseEntity<Cart> addItem(@Valid @RequestBody CartItemInfo cartItemInfo, @RequestParam Integer userId) {
+    public ResponseEntity<CartGuest> addItem(@Valid @RequestBody CartItemInfo cartItemInfo, @RequestParam Integer userId) {
         CartDto cartDto = new CartDto();
         cartDto.setUserId(userId);
-        Cart cart = userCartService.addItemToUserCart(
+        CartGuest cart = userCartService.addItemToUserCart(
                 cartItemInfo.getProductId(),
                 cartItemInfo.getQuantity(),
-                cartDto
+                cartDto,
+
         );
         
         if (cart == null) {
@@ -44,20 +46,20 @@ public class UserCartController {
     }
     
     @PutMapping("/items/{itemId}")
-    public ResponseEntity<Cart> updateUserItem(
+    public ResponseEntity<CartGuest> updateUserItem(
             @PathVariable String itemId,
             @Valid @RequestBody CartItemQuantityDto quantityDto, @RequestParam Integer userId) {
         CartDto cartDto = new CartDto();
         cartDto.setUserId(userId);
-        Cart cart = userCartService.updateUserItemQuantity(itemId, quantityDto.getQuantity(), cartDto);
+        CartGuest cart = userCartService.updateUserItemQuantity(itemId, quantityDto.getQuantity(), cartDto);
         return ResponseEntity.ok(cart);
     }
     
     @DeleteMapping("/items/{itemId}")
-    public ResponseEntity<Cart> removeUserItem(@PathVariable String itemId, @RequestParam Integer userId) {
+    public ResponseEntity<CartGuest> removeUserItem(@PathVariable String itemId, @RequestParam Integer userId) {
         CartDto cartDto = new CartDto();
         cartDto.setUserId(userId);
-        Cart cart = userCartService.removeUserItemFromCart(itemId, cartDto);
+        CartGuest cart = userCartService.removeUserItemFromCart(itemId, cartDto);
         return ResponseEntity.ok(cart);
     }    
 }

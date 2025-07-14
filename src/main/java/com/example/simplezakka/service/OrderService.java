@@ -1,6 +1,6 @@
 package com.example.simplezakka.service;
 
-import com.example.simplezakka.dto.cart.Cart;
+import com.example.simplezakka.dto.cart.CartGuest;
 import com.example.simplezakka.dto.cart.CartItem;
 import com.example.simplezakka.dto.order.CustomerInfo;
 import com.example.simplezakka.dto.order.OrderRequest;
@@ -41,7 +41,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse placeOrder(Cart cart, OrderRequest orderRequest, HttpSession session) {
+    public OrderResponse placeOrder(CartGuest cart, OrderRequest orderRequest, HttpSession session) {
         if (cart == null || cart.getItems().isEmpty()) {
             return null;
         }
