@@ -10,6 +10,39 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 商品一覧の取得と表示
     fetchProducts();
+        // ここから追加
+    const allProductsContainer = document.getElementById('all-products');
+    const stationeryContainer = document.querySelector('.stationery-products').parentElement; // tab-pane
+    const kitchenContainer = document.querySelector('.kitchen-products').parentElement; // tab-pane
+
+    // 初期表示
+    allProductsContainer.style.display = 'flex'; // または 'block'
+    stationeryContainer.style.display = 'none';
+    kitchenContainer.style.display = 'none';
+
+    // タブ切り替え
+    document.querySelectorAll('.nav-tabs button').forEach(button => {
+        button.addEventListener('click', () => {
+            allProductsContainer.style.display = 'none';
+            stationeryContainer.style.display = 'none';
+            kitchenContainer.style.display = 'none';
+
+            const targetId = button.getAttribute('data-bs-target');
+            const targetPane = document.querySelector(targetId);
+            if (targetPane) targetPane.style.display = 'block';
+        });
+    });
+
+    // ホームボタンがあれば全商品に戻す処理
+    const homeBtn = document.querySelector('a[href="/home.html"]');
+    if (homeBtn) {
+        homeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            allProductsContainer.style.display = 'flex';
+            stationeryContainer.style.display = 'none';
+            kitchenContainer.style.display = 'none';
+        });
+    }
     
     // カート情報の取得と表示
     updateCartDisplay();
@@ -47,46 +80,51 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 商品一覧を表示する関数
-    function displayProducts(products) {
-    // 文房具とキッチン用品のコンテナを取得
-    const stationeryContainer = document.getElementById('stationery-products-container');
-    const kitchenContainer = document.getElementById('kitchen-products-container');
-
-    // コンテナの中身を空にする
+   function displayProducts(products) {
+    const allProductsContainer = document.getElementById('all-products'); // 全商品表示用
+    const stationeryContainer = document.querySelector('.stationery-products');
+    const kitchenContainer = document.querySelector('.kitchen-products');
+    
+    // 中身を空にする
+    allProductsContainer.innerHTML = '';
     stationeryContainer.innerHTML = '';
     kitchenContainer.innerHTML = '';
 
     products.forEach(product => {
-        // 商品カードのHTMLを作成
-        const cardHtml = `
-            <div class="col">
-                <div class="card product-card">
-                    <img src="${product.imageUrl || 'https://via.placeholder.com/300x200'}" class="card-img-top" alt="${product.name}">
-                    <div class="card-body">
-                        <h5 class="card-title">${product.name}</h5>
-                        <p class="card-text">¥${product.price.toLocaleString()}</p>
-                        <button class="btn btn-outline-primary view-product" data-id="${product.productId}">詳細を見る</button>
-                    </div>
-                </div>
-            </div>
-        `;
+        const cardHtml = `...`; // 省略：既存のカードHTML生成コード
 
-        // 商品名で振り分け
-        if (product.name === 'タンブラー' || product.name === 'コースター' || product.name === '保存容器セット') {
+        // 全商品コンテナに追加
+        allProductsContainer.insertAdjacentHTML('beforeend', cardHtml);
+
+        // 既存のカテゴリ振り分けもそのまま
+        if (product.name === 'ステンレスタンブラー' || product.name === '木製コースター（4枚セット）' || product.name === 'ガラス保存容器セット') {
             kitchenContainer.insertAdjacentHTML('beforeend', cardHtml);
         } else {
             stationeryContainer.insertAdjacentHTML('beforeend', cardHtml);
         }
     });
 
-    // 挿入した全ての詳細ボタンにクリックイベントを登録
-    document.querySelectorAll('.view-product').forEach(button => {
+    // 詳細ボタンのイベント登録（allProductsContainer内も含めて）
+    allProductsContainer.querySelectorAll('.view-product').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            fetchProductDetail(id);
+        });
+    });
+    stationeryContainer.querySelectorAll('.view-product').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            fetchProductDetail(id);
+        });
+    });
+    kitchenContainer.querySelectorAll('.view-product').forEach(button => {
         button.addEventListener('click', (e) => {
             const id = e.currentTarget.dataset.id;
             fetchProductDetail(id);
         });
     });
 }
+
 
     
     // 商品詳細を取得する関数
