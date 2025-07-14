@@ -17,7 +17,7 @@ async function tryLogin() {
   const response = await fetch('http://localhost:8080/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ loginName, loginPassword })
+    body: JSON.stringify({ loginEmail, loginPassword })
   });
 
   if (response.ok) {
