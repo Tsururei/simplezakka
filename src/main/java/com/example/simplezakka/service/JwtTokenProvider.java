@@ -32,4 +32,10 @@ public class JwtTokenProvider {
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
     }
+
+    private Key getSigningKey() {
+        byte[] keyBytes = Base64.getDecoder().decode("MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=");
+        return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
+    }
+    
 }
