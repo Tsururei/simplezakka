@@ -5,11 +5,13 @@ import com.example.simplezakka.dto.auth.LoginResponse;
 import com.example.simplezakka.dto.auth.RegisterRequest;
 import com.example.simplezakka.exception.AuthenticationException;
 import com.example.simplezakka.service.AuthService;
+import com.example.simplezakka.service.JwtTokenProvider;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -25,28 +27,49 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpSession session) {
         try {
             LoginResponse tokens = authService.findUserbyloginEmail(request);
-            return ResponseEntity.ok(tokens);
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("認証失敗" + e.getMessage());
-        }
+
+            session.setAttribute("accessToken", tokens.getAccessToken());
+            session.setAttribute("refreshToken", tokens.getRefreshToken());
+
+        return ResponseEntity.ok(tokens);  // JSONを返す
+    } catch (AuthenticationException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body("ログイン失敗: " + e.getMessage());
     }
+}
+
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    public String register(    
+        @RequestParam("user_name") String userName,
+        @RequestParam("user_address") String userAddress,
+        @RequestParam("user_email") String userEmail,
+        @RequestParam("user_password") String userPassword,
+        HttpSession session) {
+        
+        RegisterRequest request = new RegisterRequest();
+        request.setRegisterName(userName);
+        request.setRegisterAddress(userAddress);
+        request.setRegisterEmail(userEmail);
+        request.setRegisterPassword(userPassword);
+
         try {
             LoginResponse tokens = authService.registerUser(request);
-            return ResponseEntity.ok(tokens);
+            session.setAttribute("accessToken",tokens.getAccessToken());
+            session.setAttribute("refreshToken", tokens.getRefreshToken());
+            return "redirect:/home.html";
         } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("認証失敗" + e.getMessage());
+            session.setAttribute("registerError","登録失敗" + e.getMessage());
+            return "redirect:/index.html";
         }
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpSession session) {
+    public String logout(HttpSession session) {
         session.removeAttribute("UserSession");
-        return ResponseEntity.noContent().build(); 
+        return "redirect:/index.html";
     }
 }

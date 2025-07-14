@@ -1,48 +1,40 @@
 package com.example.simplezakka.controller;
 
-import com.example.simplezakka.dto.admin.AdminLoginRequest;
-import com.example.simplezakka.dto.admin.AdminLoginResponse;
 import com.example.simplezakka.dto.admin.AdminSession;
 import com.example.simplezakka.service.AdminAuthService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller  
 @RequestMapping("/admin/auth")
 @RequiredArgsConstructor
 public class AdminAuthController {
 
     private final AdminAuthService adminAuthService;
 
-    // 管理者ログイン
+    // HTMLフォームからの管理者ログイン
     @PostMapping("/login")
-    public ResponseEntity<AdminLoginResponse> login(
-            @Valid @RequestBody AdminLoginRequest request,
+    public String loginForm(
+            @RequestParam("email") String email,
+            @RequestParam("password") String password,
             HttpSession session
     ) {
-        AdminSession adminSession = adminAuthService.authenticate(
-                request.getAdminEmail(),
-                request.getAdminPassword()
-        );
-
-        // セッションに管理者情報を保存
-        session.setAttribute("ADMIN_SESSION", adminSession);
-
-        // レスポンスを生成して返す
-        AdminLoginResponse response = new AdminLoginResponse(
-                adminSession.getAdminName(),
-                adminSession.getRole()
-        );
-        return ResponseEntity.ok(response);
+        try {
+            AdminSession adminSession = adminAuthService.authenticate(email, password);
+            session.setAttribute("ADMIN_SESSION", adminSession);
+            return "redirect:/admin-top.html";  // 管理画面トップへリダイレクト
+        } catch (Exception e) {
+            // 認証失敗時（ログイン画面に戻す）
+            return "redirect:/admin-login.html";
+        }
     }
 
-    // 管理者ログアウト
+    // ログアウト処理（フォームなどからPOSTされた場合）
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpSession session) {
+    public String logout(HttpSession session) {
         session.removeAttribute("ADMIN_SESSION");
-        return ResponseEntity.noContent().build(); // 204 No Content
+        return "redirect:/admin-login.html";
     }
 }
