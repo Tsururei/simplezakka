@@ -5,6 +5,35 @@ let allProductsContainer, kitchenContainer, interiorContainer;
 const API_BASE = '/api';
 
 document.addEventListener('DOMContentLoaded', function () {
+    // カテゴリタブ押下時のイベント登録
+document.getElementById('kitchen-tab').addEventListener('click', function () {
+  // 全タブの中身（.tab-pane）を非表示に
+  document.querySelectorAll('.tab-pane').forEach(pane => {
+    pane.classList.remove('show', 'active');
+  });
+
+  // キッチン用の商品一覧を表示
+  document.getElementById('kitchen').classList.add('show', 'active');
+
+  // タブの active 状態も切り替え
+  document.getElementById('interior-tab').classList.remove('active');
+  this.classList.add('active');
+});
+
+document.getElementById('interior-tab').addEventListener('click', function () {
+  // 全タブの中身（.tab-pane）を非表示に
+  document.querySelectorAll('.tab-pane').forEach(pane => {
+    pane.classList.remove('show', 'active');
+  });
+
+  // インテリアの商品一覧を表示
+  document.getElementById('interior').classList.add('show', 'active');
+
+  // タブの active 状態も切り替え
+  document.getElementById('kitchen-tab').classList.remove('active');
+  this.classList.add('active');
+});
+
   // Bootstrapモーダル初期化
   productModal = new bootstrap.Modal(document.getElementById('productModal'));
   cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
