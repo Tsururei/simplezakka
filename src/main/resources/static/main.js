@@ -5,40 +5,23 @@ document.addEventListener('DOMContentLoaded', function () {
   const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
   const orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
 
-  // APIのベースURL
-  const API_BASE = '/api';
 
-  // 商品一覧の取得と表示
-  fetchProducts();
 
   const allProductsContainer = document.getElementById('all-products');
-  
-  const kitchenContainer = document.querySelector('.kitchen-products').parentElement;
+ const kitchenContainer = document.querySelector('.kitchen-products').parentElement;
   const interiorContainer = document.querySelector('.interior-products').parentElement;
 
   // 初期表示
   allProductsContainer.style.display = 'flex';
 
-  kitchenContainer.style.display = 'none';
-  interiorContainer.style.display = 'none';
 
-// タブ切り替え
-document.querySelectorAll('.nav-tabs button').forEach(button => {
-  button.addEventListener('click', () => {
-    allProductsContainer.style.display = 'none';
-    
-    kitchenContainer.style.display = 'none';
-    interiorContainer.style.display = 'none';
+  // 商品一覧の取得と表示
+  fetchProducts();
 
-    const targetId = button.getAttribute('data-bs-target');
-    const targetPane = document.querySelector(targetId);
-    if (targetPane) targetPane.style.display = 'block';
-
-    // タブのアクティブ状態更新
-    document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
-    button.classList.add('active');
   });
-});
+
+    // APIのベースURL
+  const API_BASE = '/api';
 
 // ホームボタン押したとき全商品に戻す
 const homeBtn = document.querySelector('a[href="/home.html"]');
@@ -427,4 +410,4 @@ function displayProducts(products) {
             <p>お客様のメールアドレスに注文確認メールをお送りしました。</p>
         `;
     }
-});
+;
