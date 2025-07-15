@@ -43,19 +43,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(    
-        @RequestParam("user_name") String userName,
-        @RequestParam("user_address") String userAddress,
-        @RequestParam("user_email") String userEmail,
-        @RequestParam("user_password") String userPassword,
-        HttpSession session) {
-        
-        RegisterRequest request = new RegisterRequest();
-        request.setRegisterName(userName);
-        request.setRegisterAddress(userAddress);
-        request.setRegisterEmail(userEmail);
-        request.setRegisterPassword(userPassword);
-
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request, HttpSession session) {
         try {
             LoginResponse tokens = authService.registerUser(request);
             session.setAttribute("accessToken",tokens.getAccessToken());
