@@ -1,49 +1,60 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // モーダル要素の取得
-    const productModal = new bootstrap.Modal(document.getElementById('productModal'));
-    const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-    const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
-    const orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
-    
-    // APIのベースURL
-    const API_BASE = '/api';
-    
-    // 商品一覧の取得と表示
-    fetchProducts();
-        // ここから追加
-    const allProductsContainer = document.getElementById('all-products');
-    const stationeryContainer = document.querySelector('.stationery-products').parentElement; // tab-pane
-    const kitchenContainer = document.querySelector('.kitchen-products').parentElement; // tab-pane
+document.addEventListener('DOMContentLoaded', function () {
+  // モーダル要素の取得
+  const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+  const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+  const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+  const orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
 
-    // 初期表示
-    allProductsContainer.style.display = 'flex';  // 全商品表示
+  // APIのベースURL
+  const API_BASE = '/api';
+
+  // 商品一覧の取得と表示
+  fetchProducts();
+
+  const allProductsContainer = document.getElementById('all-products');
+  
+  const kitchenContainer = document.querySelector('.kitchen-products').parentElement;
+  const interiorContainer = document.querySelector('.interior-products').parentElement;
+
+  // 初期表示
+  allProductsContainer.style.display = 'flex';
+
+  kitchenContainer.style.display = 'none';
+  interiorContainer.style.display = 'none';
+
+// タブ切り替え
+document.querySelectorAll('.nav-tabs button').forEach(button => {
+  button.addEventListener('click', () => {
+    allProductsContainer.style.display = 'none';
+    
     kitchenContainer.style.display = 'none';
     interiorContainer.style.display = 'none';
 
+    const targetId = button.getAttribute('data-bs-target');
+    const targetPane = document.querySelector(targetId);
+    if (targetPane) targetPane.style.display = 'block';
 
-    // タブ切り替え
-    document.querySelectorAll('.nav-tabs button').forEach(button => {
-        button.addEventListener('click', () => {
-            allProductsContainer.style.display = 'none';
-            stationeryContainer.style.display = 'none';
-            kitchenContainer.style.display = 'none';
+    // タブのアクティブ状態更新
+    document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+  });
+});
 
-            const targetId = button.getAttribute('data-bs-target');
-            const targetPane = document.querySelector(targetId);
-            if (targetPane) targetPane.style.display = 'block';
-        });
-    });
+// ホームボタン押したとき全商品に戻す
+const homeBtn = document.querySelector('a[href="/home.html"]');
+if (homeBtn) {
+  homeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
 
-    // ホームボタンがあれば全商品に戻す処理
-    const homeBtn = document.querySelector('a[href="/home.html"]');
-    if (homeBtn) {
-        homeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            allProductsContainer.style.display = 'flex';
-            stationeryContainer.style.display = 'none';
-            kitchenContainer.style.display = 'none';
-        });
-    }
+    allProductsContainer.style.display = 'flex';
+    
+    kitchenContainer.style.display = 'none';
+    interiorContainer.style.display = 'none';
+
+    document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
+  });
+}
+
     
     // カート情報の取得と表示
     updateCartDisplay();
@@ -88,7 +99,7 @@ function displayProducts(products) {
 
 
     allProductsContainer.innerHTML = '';
-    stationeryContainer.innerHTML = '';
+    interiorContainer.innerHTML = '';
     kitchenContainer.innerHTML = '';
 
     products.forEach(product => {
@@ -114,12 +125,12 @@ function displayProducts(products) {
         ) {
             kitchenContainer.insertAdjacentHTML('beforeend', cardHtml);
         } else {
-            stationeryContainer.insertAdjacentHTML('beforeend', cardHtml);
+            interiorContainer.insertAdjacentHTML('beforeend', cardHtml);
         }
     });
 
     // 詳細ボタンのイベント登録
-    [allProductsContainer, stationeryContainer, kitchenContainer].forEach(container => {
+    [allProductsContainer, interiorContainer, kitchenContainer].forEach(container => {
         container.querySelectorAll('.view-product').forEach(button => {
             button.addEventListener('click', (e) => {
                 const id = e.currentTarget.dataset.id;
@@ -128,9 +139,6 @@ function displayProducts(products) {
         });
     });
 }
-
-
-
     
     // 商品詳細を取得する関数
     async function fetchProductDetail(productId) {
