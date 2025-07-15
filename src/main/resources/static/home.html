@@ -176,13 +176,14 @@
                     <div class="mb-3">
                         <label for="address" class="form-label">決済方法</label>
                         <div class="form-check">
-                          <input class="form-checkinput" type="radio" id="pay_mathod" name="pay_mathod" required>
-                          <label class="form-checkinput" for="cod">代引き</label>
+                           <input class="form-check-input" type="radio" id="pay_cod" name="pay_method" value="cod" required>
+                           <label class="form-check-label" for="pay_cod">代引き</label>
                         </div>
                         <div class="form-check">
-                          <input class="form-checkinput" type="radio" id="pay_mathod" name="pay_mathod" required>
-                          <label class="form-checkinput" for="bank">銀行振込</label>
+                        <input class="form-check-input" type="radio" id="pay_bank" name="pay_method" value="bank" required>
+                        <label class="form-check-label" for="pay_bank">銀行振込</label>
                         </div>
+
                         <div class="invalid-feedback">決済方法を選択してください</div>
                     </div>
                 </form>

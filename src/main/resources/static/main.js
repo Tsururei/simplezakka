@@ -360,17 +360,30 @@ function displayProducts(products) {
             form.classList.add('was-validated');
             return;
         }
-        
+        const payMethod = document.querySelector('input[name="pay_method"]:checked');
+        if (!payMethod) {
+        alert("決済方法を選択してください");
+        return;
+        }
+        const selectedMethod = payMethod.value;  // "cod" または "bank"
+
         const orderData = {
             customerInfo: {
                 name: document.getElementById('name').value,
                 email: document.getElementById('email').value,
                 address: document.getElementById('address').value,
-                phoneNumber: document.getElementById('phone').value
-            }
+            },
+                
+                shippingInfo: {
+                name: document.getElementById('ship_name').value,
+                address: document.getElementById('ship_address').value,
+            },
+            payment_method: selectedMethod
         };
         
         try {
+            console.log('送信データ:', orderData);
+
             const response = await fetch(`${API_BASE}/orders`, {
                 method: 'POST',
                 headers: {
@@ -389,6 +402,8 @@ function displayProducts(products) {
             checkoutModal.hide();
             orderCompleteModal.show();
             
+            
+
             // カート表示をリセット
             updateCartBadge(0);
             
