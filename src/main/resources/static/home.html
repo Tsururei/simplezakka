@@ -19,20 +19,20 @@
         <!-- Welcome メッセージ（中央・大きめ） -->
       <span class="fs-5 fw-bold">
         Welcome to 'TEINEI' </span>
-      </div>
+    </div>
 
       <!--ユーザー情報（右寄せ・小さめ）-->
       <div class="py-1 border-bottom">
         <div class="container position-relative" style="min-height: 40px;"><!-- 高さ調整もお好みで -->
             <!--position    position-absolute で右寄せ -->
-             <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 0.9rem; text-align: right;">
+        <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 0.9rem; text-align: right;">
                 <strong>お問い合わせ先</strong><br>
                 <strong>090-1234-5678</strong><br>
                 <strong>sample@example.com</strong>
               
-            </div>
         </div>
-    </div>
+      </div>
+  </div>
 
   <!-- 2行目：マイページ・カート -->
   <div class="container d-flex align-items-center justify-content-between py-2 border-bottom">
@@ -41,16 +41,16 @@
         <a href="/home.html" class="btn btn-outline-primary me-2">ホーム</a>
 
       <a href="#" id="cart-btn" class="btn btn-outline-success position-relative">
-  カート
-  <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+         カート
+         <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
       </a>
 
     </div>
   </div>
 
   <!-- カテゴリタブ -->
-<div class="border-top">
-  <div class="container">
+  <div class="border-top">
+   <div class="container">
     <ul class="nav nav-tabs" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" 
@@ -61,7 +61,7 @@
                 role="tab" 
                 aria-controls="kitchen" 
                 aria-selected="true">
-          キッチン用品
+                キッチン用品
         </button>
       </li>
       <li class="nav-item" role="presentation">
@@ -73,20 +73,19 @@
                 role="tab" 
                 aria-controls="interior" 
                 aria-selected="false">
-          インテリア
+               インテリア
         </button>
       </li>
     </ul>
   </div>
-</div>
 
-  </div>
 </header>
 
 <!-- 全商品表示用 -->
 <div id="all-products" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
   <!-- 全商品のカードをここに表示 -->
 </div>
+
 
 <!-- タブ切り替えコンテンツ -->
 <div class="tab-content container pt-4">
@@ -104,7 +103,6 @@
     </div>
   </div>
 </div>
-
 
 <!-- 商品詳細モーダル -->
 <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">

@@ -1,63 +1,62 @@
+// グローバル変数宣言
+let productModal, cartModal, checkoutModal, orderCompleteModal;
+let allProductsContainer, kitchenContainer, interiorContainer;
+
+const API_BASE = '/api';
+
 document.addEventListener('DOMContentLoaded', function () {
-  // モーダル要素の取得
-  const productModal = new bootstrap.Modal(document.getElementById('productModal'));
-  const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-  const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
-  const orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
+  // Bootstrapモーダル初期化
+  productModal = new bootstrap.Modal(document.getElementById('productModal'));
+  cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+  checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+  orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
 
+  // 商品一覧コンテナをグローバル変数に代入
+  allProductsContainer = document.getElementById('all-products');
+  kitchenContainer = document.querySelector('.kitchen-products').parentElement;
+  interiorContainer = document.querySelector('.interior-products').parentElement;
 
-
-  const allProductsContainer = document.getElementById('all-products');
- const kitchenContainer = document.querySelector('.kitchen-products').parentElement;
-  const interiorContainer = document.querySelector('.interior-products').parentElement;
-
-  // 初期表示
+  // 初期表示設定
   allProductsContainer.style.display = 'flex';
+  kitchenContainer.style.display = 'none';
+  interiorContainer.style.display = 'none';
 
-
-  // 商品一覧の取得と表示
+  // 商品一覧の取得・表示
   fetchProducts();
 
+  // ホームボタンのイベント登録
+  const homeBtn = document.querySelector('a[href="/home.html"]');
+  if (homeBtn) {
+    homeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      allProductsContainer.style.display = 'flex';
+      kitchenContainer.style.display = 'none';
+      interiorContainer.style.display = 'none';
+      document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
+    });
+  }
+
+  // カート情報表示
+  updateCartDisplay();
+
+  // カートボタン押下時のイベント登録
+  document.getElementById('cart-btn').addEventListener('click', function() {
+    updateCartModalContent();
+    cartModal.show();
   });
 
-    // APIのベースURL
-  const API_BASE = '/api';
-
-// ホームボタン押したとき全商品に戻す
-const homeBtn = document.querySelector('a[href="/home.html"]');
-if (homeBtn) {
-  homeBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-
-    allProductsContainer.style.display = 'flex';
-    
-    kitchenContainer.style.display = 'none';
-    interiorContainer.style.display = 'none';
-
-    document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
+  // 注文手続きボタン押下時のイベント登録
+  document.getElementById('checkout-btn').addEventListener('click', function() {
+    cartModal.hide();
+    checkoutModal.show();
   });
-}
 
-    
-    // カート情報の取得と表示
-    updateCartDisplay();
-    
-    // カートボタンクリックイベント
-    document.getElementById('cart-btn').addEventListener('click', function() {
-        updateCartModalContent();
-        cartModal.show();
-    });
-    
-    // 注文手続きボタンクリックイベント
-    document.getElementById('checkout-btn').addEventListener('click', function() {
-        cartModal.hide();
-        checkoutModal.show();
-    });
-    
-    // 注文確定ボタンクリックイベント
-    document.getElementById('confirm-order-btn').addEventListener('click', function() {
-        submitOrder();
-    });
+  // 注文確定ボタン押下時のイベント登録
+  document.getElementById('confirm-order-btn').addEventListener('click', function() {
+    submitOrder();
+  });
+});
+
     
     // 商品一覧を取得して表示する関数
     async function fetchProducts() {
