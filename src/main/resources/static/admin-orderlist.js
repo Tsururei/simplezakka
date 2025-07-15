@@ -1,0 +1,58 @@
+async function fetchOrders() {
+    const response = await fetch('/api/orders');
+    const orders = await response.json();
+    displayOrders(orders);
+  }
+
+  const tbody = document.querySelector("#orders-table tbody");
+  const modal = document.getElementById("order-modal");
+  const modalBody = document.getElementById("modal-body");
+
+  function displayOrders(orders) {
+    tbody.innerHTML = "";
+    orders.forEach(order => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><button class="order-id-btn" data-id="${order.orderId}">${order.orderId}</button></td>
+        <td>${order.customerName}</td>
+        <td>${order.orderDate}</td>
+        <td>¥${order.totalAmount.toLocaleString()}</td>
+        <td>${order.status}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function showModal(orderId) {
+    const order = orders.find(o => o.orderId === orderId);
+    if (!order) return;
+
+    modalBody.innerHTML = `
+      <p><strong>注文ID:</strong> ${order.orderId}</p>
+      <p><strong>購入者名:</strong> ${order.customerName}</p>
+      <p><strong>配送先住所:</strong> ${order.shippingAddress}</p>
+      <p><strong>購入代金:</strong> ¥${order.totalAmount.toLocaleString()}</p>
+      <p><strong>注文ステータス:</strong> ${order.status}</p>
+      <p><strong>メールアドレス:</strong> ${order.customerEmail}</p>
+      <p><strong>注文日時:</strong> ${order.orderDate}</p>
+      <p><strong>詳細:</strong> ${order.orderDetails.map(d => `${d.productName} ${d.quantity}個`).join(", ")}</p>
+    `;
+    modal.style.display = "flex";
+  }
+
+  tbody.addEventListener("click", e => {
+    if (e.target.classList.contains("order-id-btn")) {
+      const id = e.target.getAttribute("data-id");
+      showModal(id);
+    }
+  });
+
+
+  fetchOrders();
+
+
+  window.addEventListener("click", e => {
+    if (e.target === modal) {
+      modal.style.display = "none";
+    }
+  });
