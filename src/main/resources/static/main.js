@@ -18,6 +18,11 @@ document.getElementById('kitchen-tab').addEventListener('click', function () {
   // タブの active 状態も切り替え
   document.getElementById('interior-tab').classList.remove('active');
   this.classList.add('active');
+
+  // キッチンタブを押したときの表示
+allProductsContainer.style.display = 'none';
+kitchenContainer.style.display = 'block';  
+interiorContainer.style.display = 'none';
 });
 
 document.getElementById('interior-tab').addEventListener('click', function () {
@@ -32,6 +37,12 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   // タブの active 状態も切り替え
   document.getElementById('kitchen-tab').classList.remove('active');
   this.classList.add('active');
+
+  // ここで表示切替後の状態
+  allProductsContainer.style.display = 'none';
+  kitchenContainer.style.display = 'none';
+  interiorContainer.style.display = 'block';
+
 });
 
   // Bootstrapモーダル初期化
