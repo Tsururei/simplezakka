@@ -179,15 +179,24 @@
   const productList = document.getElementById("product-list");
   const modal = document.getElementById("modal");
 
-  let products = [
-    { categoryId: "A1", productId: "P001", image: "/images/aroma-diffuser.png", name: "アロマディフューザー", price: 12000, desc: "説明A" },
-    { categoryId: "B2", productId: "P002", image: "/images/cotton-blanket.png", name: "コットンブランケット", price: 5800, desc: "説明B" },
-    { categoryId: "A2", productId: "P003", image: "/images/cushion-cover.png", name: "クッションカバー", price: 2900, desc: "説明C"},
-    { categoryId: "B3", productId: "P004", image: "/images/desk-organizer.png", name: "デスクオーガナイザー", price: 1500, desc: "説明D"},
-  ];
+  let products = []; //初期は空
 
-  function renderProducts() {
-    productList.innerHTML = "";
+async function fetchProducts() {
+  try {
+    const response = await fetch("/"); //apiのURL
+    if (!response.ok){
+      throw new Error("商品情報の取得に失敗しました");
+    } 
+    products = await response.json();
+    renderProducts();
+  } catch (error) {
+    console.error("商品データ取得エラー:", error);
+    alert("商品情報の取得に失敗しました");
+  }
+}
+  
+function renderProducts() { 
+  productList.innerHTML = "";
     products.forEach((p, i) => {
       const card = document.createElement("div");
       card.className = "product-card";
@@ -241,7 +250,7 @@
     }
   }
 
-  renderProducts();
+  fetchProducts();
 </script>
 
 </body>
