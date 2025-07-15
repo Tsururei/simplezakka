@@ -15,10 +15,10 @@ const newPassword = document.getElementById("new-password");
 
 let deleteTargetId = null;
 
-// 管理者一覧をAPIから取得して表示
+
 async function fetchAdmins() {
   try {
-    const res = await fetch("http://localhost:8080/api/admins"); // URLは環境に合わせて変更してください
+    const res = await fetch("http://localhost:8080/api/admins"); 
     if (!res.ok) throw new Error("管理者一覧の取得に失敗しました");
     const admins = await res.json();
     displayAdmins(admins);
@@ -27,7 +27,6 @@ async function fetchAdmins() {
   }
 }
 
-// 管理者一覧のテーブル表示
 function displayAdmins(admins) {
   tbody.innerHTML = "";
   admins.forEach(admin => {
@@ -43,7 +42,6 @@ function displayAdmins(admins) {
   });
 }
 
-// 削除ボタン押下時
 tbody.addEventListener("click", e => {
   if (e.target.classList.contains("delete-btn")) {
     deleteTargetId = e.target.getAttribute("data-id");
@@ -51,7 +49,6 @@ tbody.addEventListener("click", e => {
   }
 });
 
-// 削除確認「はい」
 confirmBtn.addEventListener("click", async () => {
   if (!deleteTargetId) return;
   try {
@@ -67,13 +64,13 @@ confirmBtn.addEventListener("click", async () => {
   }
 });
 
-// 削除キャンセル「いいえ」
+
 cancelBtn.addEventListener("click", () => {
   deleteTargetId = null;
   deleteModal.style.display = "none";
 });
 
-// 新規登録ボタン押下時
+
 registerBtn.addEventListener("click", () => {
   newName.value = "";
   newEmail.value = "";
@@ -81,7 +78,7 @@ registerBtn.addEventListener("click", () => {
   registerModal.style.display = "flex";
 });
 
-// 新規登録確定ボタン押下時
+
 registerConfirmBtn.addEventListener("click", async () => {
   const name = newName.value.trim();
   const email = newEmail.value.trim();
@@ -112,12 +109,12 @@ registerConfirmBtn.addEventListener("click", async () => {
   }
 });
 
-// 新規登録キャンセル
+
 registerCancelBtn.addEventListener("click", () => {
   registerModal.style.display = "none";
 });
 
-// モーダル外クリックで閉じる
+
 window.addEventListener("click", e => {
   if (e.target === deleteModal) {
     deleteModal.style.display = "none";
@@ -128,5 +125,4 @@ window.addEventListener("click", e => {
   }
 });
 
-// 初期表示で管理者一覧を取得
 fetchAdmins();
