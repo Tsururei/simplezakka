@@ -1,6 +1,7 @@
 package com.example.simplezakka.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,8 +10,7 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_details")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class OrderDetail {
 
