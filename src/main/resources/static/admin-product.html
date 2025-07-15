@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <tytle>商品情報・カテゴリ編集</tytle>
+  <title>商品情報・カテゴリ編集</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -180,8 +180,10 @@
   const modal = document.getElementById("modal");
 
   let products = [
-    { categoryId: "A1", productId: "P001", image: "/images/aroma-diffuser.png", name: "アロマディフューザー", price: 4200, desc: "説明A" },
+    { categoryId: "A1", productId: "P001", image: "/images/aroma-diffuser.png", name: "アロマディフューザー", price: 12000, desc: "説明A" },
     { categoryId: "B2", productId: "P002", image: "/images/cotton-blanket.png", name: "コットンブランケット", price: 5800, desc: "説明B" },
+    { categoryId: "A2", productId: "P003", image: "/images/cushion-cover.png", name: "クッションカバー", price: 2900, desc: "説明C"},
+    { categoryId: "B3", productId: "P004", image: "/images/desk-organizer.png", name: "デスクオーガナイザー", price: 1500, desc: "説明D"},
   ];
 
   function renderProducts() {
@@ -190,11 +192,22 @@
       const card = document.createElement("div");
       card.className = "product-card";
       card.innerHTML = `
+        <label>カテゴリID</label>
         <input value="${p.categoryId}" placeholder="カテゴリID" onchange="products[${i}].categoryId = this.value">
+
+        <label>商品ID</label>
         <input value="${p.productId}" placeholder="商品ID" onchange="products[${i}].productId = this.value">
+        
+        <label>画像</label>
         <img src="${p.image || 'https://via.placeholder.com/150'}" alt="画像">
+        
+        <label>商品名</label>
         <input value="${p.name}" placeholder="商品名" onchange="products[${i}].name = this.value">
+        
+        <label>価格（円）</label>
         <input type="number" value="${p.price}" placeholder="価格" onchange="products[${i}].price = this.value">
+        
+        <label>商品説明</label>
         <textarea placeholder="商品説明" onchange="products[${i}].desc = this.value">${p.desc}</textarea>
       `;
       productList.appendChild(card);
