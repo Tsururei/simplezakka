@@ -5,8 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
   const orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
 
-  // APIのベースURL
-  const API_BASE = '/api';
+
 
   const allProductsContainer = document.getElementById('all-products');
  const kitchenContainer = document.querySelector('.kitchen-products').parentElement;
@@ -20,6 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
   fetchProducts();
 
   });
+
+    // APIのベースURL
+  const API_BASE = '/api';
 
 // ホームボタン押したとき全商品に戻す
 const homeBtn = document.querySelector('a[href="/home.html"]');
