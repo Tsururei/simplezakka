@@ -8,6 +8,9 @@ import com.example.simplezakka.service.AuthService;
 import com.example.simplezakka.service.JwtTokenProvider;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+
+import javax.swing.text.html.parser.Entity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,8 +60,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public String logout(HttpSession session) {
+    public ResponseEntity<?> logout(HttpSession session) {
         session.removeAttribute("UserSession");
-        return "redirect:/index.html";
+        return ResponseEntity.ok().build();
     }
 }
