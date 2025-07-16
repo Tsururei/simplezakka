@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/admins")
@@ -27,9 +29,9 @@ public class AdminEditController {
 
     @PostMapping
     public Admin createAdmin(@RequestBody Admin admin) {
-        admin.setAdminDate(LocalDateTime.now());   
-        admin.setAdminPassword("******");         
-        return repo.save(admin);
+    admin.setAdminId(UUID.randomUUID().toString());     
+    admin.setAdminDate(LocalDateTime.now());            
+    return repo.save(admin);                           
     }
 
     
