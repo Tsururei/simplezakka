@@ -12,7 +12,7 @@ document.getElementById('all-tab').addEventListener('click', function () {
   });
 
   // 全商品の商品一覧を表示
-  document.getElementById('all').classList.add('show', 'active');
+  document.getElementById('all-products').classList.add('show', 'active');
 
   // tab切り替え共通部分
   document.querySelectorAll('.nav-link').forEach(tab => {
@@ -98,7 +98,7 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   tryLogout();
 });
 
-async function tryLogout() {
+  async function tryLogout() {
   const response = await fetch('http://localhost:8080/api/auth/logout', {
     method: 'POST',
     credentials: 'include'
@@ -445,7 +445,7 @@ function displayProducts(products) {
             form.classList.add('was-validated');
             return;
         }
-        const payMethod = document.querySelector('input[name="pay_method"]:checked');
+        const payMethod = document.querySelector('input[name="payMethod"]:checked');
         if (!payMethod) {
         alert("決済方法を選択してください");
         return;
