@@ -66,7 +66,7 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   // 商品一覧の取得・表示
   fetchProducts();
 
-  // ホームボタンのイベント登録
+  // ログアウトボタンのイベント登録
   document.getElementById('logout-btn').addEventListener('click', async function(event) {
   tryLogout();
 });
