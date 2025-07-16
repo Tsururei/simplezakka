@@ -106,7 +106,6 @@ public UserOrderResponse placeOrder(Integer userId, OrderRequest orderRequest) {
     order.setCustomerName(user.getUserName());
     order.setCustomerEmail(user.getUserEmail());
     order.setShippingAddress(user.getUserAddress());
-    order.setShippingPhoneNumber(orderRequest.getCustomerInfo().getPhoneNumber());
     order.setStatus("PENDING");
 
     for (OrderDetail detail : orderDetails) {
