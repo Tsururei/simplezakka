@@ -445,7 +445,7 @@ function displayProducts(products) {
             form.classList.add('was-validated');
             return;
         }
-        const payMethod = document.querySelector('input[name="pay_method"]:checked');
+        const payMethod = document.querySelector('input[name="payMethod"]:checked');
         if (!payMethod) {
         alert("決済方法を選択してください");
         return;
