@@ -1,5 +1,5 @@
 document.getElementById('login-btn').addEventListener('click', async function(event) {
-  event.preventDefault();  // これでフォームの送信を止める
+  event.preventDefault(); 
   tryLogin();
 });
 
@@ -24,6 +24,7 @@ async function tryLogin() {
 
   if (response.ok) {
     const data = await response.json();
+    localStorage.setItem('token', data.token);
     window.location.href = 'home.html';
   } else {
     const err = await response.text();

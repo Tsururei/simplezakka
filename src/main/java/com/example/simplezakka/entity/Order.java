@@ -27,16 +27,22 @@ public class Order {
     
     @Column(nullable = false)
     private String customerName;
+
+    @Column(nullable = false)
+    private String customerAddress;
     
     @Column(nullable = false)
     private String customerEmail;
+
+    @Column(nullable = false)
+    private String shippingName;
     
     @Column(nullable = false)
     private String shippingAddress;
-    
+
     @Column(nullable = false)
-    private String shippingPhoneNumber;
-    
+    private String payMethod;
+        
     @Column(nullable = false)
     private String status;
     
