@@ -1,5 +1,5 @@
 document.getElementById('login-btn').addEventListener('click', async function(event) {
-  event.preventDefault();  // これでフォームの送信を止める
+  event.preventDefault(); 
   tryLogin();
 });
 

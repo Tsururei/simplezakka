@@ -187,6 +187,50 @@
                         <div class="invalid-feedback">決済方法を選択してください</div>
                     </div>
                 </form>
+
+<script>
+  // ここに注文確定ボタンのクリック処理を書く
+  document.getElementById('confirm-order-btn').addEventListener('click', async () => {
+    // フォームのバリデーションチェック
+    const form = document.getElementById('order-form');
+    if (!form.checkValidity()) {
+      form.classList.add('was-validated');
+      return;
+    }
+    
+    // フォームの値を取得
+    const data = {
+      customerInfo: {
+        name: document.getElementById('name').value,
+        address: document.getElementById('address').value,
+        email: document.getElementById('email').value,
+        ship_name: document.getElementById('ship_name').value,
+        ship_address: document.getElementById('ship_address').value,
+        pay_method: document.querySelector('input[name="pay_method"]:checked').value
+      }
+    };
+    
+    try {
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      
+      if (response.ok) {
+        // 注文成功時の処理
+        const orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
+        orderCompleteModal.show();
+        // カートを空にしたり、モーダル閉じたりする処理もここに
+      } else {
+        alert('注文確定に失敗しました。');
+      }
+    } catch (error) {
+      alert('通信エラーが発生しました。');
+    }
+  });
+</script>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>

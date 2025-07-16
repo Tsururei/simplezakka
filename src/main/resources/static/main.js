@@ -422,17 +422,13 @@ function displayProducts(products) {
 
         const orderData = {
             customerInfo: {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                address: document.getElementById('address').value,
-            },
-                
-                shippingInfo: {
-                name: document.getElementById('ship_name').value,
-                address: document.getElementById('ship_address').value,
-            },
-            payment_method: selectedMethod,
-            items: cartItems 
+                customerName: document.getElementById('customerName').value,
+                customerEmail: document.getElementById('customerEmail').value,
+                customerAddress: document.getElementById('customerAddress').value,                
+                shippingName: document.getElementById('shippingName').value,
+                shippingAddress: document.getElementById('shippingAddress').value,
+                payMethod: selectedMethod
+            }
         };
         
         try {
