@@ -66,18 +66,23 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   // 商品一覧の取得・表示
   fetchProducts();
 
-  // ホームボタンのイベント登録
-  const homeBtn = document.querySelector('a[href="/home.html"]');
-  if (homeBtn) {
-    homeBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      allProductsContainer.style.display = 'flex';
-      kitchenContainer.style.display = 'none';
-      interiorContainer.style.display = 'none';
-      document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
-    });
-  }
+  // ログアウトボタンのイベント登録
+  document.getElementById('logout-btn').addEventListener('click', async function(event) {
+  tryLogout();
+});
 
+async function tryLogout() {
+  const response = await fetch('http://localhost:8080/api/auth/logout', {
+    method: 'POST',
+    credentials: 'include'
+  });
+
+  if (response.ok) {
+    window.location.href = '/index.html';
+  } else {
+    alert('ログアウトに失敗しました');
+  }
+}
   // カート情報表示
   updateCartDisplay();
 
