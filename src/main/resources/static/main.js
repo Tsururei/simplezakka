@@ -1,11 +1,13 @@
 // グローバル変数宣言
 let productModal, cartModal, checkoutModal, orderCompleteModal;
 let allProductsContainer, kitchenContainer, interiorContainer;
+let cartItems = [];
 
 const API_BASE = '/api';
 
 document.addEventListener('DOMContentLoaded', function () {
     // カテゴリタブ押下時のイベント登録
+    loadCartItems(); 
 document.getElementById('kitchen-tab').addEventListener('click', function () {
   // 全タブの中身（.tab-pane）を非表示に
   document.querySelectorAll('.tab-pane').forEach(pane => {
@@ -271,6 +273,17 @@ function displayProducts(products) {
             alert('カート情報の読み込みに失敗しました');
         }
     }
+
+    async function loadCartItems() {
+    try {
+        const response = await fetch(`${API_BASE}/cart`);
+        const data = await response.json();
+        cartItems = data.items; // ← 必要に応じて product_id, quantity に変換
+        console.log("カートの中身:", cartItems);
+    } catch (error) {
+        console.error("カートの読み込みに失敗しました", error);
+    }
+}
     
     // カート内容を表示する関数
     function displayCart(cart) {
@@ -418,7 +431,8 @@ function displayProducts(products) {
                 name: document.getElementById('ship_name').value,
                 address: document.getElementById('ship_address').value,
             },
-            payment_method: selectedMethod
+            payment_method: selectedMethod,
+            items: cartItems 
         };
         
         try {
