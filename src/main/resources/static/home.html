@@ -17,15 +17,15 @@
   <div class="py-1 text-center border-bottom">
     <div class="container">
         <!-- Welcome メッセージ（中央・大きめ） -->
-      <span class="fs-5 fw-bold">
-        Welcome to 'TEINEI' </span>
+      <span class="fs-1 fw-bold">
+        Welcome to "TEINEI" </span>
     </div>
 
-      <!--ユーザー情報（右寄せ・小さめ）-->
+      <!--問い合わせ先情報（右寄せ・小さめ）-->
       <div class="py-1 border-bottom">
-        <div class="container position-relative" style="min-height: 40px;"><!-- 高さ調整もお好みで -->
+        <div class="container position-relative" style="min-height: 40px;"><!-- 高さ調整-->
             <!--position    position-absolute で右寄せ -->
-        <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 0.9rem; text-align: right;">
+        <div style="position: absolute; right: 0; top: 15%; transform: translateY(-50%); font-size: 0.9rem; text-align: right;">
                 <strong>お問い合わせ先</strong><br>
                 <strong>090-1234-5678</strong><br>
                 <strong>sample@example.com</strong>
@@ -38,9 +38,9 @@
   <div class="container d-flex align-items-center justify-content-between py-2 border-bottom">
     <a href="/mypage" class="fs-3 fw-bold text-decoration-none">マイページ</a>
     <div>
-        <a href="/home.html" class="btn btn-outline-primary me-2">ホーム</a>
+        <a href="#" class="btn btn-outline-primary me-2" id="logout-btn">ログアウト</a>
 
-      <a href="#" id="cart-btn" class="btn btn-outline-success position-relative">
+      <a id="cart-btn" class="btn btn-outline-success position-relative">
          カート
          <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
       </a>
@@ -52,15 +52,27 @@
   <div class="border-top">
    <div class="container">
     <ul class="nav nav-tabs" role="tablist">
+     <li class="nav-item" role="presentation">
+        <button class="nav-link active"
+                id="all-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#all"
+                type="button"
+                role="tab"
+                aria-controls="all"
+                aria-selected="true">
+                全商品
+        </button>
+     </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" 
+        <button class="nav-link" 
                 id="kitchen-tab" 
                 data-bs-toggle="tab" 
                 data-bs-target="#kitchen" 
                 type="button" 
                 role="tab" 
                 aria-controls="kitchen" 
-                aria-selected="true">
+                aria-selected="false">
                 キッチン用品
         </button>
       </li>
@@ -81,21 +93,22 @@
 
 </header>
 
-<!-- 全商品表示用 -->
-<div id="all-products" class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-  <!-- 全商品のカードをここに表示 -->
-</div>
 
 
 <!-- タブ切り替えコンテンツ -->
 <div class="tab-content container pt-4">
+    <!-- 全商品 -->
+  <div class="tab-pane fade show active" id="all-products" role="tabpanel" aria-labelledby="all-tab">
+    <div class="all-products row row-cols-1 row-cols-md-3 g-4 mb-5">
+      <!-- JavaScriptで全商品カードをここに表示 -->
+    </div>
+  </div>
   <!-- キッチン用品 -->
-  <div class="tab-pane fade show active" id="kitchen" role="tabpanel" aria-labelledby="kitchen-tab">
+  <div class="tab-pane fade" id="kitchen" role="tabpanel" aria-labelledby="kitchen-tab">
     <div class="kitchen-products row row-cols-1 row-cols-md-3 g-4 mb-5">
       <!-- JavaScriptでキッチン用品の商品カードをここに表示 -->
     </div>
   </div>
-
   <!-- インテリア -->
   <div class="tab-pane fade" id="interior" role="tabpanel" aria-labelledby="interior-tab">
     <div class="interior-products row row-cols-1 row-cols-md-3 g-4 mb-5">
@@ -149,44 +162,45 @@
             <div class="modal-body">
                 <form id="order-form" class="needs-validation" novalidate>
                     <div class="mb-3">
-                        <label for="name" class="form-label">購入者氏名</label>
-                        <input type="text" class="form-control" id="name" required>
+                        <label for="customerName" class="form-label">購入者氏名</label>
+                        <input type="text" class="form-control" id="customerName" name="customerName" required>
                         <div class="invalid-feedback">購入者氏名を入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="address" class="form-label">購入者住所</label>
-                        <input type="text" class="form-control" id="address" required>
+                        <label for="customerAddress" class="form-label">購入者住所</label>
+                        <input type="text" class="form-control" id="customerAddress" name="customerAddress" required>
                         <div class="invalid-feedback">購入者住所を入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">購入者メールアドレス</label>
-                        <input type="email" class="form-control" id="email" required>
+                        <label for="customerEmail" class="form-label">購入者メールアドレス</label>
+                        <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
                         <div class="invalid-feedback">有効なメールアドレスを入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="name" class="form-label">配送先氏名</label>
-                        <input type="text" class="form-control" id="ship_name" required>
+                        <label for="shippingName" class="form-label">配送先氏名</label>
+                        <input type="text" class="form-control" id="shippingName" name="shippingName" required>
                         <div class="invalid-feedback">配送先氏名を入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="address" class="form-label">配送先住所</label>
-                        <input type="text" class="form-control" id="ship_address" required>
+                        <label for="shippingAddress" class="form-label">配送先住所</label>
+                        <input type="text" class="form-control" id="shippingAddress" name="shippingAddress" required>
                         <div class="invalid-feedback">配送先住所を入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="address" class="form-label">決済方法</label>
+                        <label for="payMethod" class="form-label">決済方法</label>
                         <div class="form-check">
-                           <input class="form-check-input" type="radio" id="pay_cod" name="pay_method" value="cod" required>
+                           <input class="form-check-input" type="radio" id="pay_cod" name="payMethod" value="cod" required>
                            <label class="form-check-label" for="pay_cod">代引き</label>
                         </div>
                         <div class="form-check">
-                        <input class="form-check-input" type="radio" id="pay_bank" name="pay_method" value="bank" required>
+                        <input class="form-check-input" type="radio" id="pay_bank" name="payMethod" value="bank" required>
                         <label class="form-check-label" for="pay_bank">銀行振込</label>
                         </div>
 
                         <div class="invalid-feedback">決済方法を選択してください</div>
                     </div>
                 </form>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>

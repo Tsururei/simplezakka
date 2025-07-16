@@ -59,10 +59,13 @@ public class OrderService {
         CustomerInfo customerInfo = orderRequest.getCustomerInfo();
         order.setOrderDate(LocalDateTime.now());
         order.setTotalAmount(cart.getTotalPrice());
-        order.setCustomerName(customerInfo.getName());
-        order.setCustomerEmail(customerInfo.getEmail());
-        order.setShippingAddress(customerInfo.getAddress());
-        order.setShippingPhoneNumber(customerInfo.getPhoneNumber());
+        order.setCustomerName(customerInfo.getCustomerName());
+        order.setCustomerAddress(customerInfo.getCustomerAddress());
+        order.setCustomerEmail(customerInfo.getCustomerEmail());
+        order.setShippingName(customerInfo.getShippingName());
+        order.setShippingAddress(customerInfo.getShippingAddress());
+        order.setPayMethod(customerInfo.getPayMethod());
+    
         order.setStatus("PENDING");
 
         // 注文明細作成と在庫減算
@@ -75,6 +78,7 @@ public class OrderService {
             orderDetail.setProductId(product.getProductId());
             orderDetail.setProductName(product.getName());
             orderDetail.setPrice(BigDecimal.valueOf(product.getPrice()));
+            orderDetail.setUnitPrice(BigDecimal.valueOf(product.getPrice()));
             orderDetail.setQuantity(cartItem.getQuantity());
 
             order.addOrderDetail(orderDetail);

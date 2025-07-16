@@ -16,13 +16,23 @@ content-type: application/json
 ### カート取得
 GET http://localhost:8080/api/cart
 
+
 ### 注文
 POST http://localhost:8080/api/orders
 content-type: application/json
 
-{"customerInfo":
-    {"name": "テスト",
-        "email": "t@e.com",
-        "address": "住所",
-        "phoneNumber": "123"}
+
+{"customerInfo":{
+        "customerName": "テスト",
+        "customerAddress": "購入者住所",
+        "customerEmail": "t@e.com",
+        "shippingName": "配送先氏名",
+        "shippingAddress": "住所",
+        "payMethod": "cod"},
+  "items": [
+    {
+        "productId": 7,
+        "quantity": 6
+    }
+  ]
 }

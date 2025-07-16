@@ -1,11 +1,31 @@
 // グローバル変数宣言
 let productModal, cartModal, checkoutModal, orderCompleteModal;
 let allProductsContainer, kitchenContainer, interiorContainer;
+let cartItems = [];
 
 const API_BASE = '/api';
 
+document.getElementById('all-tab').addEventListener('click', function () {
+  // 全タブの中身（.tab-pane）を非表示に
+  document.querySelectorAll('.tab-pane').forEach(pane => {
+    pane.classList.remove('show', 'active');
+  });
+
+  // 全商品の商品一覧を表示
+  document.getElementById('all-products').classList.add('show', 'active');
+
+  // tab切り替え共通部分
+  document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  this.classList.add('active'); 
+
+
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     // カテゴリタブ押下時のイベント登録
+    loadCartItems(); 
 document.getElementById('kitchen-tab').addEventListener('click', function () {
   // 全タブの中身（.tab-pane）を非表示に
   document.querySelectorAll('.tab-pane').forEach(pane => {
@@ -15,14 +35,13 @@ document.getElementById('kitchen-tab').addEventListener('click', function () {
   // キッチン用の商品一覧を表示
   document.getElementById('kitchen').classList.add('show', 'active');
 
-  // タブの active 状態も切り替え
-  document.getElementById('interior-tab').classList.remove('active');
-  this.classList.add('active');
+  // tab切り替え共通部分
+  document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  this.classList.add('active'); 
 
-  // キッチンタブを押したときの表示
-allProductsContainer.style.display = 'none';
-kitchenContainer.style.display = 'block';  
-interiorContainer.style.display = 'none';
+
 });
 
 document.getElementById('interior-tab').addEventListener('click', function () {
@@ -34,14 +53,12 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   // インテリアの商品一覧を表示
   document.getElementById('interior').classList.add('show', 'active');
 
-  // タブの active 状態も切り替え
-  document.getElementById('kitchen-tab').classList.remove('active');
-  this.classList.add('active');
 
-  // ここで表示切替後の状態
-  allProductsContainer.style.display = 'none';
-  kitchenContainer.style.display = 'none';
-  interiorContainer.style.display = 'block';
+  // tab切り替え共通部分
+  document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  this.classList.add('active'); 
 
 });
 
@@ -52,30 +69,32 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
 
   // 商品一覧コンテナをグローバル変数に代入
-  allProductsContainer = document.getElementById('all-products');
-  kitchenContainer = document.querySelector('.kitchen-products').parentElement;
-  interiorContainer = document.querySelector('.interior-products').parentElement;
+  allProductsContainer = document.querySelector('#all-products .all-products');
+  kitchenContainer = document.querySelector('#kitchen .kitchen-products');
+  interiorContainer = document.querySelector('#interior .interior-products');
 
-  // 初期表示設定
-  allProductsContainer.style.display = 'flex';
-  kitchenContainer.style.display = 'none';
-  interiorContainer.style.display = 'none';
+
 
   // 商品一覧の取得・表示
   fetchProducts();
 
-  // ホームボタンのイベント登録
-  const homeBtn = document.querySelector('a[href="/home.html"]');
-  if (homeBtn) {
-    homeBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      allProductsContainer.style.display = 'flex';
-      kitchenContainer.style.display = 'none';
-      interiorContainer.style.display = 'none';
-      document.querySelectorAll('.nav-tabs button').forEach(btn => btn.classList.remove('active'));
-    });
-  }
+  // ログアウトボタンのイベント登録
+  document.getElementById('logout-btn').addEventListener('click', async function(event) {
+  tryLogout();
+});
 
+  async function tryLogout() {
+  const response = await fetch('http://localhost:8080/api/auth/logout', {
+    method: 'POST',
+    credentials: 'include'
+  });
+
+  if (response.ok) {
+    window.location.href = '/index.html';
+  } else {
+    alert('ログアウトに失敗しました');
+  }
+}
   // カート情報表示
   updateCartDisplay();
 
@@ -115,10 +134,6 @@ document.getElementById('interior-tab').addEventListener('click', function () {
     
     // 商品一覧を表示する関数
 function displayProducts(products) {
-    const allProductsContainer = document.getElementById('all-products'); // 全商品表示用
-    const kitchenContainer = document.querySelector('.kitchen-products');
-    const interiorContainer = document.querySelector('.interior-products');
-
 
     allProductsContainer.innerHTML = '';
     interiorContainer.innerHTML = '';
@@ -271,6 +286,26 @@ function displayProducts(products) {
             alert('カート情報の読み込みに失敗しました');
         }
     }
+
+    async function loadCartItems() {
+    try {
+        const response = await fetch(`${API_BASE}/cart`);
+        const data = await response.json();
+        console.log("APIのカート情報:", data);
+        if (data.items) {
+            if (Array.isArray(data.items)) {
+                cartItems = data.items;
+            } else {
+                cartItems = Object.values(data.items);
+            }
+        } else {
+            cartItems = [];
+        }
+        console.log("カートの中身:", cartItems);
+    } catch (error) {
+        console.error("カートの読み込みに失敗しました", error);
+    }
+}
     
     // カート内容を表示する関数
     function displayCart(cart) {
@@ -394,33 +429,56 @@ function displayProducts(products) {
     // 注文を確定する関数
     async function submitOrder() {
         const form = document.getElementById('order-form');
+        console.log('注文確定ボタンがクリックされました');
+
         
         // フォームバリデーション
         if (!form.checkValidity()) {
             form.classList.add('was-validated');
             return;
         }
-        const payMethod = document.querySelector('input[name="pay_method"]:checked');
+        const payMethod = document.querySelector('input[name="payMethod"]:checked');
         if (!payMethod) {
-        alert("決済方法を選択してください");
-        return;
+            alert("決済方法を選択してください");
+            return;
         }
         const selectedMethod = payMethod.value;  // "cod" または "bank"
 
+        let latestCartItems = [];
+        try {
+            const response = await fetch(`${API_BASE}/cart`, {
+                method: 'GET',
+                credentials: 'include'
+            });              
+            const data = await response.json();
+            latestCartItems = Object.values(data.items).map(item => ({
+                productId: item.productId,
+                quantity: item.quantity
+            }));
+            
+            if (latestCartItems.length === 0) {
+                alert('注文商品は必須です');
+                return;
+            }
+        } catch (err) {
+            console.error('カート情報の取得に失敗しました', err);
+            alert('カート情報の取得に失敗しました');
+            return;
+        }
+
         const orderData = {
             customerInfo: {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                address: document.getElementById('address').value,
+                customerName: document.getElementById('customerName').value,
+                customerAddress: document.getElementById('customerAddress').value,                
+                customerEmail: document.getElementById('customerEmail').value,
+                shippingName: document.getElementById('shippingName').value,
+                shippingAddress: document.getElementById('shippingAddress').value,
+                payMethod: selectedMethod
             },
-                
-                shippingInfo: {
-                name: document.getElementById('ship_name').value,
-                address: document.getElementById('ship_address').value,
-            },
-            payment_method: selectedMethod
+            items: latestCartItems
         };
         
+        console.log('注文データ（送信前）:', orderData);
         try {
             console.log('送信データ:', orderData);
 
@@ -429,10 +487,15 @@ function displayProducts(products) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify(orderData)
             });
+          
+            console.log('APIレスポンスのstatus:', response.status);
             
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('注文確定APIのエラー内容:', errorText);
                 throw new Error('注文の確定に失敗しました');
             }
             
@@ -464,4 +527,3 @@ function displayProducts(products) {
             <p>お客様のメールアドレスに注文確認メールをお送りしました。</p>
         `;
     }
-;

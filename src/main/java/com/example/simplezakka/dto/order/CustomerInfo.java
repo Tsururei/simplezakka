@@ -6,16 +6,22 @@ import lombok.Data;
 
 @Data
 public class CustomerInfo {
-    @NotBlank(message = "お名前は必須です")
-    private String name;
+    @NotBlank(message = "購入者氏名は必須です")
+    private String customerName;
+
+    @NotBlank(message = "購入者住所は必須です")
+    private String customerAddress;
     
-    @NotBlank(message = "メールアドレスは必須です")
+    @NotBlank(message = "購入者メールアドレスは必須です")
     @Email(message = "有効なメールアドレスを入力してください")
-    private String email;
+    private String customerEmail;
     
-    @NotBlank(message = "住所は必須です")
-    private String address;
+    @NotBlank(message = "配送先氏名は必須です")
+    private String shippingName;
+
+    @NotBlank(message = "配送先住所は必須です")
+    private String shippingAddress;
     
-    @NotBlank(message = "電話番号は必須です")
-    private String phoneNumber;
+    @NotBlank(message = "決済方法は必須です")
+    private String payMethod;
 }
