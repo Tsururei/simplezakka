@@ -43,7 +43,7 @@ nav ul li a:hover {
   background-color: #2980b9;
 }
 
-#logout-button {
+#logout-btn {
   display: block;
   margin: 0 auto;
   padding: 10px 20px;
@@ -55,12 +55,12 @@ nav ul li a:hover {
   transition: background-color 0.2s;
 }
 
-#logout-button:hover {
+#logout-btn:hover {
   background-color: #c0392b;
 }
 
 nav ul li a,
-#logout-button {
+#logout-btn {
   width: 220px;
   box-sizing: border-box;
   margin: 0 auto;
