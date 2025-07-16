@@ -1,0 +1,16 @@
+package com.example.simplezakka.dto.product;
+
+import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class ProductAdminView {
+    private String productId;
+    private String productName;
+    private Integer productPrice;
+    private String categoryName;
+    private int imageCount;
+}
