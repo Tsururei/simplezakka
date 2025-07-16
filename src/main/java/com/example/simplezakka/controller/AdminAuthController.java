@@ -4,10 +4,14 @@ import com.example.simplezakka.dto.admin.AdminSession;
 import com.example.simplezakka.service.AdminAuthService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller  
+
+@RestController  
+@CrossOrigin(origins = "http://127.0.0.1:5500" ,allowCredentials = "true")
 @RequestMapping("/admin/auth")
 @RequiredArgsConstructor
 public class AdminAuthController {
@@ -33,8 +37,8 @@ public class AdminAuthController {
 
     // ログアウト処理（フォームなどからPOSTされた場合）
     @PostMapping("/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute("ADMIN_SESSION");
-        return "redirect:/admin-login.html";
+    public ResponseEntity<?> logout(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok().build();
     }
 }
