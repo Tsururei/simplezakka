@@ -37,5 +37,10 @@ public class JwtTokenProvider {
         byte[] keyBytes = Base64.getDecoder().decode("MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=");
         return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
     }
+
+    public Integer getUserIdFromToken(String cleanedToken) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getUserIdFromToken'");
+    }
     
 }

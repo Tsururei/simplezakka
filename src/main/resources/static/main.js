@@ -425,6 +425,60 @@ function displayProducts(products) {
         }
         const selectedMethod = payMethod.value;  // "cod" または "bank"
 
+        const token = localStorage.getItem('accessToken');//保存しているトークンキー名を合わせてください
+        let url = '';
+        let headers = {
+            'Content-Type': 'application/json'
+        };
+
+        if(token){
+            //ログインユーザーの場合
+            url = '/api/user/orders';
+            headers['Authorization'] = 'Bearer ${token}';
+        } else {
+            //ゲストユーザーの場合
+            url = '/api/orders';
+        }
+        //注文データ作成
+        const orderData = {
+            customerInfo: {
+                name:document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      address: document.getElementById('address').value,
+      phoneNumber: document.getElementById('phone').value // 必要なら追加
+    },
+    items: cartItems.map(item => ({
+      productName: item.name,
+      quantity: item.quantity,
+      unitPrice: item.price,
+      subtotal: item.subtotal
+    }))
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(orderData)
+    });
+
+    if (!response.ok) {
+      throw new Error('注文の確定に失敗しました');
+    }
+    const order = await response.json();
+    displayOrderComplete(order);
+    checkoutModal.hide();
+    orderCompleteModal.show();
+
+    updateCartBadge(0);
+    form.reset();
+    form.classList.remove('was-validated');
+
+  } catch (error) {
+    console.error('Error:', error);
+    alert('注文の確定に失敗しました');
+  }
+}
         const orderData = {
             customerInfo: {
                 name: document.getElementById('name').value,
@@ -473,7 +527,6 @@ function displayProducts(products) {
             console.error('Error:', error);
             alert('注文の確定に失敗しました');
         }
-    }
     
     // 注文完了画面を表示する関数
     function displayOrderComplete(order) {
