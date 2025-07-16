@@ -166,87 +166,44 @@
             <div class="modal-body">
                 <form id="order-form" class="needs-validation" novalidate>
                     <div class="mb-3">
-                        <label for="name" class="form-label">購入者氏名</label>
-                        <input type="text" class="form-control" id="name" required>
+                        <label for="customerName" class="form-label">購入者氏名</label>
+                        <input type="text" class="form-control" id="customerName" name="customerName" required>
                         <div class="invalid-feedback">購入者氏名を入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="address" class="form-label">購入者住所</label>
-                        <input type="text" class="form-control" id="address" required>
+                        <label for="customerAddress" class="form-label">購入者住所</label>
+                        <input type="text" class="form-control" id="customerAddress" name="customerAddress" required>
                         <div class="invalid-feedback">購入者住所を入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">購入者メールアドレス</label>
-                        <input type="email" class="form-control" id="email" required>
+                        <label for="customerEmail" class="form-label">購入者メールアドレス</label>
+                        <input type="email" class="form-control" id="customerEmail" name="customerEmail" required>
                         <div class="invalid-feedback">有効なメールアドレスを入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="name" class="form-label">配送先氏名</label>
-                        <input type="text" class="form-control" id="ship_name" required>
+                        <label for="shippingName" class="form-label">配送先氏名</label>
+                        <input type="text" class="form-control" id="shippingName" name="shippingName" required>
                         <div class="invalid-feedback">配送先氏名を入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="address" class="form-label">配送先住所</label>
-                        <input type="text" class="form-control" id="ship_address" required>
+                        <label for="shippingAddress" class="form-label">配送先住所</label>
+                        <input type="text" class="form-control" id="shippingAddress" name="shippingAddress" required>
                         <div class="invalid-feedback">配送先住所を入力してください</div>
                     </div>
                     <div class="mb-3">
-                        <label for="address" class="form-label">決済方法</label>
+                        <label for="payMethod" class="form-label">決済方法</label>
                         <div class="form-check">
-                           <input class="form-check-input" type="radio" id="pay_cod" name="pay_method" value="cod" required>
+                           <input class="form-check-input" type="radio" id="pay_cod" name="payMethod" value="cod" required>
                            <label class="form-check-label" for="pay_cod">代引き</label>
                         </div>
                         <div class="form-check">
-                        <input class="form-check-input" type="radio" id="pay_bank" name="pay_method" value="bank" required>
+                        <input class="form-check-input" type="radio" id="pay_bank" name="payMethod" value="bank" required>
                         <label class="form-check-label" for="pay_bank">銀行振込</label>
                         </div>
 
                         <div class="invalid-feedback">決済方法を選択してください</div>
                     </div>
                 </form>
-
-<script>
-  // ここに注文確定ボタンのクリック処理を書く
-  document.getElementById('confirm-order-btn').addEventListener('click', async () => {
-    // フォームのバリデーションチェック
-    const form = document.getElementById('order-form');
-    if (!form.checkValidity()) {
-      form.classList.add('was-validated');
-      return;
-    }
-    
-    // フォームの値を取得
-    const data = {
-      customerInfo: {
-        name: document.getElementById('name').value,
-        address: document.getElementById('address').value,
-        email: document.getElementById('email').value,
-        ship_name: document.getElementById('ship_name').value,
-        ship_address: document.getElementById('ship_address').value,
-        pay_method: document.querySelector('input[name="pay_method"]:checked').value
-      }
-    };
-    
-    try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      
-      if (response.ok) {
-        // 注文成功時の処理
-        const orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
-        orderCompleteModal.show();
-        // カートを空にしたり、モーダル閉じたりする処理もここに
-      } else {
-        alert('注文確定に失敗しました。');
-      }
-    } catch (error) {
-      alert('通信エラーが発生しました。');
-    }
-  });
-</script>
 
             </div>
             <div class="modal-footer">
