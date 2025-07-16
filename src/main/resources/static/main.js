@@ -5,6 +5,28 @@ let cartItems = [];
 
 const API_BASE = '/api';
 
+document.getElementById('all-tab').addEventListener('click', function () {
+  // 全タブの中身（.tab-pane）を非表示に
+  document.querySelectorAll('.tab-pane').forEach(pane => {
+    pane.classList.remove('show', 'active');
+  });
+
+  // 全商品の商品一覧を表示
+  document.getElementById('all-products').classList.add('show', 'active');
+
+  // tab切り替え共通部分
+  document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  this.classList.add('active'); 
+
+  // ここで表示切替後の状態
+  allProductsContainer.style.display = 'flex';
+  kitchenContainer.style.display = 'none';
+  interiorContainer.style.display = 'none';
+
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     // カテゴリタブ押下時のイベント登録
     loadCartItems(); 
@@ -17,9 +39,11 @@ document.getElementById('kitchen-tab').addEventListener('click', function () {
   // キッチン用の商品一覧を表示
   document.getElementById('kitchen').classList.add('show', 'active');
 
-  // タブの active 状態も切り替え
-  document.getElementById('interior-tab').classList.remove('active');
-  this.classList.add('active');
+  // tab切り替え共通部分
+  document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  this.classList.add('active'); 
 
   // キッチンタブを押したときの表示
 allProductsContainer.style.display = 'none';
@@ -36,9 +60,12 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   // インテリアの商品一覧を表示
   document.getElementById('interior').classList.add('show', 'active');
 
-  // タブの active 状態も切り替え
-  document.getElementById('kitchen-tab').classList.remove('active');
-  this.classList.add('active');
+
+  // tab切り替え共通部分
+  document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  this.classList.add('active'); 
 
   // ここで表示切替後の状態
   allProductsContainer.style.display = 'none';
@@ -71,7 +98,7 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   tryLogout();
 });
 
-async function tryLogout() {
+  async function tryLogout() {
   const response = await fetch('http://localhost:8080/api/auth/logout', {
     method: 'POST',
     credentials: 'include'
@@ -418,7 +445,7 @@ function displayProducts(products) {
             form.classList.add('was-validated');
             return;
         }
-        const payMethod = document.querySelector('input[name="pay_method"]:checked');
+        const payMethod = document.querySelector('input[name="payMethod"]:checked');
         if (!payMethod) {
         alert("決済方法を選択してください");
         return;
@@ -481,17 +508,13 @@ function displayProducts(products) {
 }
         const orderData = {
             customerInfo: {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                address: document.getElementById('address').value,
-            },
-                
-                shippingInfo: {
-                name: document.getElementById('ship_name').value,
-                address: document.getElementById('ship_address').value,
-            },
-            payment_method: selectedMethod,
-            items: cartItems 
+                customerName: document.getElementById('customerName').value,
+                customerEmail: document.getElementById('customerEmail').value,
+                customerAddress: document.getElementById('customerAddress').value,                
+                shippingName: document.getElementById('shippingName').value,
+                shippingAddress: document.getElementById('shippingAddress').value,
+                payMethod: selectedMethod
+            }
         };
         
         try {
