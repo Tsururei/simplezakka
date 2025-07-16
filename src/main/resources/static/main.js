@@ -20,10 +20,6 @@ document.getElementById('all-tab').addEventListener('click', function () {
   });
   this.classList.add('active'); 
 
-  // ここで表示切替後の状態
-  allProductsContainer.style.display = 'flex';
-  kitchenContainer.style.display = 'none';
-  interiorContainer.style.display = 'none';
 
 });
 
@@ -45,10 +41,7 @@ document.getElementById('kitchen-tab').addEventListener('click', function () {
   });
   this.classList.add('active'); 
 
-  // キッチンタブを押したときの表示
-allProductsContainer.style.display = 'none';
-kitchenContainer.style.display = 'block';  
-interiorContainer.style.display = 'none';
+
 });
 
 document.getElementById('interior-tab').addEventListener('click', function () {
@@ -67,11 +60,6 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   });
   this.classList.add('active'); 
 
-  // ここで表示切替後の状態
-  allProductsContainer.style.display = 'none';
-  kitchenContainer.style.display = 'none';
-  interiorContainer.style.display = 'block';
-
 });
 
   // Bootstrapモーダル初期化
@@ -81,14 +69,11 @@ document.getElementById('interior-tab').addEventListener('click', function () {
   orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
 
   // 商品一覧コンテナをグローバル変数に代入
-  allProductsContainer = document.getElementById('all-products');
-  kitchenContainer = document.querySelector('.kitchen-products').parentElement;
-  interiorContainer = document.querySelector('.interior-products').parentElement;
+  allProductsContainer = document.querySelector('#all-products .all-products');
+  kitchenContainer = document.querySelector('#kitchen .kitchen-products');
+  interiorContainer = document.querySelector('#interior .interior-products');
 
-  // 初期表示設定
-  allProductsContainer.style.display = 'flex';
-  kitchenContainer.style.display = 'none';
-  interiorContainer.style.display = 'none';
+
 
   // 商品一覧の取得・表示
   fetchProducts();
@@ -149,10 +134,6 @@ document.getElementById('interior-tab').addEventListener('click', function () {
     
     // 商品一覧を表示する関数
 function displayProducts(products) {
-    const allProductsContainer = document.getElementById('all-products'); // 全商品表示用
-    const kitchenContainer = document.querySelector('.kitchen-products');
-    const interiorContainer = document.querySelector('.interior-products');
-
 
     allProductsContainer.innerHTML = '';
     interiorContainer.innerHTML = '';
