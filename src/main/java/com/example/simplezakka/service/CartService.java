@@ -31,7 +31,7 @@ public class CartService {
     }
     
     public CartGuest addItemToCart(Integer productId, Integer quantity, HttpSession session) {
-        Optional<Product> productOpt = productRepository.findById(ProductId);
+        Optional<Product> productOpt = productRepository.findById(productId);
         
         if (productOpt.isPresent()) {
             Product product = productOpt.get();
