@@ -2,10 +2,7 @@ const saveBtn = document.getElementById("save-button");
 const productList = document.getElementById("product-list");
 const modal = document.getElementById("modal");
 
-let products = [
-  { categoryId: "A1", productId: "P001", image: "aroma-diffuser.png", name: "アロマディフーザー", price: 1200, desc: "説明A" },
-  { categoryId: "B2", productId: "P002", image: "cotton-blanket.png", name: "コットンブランケット", price: 2400, desc: "説明B" },
-];
+document.addEventListener("DOMContentLoaded", fetchProducts);
 
 function renderProducts() {
   productList.innerHTML = "";
@@ -16,9 +13,11 @@ function renderProducts() {
       <input value="${p.categoryId}" placeholder="カテゴリID" onchange="products[${i}].categoryId = this.value">
       <input value="${p.productId}" placeholder="商品ID" onchange="products[${i}].productId = this.value">
       <img src="${p.image || 'https://via.placeholder.com/150'}" alt="画像">
-      <input value="${p.name}" placeholder="商品名" onchange="products[${i}].name = this.value">
-      <input type="number" value="${p.price}" placeholder="価格" onchange="products[${i}].price = this.value">
-      <textarea placeholder="商品説明" onchange="products[${i}].desc = this.value">${p.desc}</textarea>
+      <input value="${p.productName}" placeholder="商品名" onchange="products[${i}].name = this.value">
+      <input type="number" value="${p.productPrice}" placeholder="価格" onchange="products[${i}].price = this.value">
+      <input type="number" value="${p.stock}" placeholder="在庫数" onchange="products[${i}].stock = this.value">
+      <textarea placeholder="商品説明" onchange="products[${i}].description = this.value">${p.description}</textarea>
+      <button onclick="deleteProduct(${i})" style="background-color: #cc0000; color: white; padding 0.5em 1em;">削除</button>
     `;
     productList.appendChild(card);
   });
@@ -26,6 +25,7 @@ function renderProducts() {
 
 function openModal() {
   modal.style.display = "flex";
+  renderCategorySelect();//いらないかも
 }
 
 function closeModal() {
@@ -33,44 +33,198 @@ function closeModal() {
   document.querySelectorAll("#modal input, #modal textarea").forEach(e => e.value = "");
 }
 
-function registerProduct() {
-  const categoryId = document.getElementById("new-category-id").value;
-  const productId = document.getElementById("new-product-id").value;
-  const name = document.getElementById("new-name").value;
-  const price = document.getElementById("new-price").value;
-  const desc = document.getElementById("new-desc").value;
-  const image = ""; // 実際の画像アップロード処理は別途
-
-  if (categoryId && productId && name && price) {
-    products.push({ categoryId, productId, name, price, desc, image });
-    renderProducts();
-    closeModal();
-  } else {
-    alert("必須項目を入力してください");
+// 個別の商品削除
+async function deleteProduct(index) {
+  if (confirm("この商品を削除しますか？")) {
+    const productToDelete = products[index];
+    try {
+      const response = await fetch(`/api/admin/products/${productToDelete.product.id}`, {
+        method: "DELETE"
+      });
+      if (response.ok) {
+        products.splice(index, 1);
+        renderProducts();
+        alert("商品が削除されました")
+      } else {
+        alert("削除に失敗しました");
+      }
+    } catch (error) {
+      console.error("削除エラー:", error);
+      alert("通信エラーが発生しました");
+    }
   }
 }
 
-saveBtn.addEventListener("click", async () => {
-  const dataToSave = products;
+// 新規商品登録
+async function registerProduct() {
+  const formData = {
+    categoryId: document.getElementById("new-category-id").value,
+    productName: document.getElementById("new-name").value,
+    productPrice: parseInt(document.getElementById("new-price").value, 10),
+    desc: document.getElementById("new-description").value,
+    stock: parseInt(document.getElementById("new-stock").value, 10),
+    imageUrl: document.getElementById("new-image-url").value, // 画像アップロード処理
+  };
+
+  //バリデーション
+  if (!formData.categoryId || !formData.productName || !formData.productPrice || !formData.stock) {
+        alert("必須項目（カテゴリID, 商品名, 価格, 在庫）を入力してください。");
+        return;
+    }
+    if (isNaN(formData.productPrice) || formData.productPrice <= 0) {
+        alert("価格は正の数値で入力してください。");
+        return;
+    }
+    if (isNaN(formData.stock) || formData.stock < 0) {
+        alert("在庫数は0以上の数値で入力してください。");
+        return;
+    }
 
   try {
-    const response = await fetch("/api/save", {
+    const response = await fetch("/api/admin/products", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(dataToSave),
+      body: JSON.stringify(formData),
     });
 
     if (response.ok) {
-      location.reload(); // 保存成功後にリロード
+      alert("商品が登録されました");
+      fetchProducts(); // 一覧を再取得
+      closeModal();
     } else {
-      alert("保存に失敗しました");
+      alert("登録に失敗しました");
     }
   } catch (error) {
-    console.error("エラー:", error);
+    console.error("登録エラー:", error);
     alert("通信エラーが発生しました");
   }
+}
+
+//既存商品更新
+async function updateProduct(index) {
+  const productToUpdate = products[index];
+  const formData = {
+    productId: productToUpdate.productId,
+    categoryId: productToUpdate.categoryId,
+    productName: productToUpdate.productName,
+    productPrice: productToUpdate.productPrice,
+    description: productToUpdate.description,
+    stock: productToUpdate.stock,
+    imageUrl: productToUpdate.imageUrl
+  };
+
+  バリデーション
+  if (!formData.categoryId || !formData.productName || !formData.productPrice || !formData.stock) {
+        alert("更新する商品の必須項目が不足しています。");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/admin/products/${formData.productId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                // "Authorization": "Bearer YOUR_JWT_TOKEN" // 認証が必要な場合
+            },
+            body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+            alert("商品が更新されました。");
+            fetchProducts(); // 更新後、一覧を再取得
+        } else {
+            const errorData = await response.json();
+            alert(`更新に失敗しました: ${errorData.message || response.statusText}`);
+            console.error("更新エラーレスポンス:", errorData);
+        }
+    } catch (error) {
+        console.error("更新エラー:", error);
+        alert("通信エラーが発生しました");
+    }
+}
+
+//一括保存
+saveBtn.addEventListener("click", async () => {
+    const productsToSave = products.map(p => ({
+        productId: p.productId, 
+        productName: p.productName,
+        description: p.description,
+        stock: parseInt(p.stock, 10), 
+        productPrice: parseInt(p.productPrice, 10), 
+        imageUrl: p.imageUrl,
+        categoryId: p.categoryId
+    }));
+
+    //バリデーション
+    const invalidProduct = productsToSave.find(p => 
+        !p.categoryId || !p.productName || isNaN(p.productPrice) || p.productPrice <= 0 || isNaN(p.stock) || p.stock < 0
+    );
+    if (invalidProduct) {
+        alert("リスト内の商品に未入力または不正な値があります。確認してください。");
+        return;
+    }
+
+    try {
+        const response = await fetch("/api/admin/products/save", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(productsToSave),
+        });
+
+        if (response.ok) {
+            alert("すべての変更が保存されました！");
+            fetchProducts(); 
+        } else {
+            const errorData = await response.json();
+            alert(`保存に失敗しました: ${errorData.message || response.statusText}`);
+            console.error("一括保存エラーレスポンス:", errorData);
+        }
+    } catch (error) {
+        console.error("一括保存通信エラー:", error);
+        alert("一括保存中に通信エラーが発生しました");
+    }
 });
 
-renderProducts();
+//商品一覧を取得
+async function fetchProducts() {
+    try {
+        const response = await fetch("/api/admin/products", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+
+        if (response.ok) {
+            products = await response.json(); 
+            renderProducts(); 
+        } else {
+            const errorData = await response.json();
+            alert(`商品一覧の取得に失敗しました: ${errorData.message || response.statusText}`);
+            console.error("商品一覧取得エラーレスポンス:", errorData);
+        }
+    } catch (error) {
+        console.error("商品一覧取得エラー:", error);
+        alert("商品一覧の取得中に通信エラーが発生しました");
+    }
+}
+
+function renderCategorySelect() {
+    const categorySelect = document.getElementById("new-category-id");
+    categorySelect.innerHTML = "<option value=''>選択してください</option>"; // デフォルトオプションを追加
+    categories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat.categoryId; // categoryIdを使用
+        option.textContent = `${cat.categoryId} - ${cat.categoryName}`; // categoryNameを使用
+        categorySelect.appendChild(option);
+    });
+}
+
+const registerProductButton = document.getElementById("register-product-button");
+if (registerProductButton) {
+    registerProductButton.addEventListener("click", registerProduct);
+}

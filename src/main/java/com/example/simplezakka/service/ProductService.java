@@ -10,8 +10,10 @@ import com.example.simplezakka.entity.Category;
 import com.example.simplezakka.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,28 +51,25 @@ public class ProductService {
         );
     }
     
-private ProductDetail convertToDetail(Product product) {
-    ProductDetail productDetail = new ProductDetail();
-    productDetail.setProductId(product.getProductId());
-    productDetail.setName(product.getName());
-    productDetail.setPrice(product.getPrice());
-    productDetail.setDescription(product.getDescription());
-    productDetail.setStock(product.getStock());
-    productDetail.setImageUrl(product.getImageUrl());
-    return productDetail;
-}
-
+    private ProductDetail convertToDetail(Product product) {
+        ProductDetail productDetail = new ProductDetail();
+                product.getProductId();
+                product.getName();
+                product.getPrice();
+                product.getDescription();
+                product.getStock();
+                product.getImageUrl();
+        return productDetail;
+    }
        
     public Product create(ProductForm form) {
         Product product = new Product();
-        product.setProductId(form.getProductId());
         product.setName(form.getProductName());
         product.setPrice(form.getProductPrice());
         product.setDescription(form.getDescription());
         product.setStock(form.getStock());
         product.setImageUrl(form.getImageUrl());
 
-        // カテゴリ設定（Optionalでチェック）
         Category category = categoryRepository.findById(form.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("カテゴリが見つかりません"));
         product.setCategory(category);
@@ -89,8 +88,63 @@ private ProductDetail convertToDetail(Product product) {
         product.getProductId(),
         product.getName(),
         product.getPrice(),
-        product.getCategory().getCategoryName(), // カテゴリ名を表示
-        product.getImages().size()               // 登録画像数をカウント
+        product.getCategory().getCategoryName(), 
+        product.getImages().size()               
     );
+}
+
+    public void delete(Integer id) {
+       if (productRepository.existsById(id)) {
+        productRepository.deleteById(id);
+    } else {
+        throw new RuntimeException("削除対象の商品が見つかりません: ID " + id);
+    }
+}
+
+    public Product update(Integer id, ProductForm form) {
+    Product existingProduct = productRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("更新対象の商品が見つかりません: ID " + id));
+
+    existingProduct.setName(form.getProductName()); 
+    existingProduct.setPrice(form.getProductPrice()); 
+    existingProduct.setDescription(form.getDescription());
+    existingProduct.setStock(form.getStock());
+    existingProduct.setImageUrl(form.getImageUrl());
+
+    Category category = categoryRepository.findById(form.getCategoryId())
+            .orElseThrow(() -> new RuntimeException("更新対象のカテゴリが見つかりません: " + form.getCategoryId()));
+    existingProduct.setCategory(category);
+
+    return productRepository.save(existingProduct); 
+}
+
+    @Transactional 
+public List<Product> saveAll(List<ProductForm> productForms) {
+    List<Product> savedProducts = new ArrayList<>();
+    for (ProductForm form : productForms) {
+        Product product;
+        if (form.getProductId() != null) {
+            product = productRepository.findById(form.getProductId())
+                    .orElseThrow(() -> new RuntimeException("更新対象の商品が見つかりません: ID " + form.getProductId()));
+            updateProductFromForm(product, form);
+        } else {
+            product = new Product();
+            updateProductFromForm(product, form);
+        }
+        savedProducts.add(productRepository.save(product));
+    }
+    return savedProducts;
+}
+
+private void updateProductFromForm(Product product, ProductForm form) {
+    product.setName(form.getProductName());
+    product.setDescription(form.getDescription());
+    product.setPrice(form.getProductPrice());
+    product.setStock(form.getStock());
+    product.setImageUrl(form.getImageUrl());
+
+    Category category = categoryRepository.findById(form.getCategoryId())
+            .orElseThrow(() -> new RuntimeException("カテゴリが見つかりません: " + form.getCategoryId()));
+    product.setCategory(category);
 }
 }
