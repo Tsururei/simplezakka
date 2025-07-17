@@ -183,7 +183,7 @@
 
 async function fetchProducts() {
   try {
-    const response = await fetch("/"); //apiのURL
+    const response = await fetch("/api/admin/products"); //apiのURL
     if (!response.ok){
       throw new Error("商品情報の取得に失敗しました");
     } 

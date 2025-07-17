@@ -28,7 +28,7 @@ content-type: application/json
         "customerEmail": "t@e.com",
         "shippingName": "配送先氏名",
         "shippingAddress": "住所",
-        "payMethod": "代引き"},
+        "payMethod": "cod"},
   "items": [
     {
         "productId": 7,
