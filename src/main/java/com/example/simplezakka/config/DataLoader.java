@@ -2,10 +2,12 @@ package com.example.simplezakka.config;
 
 import com.example.simplezakka.entity.Product;
 import com.example.simplezakka.entity.Admin;
+import com.example.simplezakka.entity.Category;
 import com.example.simplezakka.entity.User;
 import com.example.simplezakka.repository.ProductRepository;
 import com.example.simplezakka.repository.AdminRepository;
 import com.example.simplezakka.repository.UserRepository;
+import com.example.simplezakka.repository.CategoryRepository;
 
 import jakarta.persistence.GenerationType;
 
@@ -25,17 +27,20 @@ public class DataLoader implements CommandLineRunner {
     private final ProductRepository productRepository;
     private final AdminRepository adminRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
 
     @Autowired
     public DataLoader(
         ProductRepository productRepository,
         AdminRepository adminRepository,
-        UserRepository userRepository
+        UserRepository userRepository,
+        CategoryRepository categoryRepository
     ) {
         this.productRepository = productRepository;
         this.adminRepository = adminRepository;
         this.userRepository = userRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
@@ -50,6 +55,8 @@ public class DataLoader implements CommandLineRunner {
             return; // すでにデータが存在する場合はスキップ
         }
 
+        Category defaultCategory = loadOrCreateDefaultCategory();
+
         List<Product> products = Arrays.asList(
             createProduct(
                 "シンプルデスクオーガナイザー", 
@@ -57,7 +64,8 @@ public class DataLoader implements CommandLineRunner {
                 3500, 
                 20, 
                 "/images/desk-organizer.png", 
-                true
+                true,
+                defaultCategory
             ),
             createProduct(
                 "アロマディフューザー（ウッド）", 
@@ -65,7 +73,8 @@ public class DataLoader implements CommandLineRunner {
                 4200, 
                 15, 
                 "/images/aroma-diffuser.png", 
-                true
+                true,
+                defaultCategory
             ),
             createProduct(
                 "コットンブランケット", 
@@ -73,7 +82,8 @@ public class DataLoader implements CommandLineRunner {
                 5800, 
                 10, 
                 "/images/cotton-blanket.png", 
-                false
+                false,
+                defaultCategory
             ),
             createProduct(
                 "ステンレスタンブラー", 
@@ -81,7 +91,8 @@ public class DataLoader implements CommandLineRunner {
                 2800, 
                 30, 
                 "/images/tumbler.png", 
-                false
+                false,
+                defaultCategory
             ),
             createProduct(
                 "ミニマルウォールクロック", 
@@ -89,7 +100,8 @@ public class DataLoader implements CommandLineRunner {
                 3200, 
                 25, 
                 "/images/wall-clock.png", 
-                false
+                false,
+                defaultCategory
             ),
             createProduct(
                 "リネンクッションカバー", 
@@ -97,7 +109,8 @@ public class DataLoader implements CommandLineRunner {
                 2500, 
                 40, 
                 "/images/cushion-cover.png", 
-                true
+                true,
+                defaultCategory
             ),
             createProduct(
                 "陶器フラワーベース", 
@@ -105,7 +118,8 @@ public class DataLoader implements CommandLineRunner {
                 4000, 
                 15, 
                 "/images/flower-vase.png", 
-                false
+                false,
+                defaultCategory
             ),
             createProduct(
                 "木製コースター（4枚セット）", 
@@ -113,7 +127,8 @@ public class DataLoader implements CommandLineRunner {
                 1800, 
                 50, 
                 "/images/wooden-coaster.png", 
-                false
+                false,
+                defaultCategory
             ),
             createProduct(
                 "キャンバストートバッグ", 
@@ -121,7 +136,8 @@ public class DataLoader implements CommandLineRunner {
                 3600, 
                 35, 
                 "/images/tote-bag.png", 
-                true
+                true,
+                defaultCategory
             ),
             createProduct(
                 "ガラス保存容器セット", 
@@ -129,7 +145,8 @@ public class DataLoader implements CommandLineRunner {
                 4500, 
                 20, 
                 "/images/glass-container.png", 
-                false
+                false,
+                defaultCategory
             )
         );
         
@@ -170,7 +187,7 @@ public class DataLoader implements CommandLineRunner {
             userRepository.save(user);
     }
 
-    private Product createProduct(String name, String description, Integer price, Integer stock, String imageUrl, Boolean isRecommended) {
+    private Product createProduct(String name, String description, Integer price, Integer stock, String imageUrl, Boolean isRecommended, Category category) {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
@@ -180,6 +197,17 @@ public class DataLoader implements CommandLineRunner {
         product.setIsRecommended(isRecommended);
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
+        product.setCategory(category);
         return product;
+    }
+
+    private Category loadOrCreateDefaultCategory() {
+        String defaultCategoryId = "cate001";
+        return categoryRepository.findById(defaultCategoryId).orElseGet(() -> {
+            Category category = new Category();
+            category.setCategoryId(defaultCategoryId);
+            category.setCategoryName("キッチン用品");
+            return categoryRepository.save(category);
+        });
     }
 }
