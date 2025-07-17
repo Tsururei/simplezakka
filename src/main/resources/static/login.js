@@ -5,17 +5,26 @@ document.getElementById('login-btn').addEventListener('click', async function(ev
 
 
 document.getElementById('register-link').addEventListener('click', function() {
-    window.location.href = 'register.html';
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userId');  
+  window.location.href = 'register.html';
   });
 
 document.getElementById('guestlogin-btn').addEventListener('click', function() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userId');
     window.location.href = 'home.html';
   });
 
 async function tryLogin() {
   const userEmail = document.getElementById('userEmailInput').value;
   const userPassword = document.getElementById('userPasswordInput').value;
-
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userId');
+    
   const response = await fetch('http://localhost:8080/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

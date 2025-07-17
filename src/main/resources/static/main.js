@@ -250,6 +250,9 @@ async function initMember() {
   document.getElementById('logout-btn').addEventListener('click', async function () {
     const response = await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
     if (response.ok) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('userId');
       window.location.href = '/index.html';
     } else {
       alert('ログアウトに失敗しました');
