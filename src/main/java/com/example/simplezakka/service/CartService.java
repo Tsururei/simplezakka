@@ -38,7 +38,7 @@ public class CartService {
             CartGuest cart = getCartFromSession(session);
             
             CartItem item = new CartItem();
-            item.setProductId(Integer.valueOf(1001));
+            item.setProductId(product.getProductId());
             item.setName(product.getName());
             item.setPrice(product.getPrice());
             item.setImageUrl(product.getImageUrl());
