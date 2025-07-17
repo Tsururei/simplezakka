@@ -78,6 +78,7 @@ public class OrderService {
             orderDetail.setProductId(product.getProductId());
             orderDetail.setProductName(product.getName());
             orderDetail.setPrice(BigDecimal.valueOf(product.getPrice()));
+            orderDetail.setUnitPrice(BigDecimal.valueOf(product.getPrice()));
             orderDetail.setQuantity(cartItem.getQuantity());
 
             order.addOrderDetail(orderDetail);

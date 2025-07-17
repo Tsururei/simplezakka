@@ -24,7 +24,9 @@ async function tryLogin() {
 
   if (response.ok) {
     const data = await response.json();
-    localStorage.setItem('token', data.token);
+    localStorage.setItem('accessToken', data.accessToken);
+    localStorage.setItem('refreshToken', data.refreshToken);
+    localStorage.setItem('userId', data.userId);
     window.location.href = 'home.html';
   } else {
     const err = await response.text();

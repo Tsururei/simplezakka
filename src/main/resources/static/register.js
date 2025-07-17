@@ -45,7 +45,9 @@ async function tryRegisiter() {
     if (response.ok) {
       const data = await response.json();
       // 例：data.token にJWTが入っている想定
-      localStorage.setItem('token', data.token);
+      localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);  
+      localStorage.setItem('userId', data.userId);
       // ホーム画面に遷移
       window.location.href = 'home.html';
     } else {
