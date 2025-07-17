@@ -56,6 +56,24 @@ public class UserCartService {
         cartGuest.setUserId(cart.getUserId());
         cartGuest.setCreatedAt(cart.getCreatedAt());
         cartGuest.setUpdatedAt(cart.getUpdatedAt());
+
+    for (CartItemEntity entity : cart.getItems()) {
+        CartItem item = new CartItem();
+
+        String itemId = String.valueOf(entity.getProductId());
+        item.setId(itemId);
+        item.setProductId(entity.getProductId());
+        item.setQuantity(entity.getCartQuantity());
+
+        productRepository.findById(entity.getProductId()).ifPresent(product -> {
+            item.setName(product.getName());
+            item.setPrice(product.getPrice());
+            item.setImageUrl(product.getImageUrl());
+            item.setSubtotal(product.getPrice() * entity.getCartQuantity());
+        });
+        cartGuest.getItems().put(itemId, item);
+    }
+        cartGuest.calculateTotals();
         return cartGuest;
     }
 

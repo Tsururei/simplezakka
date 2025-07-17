@@ -1,6 +1,5 @@
 package com.example.simplezakka.service;
 
-import com.example.simplezakka.dto.cart.CartDto;
 import com.example.simplezakka.dto.cart.CartGuest;
 import com.example.simplezakka.dto.cart.CartItem;
 import com.example.simplezakka.entity.Product;
@@ -21,6 +20,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy; // 例外テスト用
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -93,6 +93,31 @@ class CartServiceTest {
         assertThat(cart.getItems()).hasSize(1);
         assertThat(cart.getItems().get("1")).isEqualTo(existingItem);
     }
+
+    @Test
+    @DisplayName("セッションがnullの場合")
+    void getCartFromSession_WhenSessionisNull_ShouldThrowException() {
+        // Arrange
+        HttpSession session = null;
+
+        // ActとAssert
+        assertThrows(NullPointerException.class, () -> {
+     cartService.getCartFromSession(session);
+       });}
+
+    @Test
+    @DisplayName("セッションにcart属性が存在するが型が違うなど予期せぬエラーの場合")
+    void getCartFromSession_matigaetatoki_ShouldThrowException() {
+        // Arrange
+        session.setAttribute("cart", "あいうえお");
+
+        // ActとAssert
+        assertThrows(ClassCastException.class, () -> {
+        cartService.getCartFromSession(session);
+    });
+}
+       
+
 
     // --- addItemToCart のテスト ---
 
