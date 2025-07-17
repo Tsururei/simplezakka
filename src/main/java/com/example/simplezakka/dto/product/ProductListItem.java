@@ -1,15 +1,50 @@
 package com.example.simplezakka.dto.product;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProductListItem {
-    private Integer productId;
+    private String productId;
     private String name;
     private Integer price;
     private String imageUrl;
+
+    public ProductListItem() {}
+    
+    public ProductListItem(String productId, String name, Integer price, String imageUrl) {
+        this.productId = productId;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

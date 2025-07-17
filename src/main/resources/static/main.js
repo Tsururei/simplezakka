@@ -290,7 +290,16 @@ function displayProducts(products) {
     try {
         const response = await fetch(`${API_BASE}/cart`);
         const data = await response.json();
-        cartItems = data.items; // ← 必要に応じて product_id, quantity に変換
+        console.log("APIのカート情報:", data);
+        if (data.items) {
+            if (Array.isArray(data.items)) {
+                cartItems = data.items;
+            } else {
+                cartItems = Object.values(data.items);
+            }
+        } else {
+            cartItems = [];
+        }
         console.log("カートの中身:", cartItems);
     } catch (error) {
         console.error("カートの読み込みに失敗しました", error);
@@ -419,6 +428,8 @@ function displayProducts(products) {
     // 注文を確定する関数
     async function submitOrder() {
         const form = document.getElementById('order-form');
+        console.log('注文確定ボタンがクリックされました');
+
         
         // フォームバリデーション
         if (!form.checkValidity()) {
@@ -427,22 +438,46 @@ function displayProducts(products) {
         }
         const payMethod = document.querySelector('input[name="payMethod"]:checked');
         if (!payMethod) {
-        alert("決済方法を選択してください");
-        return;
+            alert("決済方法を選択してください");
+            return;
         }
         const selectedMethod = payMethod.value;  // "cod" または "bank"
+
+        let latestCartItems = [];
+        try {
+            const response = await fetch(`${API_BASE}/cart`, {
+                method: 'GET',
+                credentials: 'include'
+            });              
+            const data = await response.json();
+            latestCartItems = Object.values(data.items).map(item => ({
+                productId: item.productId,
+                quantity: item.quantity
+            }));
+            
+            if (latestCartItems.length === 0) {
+                alert('注文商品は必須です');
+                return;
+            }
+        } catch (err) {
+            console.error('カート情報の取得に失敗しました', err);
+            alert('カート情報の取得に失敗しました');
+            return;
+        }
 
         const orderData = {
             customerInfo: {
                 customerName: document.getElementById('customerName').value,
-                customerEmail: document.getElementById('customerEmail').value,
                 customerAddress: document.getElementById('customerAddress').value,                
+                customerEmail: document.getElementById('customerEmail').value,
                 shippingName: document.getElementById('shippingName').value,
                 shippingAddress: document.getElementById('shippingAddress').value,
                 payMethod: selectedMethod
-            }
+            },
+            items: latestCartItems
         };
         
+        console.log('注文データ（送信前）:', orderData);
         try {
             console.log('送信データ:', orderData);
 
@@ -451,10 +486,15 @@ function displayProducts(products) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'include',
                 body: JSON.stringify(orderData)
             });
+          
+            console.log('APIレスポンスのstatus:', response.status);
             
             if (!response.ok) {
+                const errorText = await response.text();
+                console.error('注文確定APIのエラー内容:', errorText);
                 throw new Error('注文の確定に失敗しました');
             }
             
@@ -486,4 +526,3 @@ function displayProducts(products) {
             <p>お客様のメールアドレスに注文確認メールをお送りしました。</p>
         `;
     }
-;
