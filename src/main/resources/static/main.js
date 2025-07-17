@@ -41,7 +41,6 @@ document.getElementById('kitchen-tab').addEventListener('click', function () {
   });
   this.classList.add('active'); 
 
-
 });
 
 document.getElementById('interior-tab').addEventListener('click', function () {
