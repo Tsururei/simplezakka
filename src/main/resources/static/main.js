@@ -47,6 +47,11 @@ async function commonInit() {
 
 async function initGuest() {
     //この中にゲスト処理
+    //ログアウトボタンの画面遷移
+  document.getElementById('logout-btn').addEventListener('click', async function () {
+      window.location.href = 'index.html';
+    });
+
     //ゲストの購入へボタン
    document.getElementById('checkout-btn').addEventListener('click', function() {
     cartModal.hide();
