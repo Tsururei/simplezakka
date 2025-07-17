@@ -49,16 +49,17 @@ public class ProductService {
         );
     }
     
-    private ProductDetail convertToDetail(Product product) {
-        ProductDetail productDetail = new ProductDetail();
-                product.getProductId();
-                product.getName();
-                product.getPrice();
-                product.getDescription();
-                product.getStock();
-                product.getImageUrl();
-        return productDetail;
-    }
+private ProductDetail convertToDetail(Product product) {
+    ProductDetail productDetail = new ProductDetail();
+    productDetail.setProductId(product.getProductId());
+    productDetail.setName(product.getName());
+    productDetail.setPrice(product.getPrice());
+    productDetail.setDescription(product.getDescription());
+    productDetail.setStock(product.getStock());
+    productDetail.setImageUrl(product.getImageUrl());
+    return productDetail;
+}
+
        
     public Product create(ProductForm form) {
         Product product = new Product();
