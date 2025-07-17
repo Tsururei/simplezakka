@@ -116,8 +116,33 @@ document.getElementById('interior-tab').addEventListener('click', function () {
     cartModal.show();
   });
 
+async function prefillUserInfo() {
+  const token = localStorage.getItem('accessToken');
+  console.log("accessToken:", token);
+  if (!token) return;
+  
+try{
+  const resp = await fetch(`${API_BASE}/user/me`,{
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  console.log("status:", resp.status);
+  if (!resp.ok) return;
+
+  const user = await resp.json();
+  console.log("user data:", user);
+
+  document.getElementById('customerName').value = user.name;
+  document.getElementById('customerEmail').value = user.email;
+  document.getElementById('customerAddress').value = user.address;
+} catch(e){
+  console.error("prefill error:", e);
+}
+}
+
   document.getElementById('checkout-btn').addEventListener('click', function () {
     cartModal.hide();
+    prefillUserInfo();
     checkoutModal.show();
   });
 
