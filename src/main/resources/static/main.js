@@ -4,101 +4,65 @@ let allProductsContainer, kitchenContainer, interiorContainer;
 let cartItems = [];
 
 const API_BASE = '/api';
+const token = localStorage.getItem('accessToken');
+const isGuest = !token;
 
-document.getElementById('all-tab').addEventListener('click', function () {
-  // 全タブの中身（.tab-pane）を非表示に
-  document.querySelectorAll('.tab-pane').forEach(pane => {
-    pane.classList.remove('show', 'active');
-  });
+document.addEventListener('DOMContentLoaded', async function () {
+  await commonInit();
 
-  // 全商品の商品一覧を表示
-  document.getElementById('all-products').classList.add('show', 'active');
-
-  // tab切り替え共通部分
-  document.querySelectorAll('.nav-link').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  this.classList.add('active'); 
-
-
+    if (isGuest) {
+    await initGuest();
+  } else {
+    await initMember();
+  }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-  loadCartItems();
-
-  // タブ切り替え処理
-  document.getElementById('kitchen-tab').addEventListener('click', function () {
-    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('show', 'active'));
-    document.getElementById('kitchen').classList.add('show', 'active');
-    document.getElementById('interior-tab').classList.remove('active');
-    this.classList.add('active');
-    allProductsContainer.style.display = 'none';
-    kitchenContainer.style.display = 'block';
-    interiorContainer.style.display = 'none';
-  });
-
-  document.getElementById('interior-tab').addEventListener('click', function () {
-    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('show', 'active'));
-    document.getElementById('interior').classList.add('show', 'active');
-    document.getElementById('kitchen-tab').classList.remove('active');
-    this.classList.add('active');
-    allProductsContainer.style.display = 'none';
-    kitchenContainer.style.display = 'none';
-    interiorContainer.style.display = 'block';
-  });
-
-  // モーダル初期化
-  // キッチン用の商品一覧を表示
-  document.getElementById('kitchen').classList.add('show', 'active');
-
-  // tab切り替え共通部分
-  document.querySelectorAll('.nav-link').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  this.classList.add('active'); 
-
-});
-
-document.getElementById('interior-tab').addEventListener('click', function () {
-  // 全タブの中身（.tab-pane）を非表示に
-  document.querySelectorAll('.tab-pane').forEach(pane => {
-    pane.classList.remove('show', 'active');
-  });
-
-  // インテリアの商品一覧を表示
-  document.getElementById('interior').classList.add('show', 'active');
-
-
-  // tab切り替え共通部分
-  document.querySelectorAll('.nav-link').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  this.classList.add('active'); 
-
-});
-
-  // Bootstrapモーダル初期化
+async function commonInit() {
+  //ここに共通処理 
+  //モーダル初期化
   productModal = new bootstrap.Modal(document.getElementById('productModal'));
   cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
   checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
   orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
 
-  allProductsContainer = document.getElementById('all-products');
-  kitchenContainer = document.querySelector('.kitchen-products').parentElement;
-  interiorContainer = document.querySelector('.interior-products').parentElement;
-
-  allProductsContainer.style.display = 'flex';
-  kitchenContainer.style.display = 'none';
-  interiorContainer.style.display = 'none';
-  // 商品一覧コンテナをグローバル変数に代入
+  // 商品一覧コンテナを取得（グローバル変数）
   allProductsContainer = document.querySelector('#all-products .all-products');
   kitchenContainer = document.querySelector('#kitchen .kitchen-products');
   interiorContainer = document.querySelector('#interior .interior-products');
 
+  // タブクリックで関数呼び出し
+  document.getElementById('all-tab').addEventListener('click', () => showTab('all'));
+  document.getElementById('kitchen-tab').addEventListener('click', () => showTab('kitchen'));
+  document.getElementById('interior-tab').addEventListener('click', () => showTab('interior'));
+
+  // 最初に全商品を表示
+  showTab('all');
+
+  // 商品取得処理
+  await fetchProducts();
+
+  //カート更新
+  updateCartDisplay();
+  document.getElementById('cart-btn').addEventListener('click', function () {
+    updateCartModalContent();
+    cartModal.show();
+  });
+
+}
 
 
-  fetchProducts();
+async function initGuest() {
+    //この中にゲスト処理
+    //ゲストの購入へボタン
+   document.getElementById('checkout-btn').addEventListener('click', function() {
+    cartModal.hide();
+    checkoutModal.show();
+  });
+}
 
+async function initMember() {
+    //この中に会員処理
+    //ログアウト
   document.getElementById('logout-btn').addEventListener('click', async function () {
     const response = await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
     if (response.ok) {
@@ -107,15 +71,7 @@ document.getElementById('interior-tab').addEventListener('click', function () {
       alert('ログアウトに失敗しました');
     }
   });
-
-  updateCartDisplay();
-
-
-  document.getElementById('cart-btn').addEventListener('click', function () {
-    updateCartModalContent();
-    cartModal.show();
-  });
-
+  //購入へからの会員情報自動入力
 async function prefillUserInfo() {
   const token = localStorage.getItem('accessToken');
   console.log("accessToken:", token);
@@ -145,17 +101,64 @@ try{
     prefillUserInfo();
     checkoutModal.show();
   });
+}
 
-   document.getElementById('checkout-btn').addEventListener('click', function() {
-    cartModal.hide();
-    checkoutModal.show();
+//ここに分岐外に書くべき共通処理
+function showTab(tabName) {
+  document.querySelectorAll('.tab-pane').forEach(pane => {
+    pane.classList.remove('show', 'active');
+    pane.style.display = 'none';
   });
 
-  document.getElementById('confirm-order-btn').addEventListener('click', function () {
-    submitOrder();
+  [allProductsContainer.parentElement, kitchenContainer.parentElement, interiorContainer.parentElement]
+    .forEach(el => el.style.display = 'none');
+
+  let container;
+  switch (tabName) {
+    case 'all':
+      container = allProductsContainer.parentElement;
+      document.getElementById('all-products').classList.add('show', 'active');
+      break;
+    case 'kitchen':
+      container = kitchenContainer.parentElement;
+      document.getElementById('kitchen').classList.add('show', 'active');
+      break;
+    case 'interior':
+      container = interiorContainer.parentElement;
+      document.getElementById('interior').classList.add('show', 'active');
+      break;
+  }
+  if (container) container.style.display = 'flex';
+
+  document.querySelectorAll('.nav-link').forEach(tab => tab.classList.remove('active'));
+  document.getElementById(`${tabName}-tab`).classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  loadCartItems();
+});
+
+document.getElementById('interior-tab').addEventListener('click', function () {
+  // 全タブの中身（.tab-pane）を非表示に
+  document.querySelectorAll('.tab-pane').forEach(pane => {
+    pane.classList.remove('show', 'active');
   });
 
-async function fetchProducts() {
+  // インテリアの商品一覧を表示
+  document.getElementById('interior').classList.add('show', 'active');
+
+
+  // tab切り替え共通部分
+  document.querySelectorAll('.nav-link').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  this.classList.add('active'); 
+
+});
+
+
+  // 商品取得処理
+  async function fetchProducts() {
   try {
     const response = await fetch(`${API_BASE}/products`);
     if (!response.ok) throw new Error('商品の取得に失敗しました');
@@ -166,6 +169,7 @@ async function fetchProducts() {
     alert('商品の読み込みに失敗しました');
   }
 }
+
 
 function displayProducts(products) {
   allProductsContainer.innerHTML = '';
@@ -208,6 +212,7 @@ async function fetchProductDetail(productId) {
   }
 }
 
+
 function displayProductDetail(product) {
   document.getElementById('productModalTitle').textContent = product.name;
   const modalBody = document.getElementById('productModalBody');
@@ -230,13 +235,19 @@ function displayProductDetail(product) {
 
   modalBody.querySelector('.add-to-cart').addEventListener('click', function () {
     const quantity = parseInt(document.getElementById('quantity').value);
+    if (isGuest) {
     addToCart(product.productId, quantity);
+    }
+    else {
+    addToUserCart(product.productId, quantity)
+    }
   });
 
   productModal.show();
 }
 
-async function addToCart(productId, quantity) {
+    //ゲストのカートに追加
+    async function addToCart(productId, quantity) {
   try {
     const response = await fetch(`${API_BASE}/cart`, {
       method: 'POST',
@@ -254,6 +265,27 @@ async function addToCart(productId, quantity) {
     alert('カートへの追加に失敗しました');
   }
 }
+
+    //会員のカートに追加
+    async function addToUserCart(productId,quantity) {
+    const userId = localStorage.getItem('userId'); 
+    try {
+        const response = await fetch(`${API_BASE}/usercart?userId=${userId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ productId, quantity })
+        });
+    if (!response.ok) throw new Error('カートへの追加に失敗しました');
+    const cart = await response.json();
+    updateCartBadge(cart.totalQuantity);
+    productModal.hide();
+    alert('商品をカートに追加しました');
+  } catch (error) {
+    console.error('Error:', error);
+    alert('カートへの追加に失敗しました');
+  }
+}
+//ここまでおけ
 
 async function updateCartDisplay() {
   try {
@@ -338,6 +370,11 @@ async function removeItem(itemId) {
     alert('商品の削除に失敗しました');
   }
 }
+
+//注文確定ボタン
+  document.getElementById('confirm-order-btn').addEventListener('click', function () {
+    submitOrder();
+  });
 
 async function submitOrder() {
   const form = document.getElementById('order-form');
@@ -642,11 +679,24 @@ async function loadCartItems() {
         }
     }
     
+//会員のカート表示
+//会員のカートに商品追加
+//会員のカートの商品削除
+//会員のカートの
+
+
+
+
+
+
+
+
+
     // 注文完了画面を表示する関数
     function displayOrderComplete(order) {
         document.getElementById('orderCompleteBody').innerHTML = `
             <p>ご注文ありがとうございます。注文番号は <strong>${order.orderId}</strong> です。</p>
             <p>ご注文日時: ${new Date(order.orderDate).toLocaleString()}</p>
-            <p>お客様のメールアドレスに注文確認メールをお送りしました。</p>
+            <p>後ほどお客様のメールアドレスに注文確認メールをお送りいたします。</p>
         `;
     }
