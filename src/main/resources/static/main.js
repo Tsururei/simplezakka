@@ -110,6 +110,7 @@ document.getElementById('interior-tab').addEventListener('click', function () {
 
   updateCartDisplay();
 
+
   document.getElementById('cart-btn').addEventListener('click', function () {
     updateCartModalContent();
     cartModal.show();
@@ -142,6 +143,11 @@ try{
   document.getElementById('checkout-btn').addEventListener('click', function () {
     cartModal.hide();
     prefillUserInfo();
+    checkoutModal.show();
+  });
+
+   document.getElementById('checkout-btn').addEventListener('click', function() {
+    cartModal.hide();
     checkoutModal.show();
   });
 

@@ -2,25 +2,25 @@ package com.example.simplezakka.dto.product;
 
 
 public class ProductListItem {
-    private String productId;
+    private Integer productId;
     private String name;
     private Integer price;
     private String imageUrl;
 
     public ProductListItem() {}
     
-    public ProductListItem(String productId, String name, Integer price, String imageUrl) {
+    public ProductListItem(Integer productId, String name, Integer price, String imageUrl) {
         this.productId = productId;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public String getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 

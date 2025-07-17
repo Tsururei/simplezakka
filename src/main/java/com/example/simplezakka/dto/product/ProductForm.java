@@ -7,16 +7,18 @@ public class ProductForm {
     private Integer productPrice;
     private String imageUrl;
     private String categoryId;
+    private Integer productId;
 
     public ProductForm() {}
 
-    public ProductForm(String productName, String description, Integer productPrice, Integer stock, String imageUrl, String categoryId) {
+    public ProductForm(String productName, String description, Integer productPrice, Integer stock, String imageUrl, String categoryId, Integer productId) {
         this.productName = productName;
         this.description = description;
         this.productPrice = productPrice;
         this.stock = stock;
         this.imageUrl = imageUrl;
         this.categoryId = categoryId;
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -66,4 +68,13 @@ public class ProductForm {
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
     }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+    
 }
