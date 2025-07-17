@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor 
+
 public class CartDto implements Serializable{
     private Integer cartId;
     private Integer userId;
@@ -21,3 +22,4 @@ public class CartDto implements Serializable{
     private BigDecimal totalPrice;
     private Integer totalQuantity;
 }
+
