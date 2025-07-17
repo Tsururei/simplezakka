@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ProductAdminView {
-    private String productId;
+    private Integer productId;
     private String productName;
     private Integer productPrice;
     private String categoryName;

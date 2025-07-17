@@ -62,7 +62,7 @@ public class ProductService {
        
     public Product create(ProductForm form) {
         Product product = new Product();
-        product.setProductId(UUID.randomUUID().toString());
+        product.setProductId(form.getProductId());
         product.setName(form.getProductName());
         product.setPrice(form.getProductPrice());
         product.setDescription(form.getDescription());
@@ -81,7 +81,6 @@ public class ProductService {
         return productRepository.findAll().stream()
             .map(this::convertToAdminView)
             .collect(Collectors.toList());
-        throw new UnsupportedOperationException("Unimplemented method 'getAllForAdmin'")
         };
     
     private ProductAdminView convertToAdminView(Product product) {
