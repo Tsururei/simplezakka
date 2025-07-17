@@ -261,8 +261,9 @@ async function initMember() {
     cartModal.show();
   });
       async function updateUserCartDisplay() {
+        const userId = localStorage.getItem('userId');
   try {
-    const response = await fetch(`${API_BASE}/usercart`);
+    const response = await fetch(`${API_BASE}/usercart?userId=${userId}`);
     if (!response.ok) throw new Error('カート情報の取得に失敗しました');
     const cart = await response.json();
     updateCartBadge(cart.totalQuantity);
@@ -272,8 +273,9 @@ async function initMember() {
 }
 
 async function updateUserCartModalContent() {
+    const userId = localStorage.getItem('userId');
     try{
-            const response = await fetch(`${API_BASE}/usercart`);
+            const response = await fetch(`${API_BASE}/usercart?userId=${userId}`);
     if (!response.ok) throw new Error('カート情報の取得に失敗しました');
     const cart = await response.json();
     cartItems = cart.items;
@@ -310,8 +312,9 @@ else {
 }}
 
 async function updateUserItemQuantity(itemId, quantity) {
+    const userId = localStorage.getItem('userId');
   try {
-    const response = await fetch(`${API_BASE}/usercart/items/${itemId}`, {
+    const response = await fetch(`${API_BASE}/usercart/items/${itemId}?userId=${userId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ quantity: parseInt(quantity) })
@@ -328,6 +331,7 @@ async function updateUserItemQuantity(itemId, quantity) {
 }
 
 async function removeUserItem(itemId) {
+    const userId = localStorage.getItem('userId');
   try {
     const response = await fetch(`${API_BASE}/cart/useritems/${itemId}`, { method: 'DELETE' });
     if (!response.ok) throw new Error('商品の削除に失敗しました');
@@ -397,8 +401,9 @@ async function submitUserOrder() {
   if (token) headers['Authorization'] = `Bearer ${token}`;
   //ここまで要らない？
   let latestCartItems = [];
+  const userId = localStorage.getItem('userId');
   try {
-    const response = await fetch(`${API_BASE}/usercart`, {
+    const response = await fetch(`${API_BASE}/usercart?userId=${userId}`, {
         method: 'GET',
         credentials: 'include'
     });
@@ -685,8 +690,9 @@ async function loadCartItems() {
 }
 
 async function loadUserCartItems() {
+    const userId = localStorage.getItem('userId');
     try {
-        const response = await fetch(`${API_BASE}/usercart`);
+        const response = await fetch(`${API_BASE}/usercart?userId=${userId}`);
         const data = await response.json();
         console.log("APIのカート情報:", data);
         if (data.items) {

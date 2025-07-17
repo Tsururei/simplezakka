@@ -2,6 +2,7 @@ package com.example.simplezakka.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +36,16 @@ public class UserCartService {
     public CartGuest getCartFromDb(CartDto cartDto) {
         Integer userId = cartDto.getUserId();
         Optional<Cart> cartOpt = dbCartRepository.findByUserId(userId);
+        if (cartOpt.isEmpty()) {
+        CartGuest emptyCart = new CartGuest();
+        emptyCart.setUserId(userId);
+        emptyCart.setItems(new HashMap<>());
+        emptyCart.setTotalPrice(0);
+        emptyCart.setTotalQuantity(0);
+        emptyCart.setCreatedAt(LocalDateTime.now());
+        emptyCart.setUpdatedAt(LocalDateTime.now());
+        return emptyCart;
+    }
         Cart cart = cartOpt.get();
         return convertToDto(cartOpt.get());
     }
@@ -57,7 +68,7 @@ public class UserCartService {
 }
 
 
-    private List<CartItemEntity> convertToCartItemEntitiy(CartGuest cartGuest, Cart cart) {
+    private List<CartItemEntity> convertToCartItemEntity(CartGuest cartGuest, Cart cart) {
         List<com.example.simplezakka.dto.cart.CartItem> dtoItems = new ArrayList<>(cartGuest.getItems().values());
 
         return dtoItems.stream()
