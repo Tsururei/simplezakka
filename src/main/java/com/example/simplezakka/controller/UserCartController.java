@@ -23,7 +23,9 @@ public class UserCartController {
     }
     
     @GetMapping
-    public ResponseEntity<CartGuest> getCart(CartDto cartDto) {
+    public ResponseEntity<CartGuest> getCart(@RequestParam Integer userId) {
+        CartDto cartDto = new CartDto();
+        cartDto.setUserId(userId);
         CartGuest cart = userCartService.getCartFromDb(cartDto);
         return ResponseEntity.ok(cart);
     }
