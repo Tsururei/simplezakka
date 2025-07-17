@@ -19,7 +19,7 @@ public class UserService {
     }
 
     public UserInfoResponse getUserInfo(String userId) {
-        User user = userRepository.findByUserId(userId)
+        User user = userRepository.findByUserEmail(userId)
                 .orElseThrow(() -> new IllegalArgumentException("ユーザーが見つかりません"));
 
         return UserInfoResponse.builder()
