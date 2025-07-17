@@ -47,6 +47,8 @@ async function commonInit() {
 
 async function initGuest() {
     //この中にゲスト処理
+    //マイページの非表示
+    document.getElementById('mypage-btn').style.visibility = 'hidden';
     //ログアウトボタンの画面遷移
   document.getElementById('logout-btn').addEventListener('click', async function () {
       window.location.href = 'index.html';
