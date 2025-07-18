@@ -5,8 +5,10 @@ import com.example.simplezakka.dto.order.OrderItemDto;
 import com.example.simplezakka.dto.order.OrderSummaryDto;
 import com.example.simplezakka.entity.Order;
 import com.example.simplezakka.entity.OrderDetail;
+import com.example.simplezakka.entity.Product;
 import com.example.simplezakka.repository.OrderDetailRepository;
 import com.example.simplezakka.repository.OrderRepository;
+import com.example.simplezakka.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class AdminOrderService {
 
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
+    private final ProductRepository productRepository;
 
     // ✅ 全注文一覧を取得
     public List<OrderSummaryDto> getAllOrders() {
@@ -46,7 +49,9 @@ public class AdminOrderService {
 
         List<OrderItemDto> items = details.stream()
                 .map(detail -> {
-                    String productName = "商品名未取得"; // あとでProductRepositoryで取得可
+                    String productName = productRepository.findById(detail.getProductId())
+                    .map(Product::getName)
+                    .orElse("商品名未取得");
                     return new OrderItemDto(
                             productName,
                             detail.getQuantity(),
@@ -62,6 +67,8 @@ public class AdminOrderService {
                 order.getShippingAddress(),
                 items,
                 BigDecimal.valueOf(order.getTotalAmount()),
+                order.getCustomerEmail(),
+                order.getOrderDate() != null ? order.getOrderDate().toString() : null,
                 order.getStatus()
         );
     }
