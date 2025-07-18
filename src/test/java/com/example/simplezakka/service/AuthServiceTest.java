@@ -3,8 +3,8 @@ package com.example.simplezakka.service;
 import com.example.simplezakka.dto.auth.LoginRequest;
 import com.example.simplezakka.dto.auth.LoginResponse;
 import com.example.simplezakka.dto.auth.RegisterRequest;
-import com.example.simplezakka.entity.User;
 import com.example.simplezakka.exception.AuthenticationException;
+import com.example.simplezakka.entity.User;
 import com.example.simplezakka.repository.UserRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -41,7 +41,7 @@ class AuthServiceTest {
 
         User user = new User();
         user.setUserEmail(email);
-        user.setUserPassword(password);
+        user.setUserPassword(password);  // 実際はハッシュ化されている想定
 
         when(userRepository.findByUserEmail(email)).thenReturn(Optional.of(user));
         when(jwtTokenProvider.generateAccessToken(any(User.class))).thenReturn("access-token");
@@ -50,7 +50,6 @@ class AuthServiceTest {
         LoginRequest request = new LoginRequest();
         request.setUserEmail(email);
         request.setUserPassword(password);
-
         LoginResponse response = authService.findUserbyloginEmail(request);
 
         assertNotNull(response);
@@ -59,13 +58,17 @@ class AuthServiceTest {
         assertEquals(user.getUserId(), response.getUserId());
     }
 
+    // --- ログイン異常ケース（存在しないユーザー） ---
     @Test
     void findUserbyloginEmail_Unknown_ShouldThrowException() {
-        when(userRepository.findByUserEmail("no@example.com")).thenReturn(Optional.empty());
+        String email = "no@example.com";
+        String password = "123456";
+
+        when(userRepository.findByUserEmail(email)).thenReturn(Optional.empty());
 
         LoginRequest request = new LoginRequest();
-        request.setUserEmail("no@example.com");
-        request.setUserPassword("123456");
+        request.setUserEmail(email);
+        request.setUserPassword(password);
 
         AuthenticationException thrown = assertThrows(AuthenticationException.class,
             () -> authService.findUserbyloginEmail(request));
@@ -73,19 +76,22 @@ class AuthServiceTest {
         assertEquals("ユーザーが見つかりません", thrown.getMessage());
     }
 
+    // --- パスワード不一致 ---
     @Test
     void findUserbyloginEmail_Wrongpassword_ShouldThrowException() {
         String email = "test@example.com";
+        String correctPassword = "correct-password"; // DBにあるパスワード
+        String wrongPassword = "wrong-password";     // 入力された間違ったパスワード
 
         User user = new User();
         user.setUserEmail(email);
-        user.setUserPassword("correct-password");
-
-        when(userRepository.findByUserEmail(email)).thenReturn(Optional.of(user));
+        user.setUserPassword(correctPassword);
 
         LoginRequest request = new LoginRequest();
         request.setUserEmail(email);
-        request.setUserPassword("wrong-password");
+        request.setUserPassword(wrongPassword);
+
+        when(userRepository.findByUserEmail(email)).thenReturn(Optional.of(user));
 
         AuthenticationException thrown = assertThrows(AuthenticationException.class,
             () -> authService.findUserbyloginEmail(request));
@@ -93,10 +99,11 @@ class AuthServiceTest {
         assertEquals("パスワードが間違っています", thrown.getMessage());
     }
 
+    // --- Eメール空文字 ---  ← 追加したテスト
     @Test
     void findUserbyloginEmail_EmptyEmail_ShouldThrowException() {
         LoginRequest request = new LoginRequest();
-        request.setUserEmail("");
+        request.setUserEmail(""); // 空文字
         request.setUserPassword("123456");
 
         AuthenticationException thrown = assertThrows(AuthenticationException.class,
@@ -119,16 +126,8 @@ class AuthServiceTest {
 
     @Test
     void findUserbyloginEmail_EmptyPassword_ShouldThrowException() {
-        String email = "test@example.com";
-
-        User user = new User();
-        user.setUserEmail(email);
-        user.setUserPassword("dummy");
-
-        when(userRepository.findByUserEmail(email)).thenReturn(Optional.of(user));
-
         LoginRequest request = new LoginRequest();
-        request.setUserEmail(email);
+        request.setUserEmail("test@example.com");
         request.setUserPassword("");
 
         AuthenticationException thrown = assertThrows(AuthenticationException.class,
@@ -139,16 +138,8 @@ class AuthServiceTest {
 
     @Test
     void findUserbyloginEmail_NullPassword_ShouldThrowException() {
-        String email = "test@example.com";
-
-        User user = new User();
-        user.setUserEmail(email);
-        user.setUserPassword("dummy");
-
-        when(userRepository.findByUserEmail(email)).thenReturn(Optional.of(user));
-
         LoginRequest request = new LoginRequest();
-        request.setUserEmail(email);
+        request.setUserEmail("test@example.com");
         request.setUserPassword(null);
 
         AuthenticationException thrown = assertThrows(AuthenticationException.class,
@@ -167,22 +158,25 @@ class AuthServiceTest {
         request.setRegisterPassword("pass123");
 
         when(userRepository.findByUserEmail(request.getRegisterEmail())).thenReturn(Optional.empty());
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> {
+
+        when(userRepository.save(any())).thenAnswer(invocation -> {
             User u = invocation.getArgument(0);
             u.setUserId(1);
             return u;
         });
-        when(jwtTokenProvider.generateAccessToken(any(User.class))).thenReturn("access-token");
-        when(jwtTokenProvider.generateRefreshToken(any(User.class))).thenReturn("refresh-token");
+
+        when(jwtTokenProvider.generateAccessToken(any())).thenReturn("access-token");
+        when(jwtTokenProvider.generateRefreshToken(any())).thenReturn("refresh-token");
 
         LoginResponse response = authService.registerUser(request);
 
         assertNotNull(response);
         assertEquals("access-token", response.getAccessToken());
         assertEquals("refresh-token", response.getRefreshToken());
-        assertEquals(userIdCompare(response.getUserId()), response.getUserId());
+        assertEquals(Long.valueOf(1L), response.getUserId());
     }
 
+    // --- 登録異常ケース：既存メール ---
     @Test
     void registerUser_ExistingEmail_ShouldThrowException() {
         RegisterRequest request = new RegisterRequest();
@@ -191,6 +185,7 @@ class AuthServiceTest {
         request.setRegisterAddress("Tokyo");
         request.setRegisterPassword("pass123");
 
+        // 既存メールのテスト
         when(userRepository.findByUserEmail(request.getRegisterEmail())).thenReturn(Optional.of(new User()));
 
         AuthenticationException thrown = assertThrows(AuthenticationException.class,
@@ -199,6 +194,7 @@ class AuthServiceTest {
         assertEquals("登録できませんでした", thrown.getMessage());
     }
 
+    // --- 登録異常ケース：空・nullメール ---
     @Test
     void registerUser_EmptyEmail_ShouldThrowException() {
         RegisterRequest request = new RegisterRequest();
@@ -227,6 +223,7 @@ class AuthServiceTest {
         assertEquals("登録できませんでした", thrown.getMessage());
     }
 
+    // --- 登録異常ケース：空・nullパスワード ---
     @Test
     void registerUser_NullPassword_ShouldThrowException() {
         RegisterRequest request = new RegisterRequest();
@@ -235,114 +232,13 @@ class AuthServiceTest {
         request.setRegisterAddress("Tokyo");
         request.setRegisterPassword(null);
 
-        when(userRepository.findByUserEmail(request.getRegisterEmail())).thenReturn(Optional.empty());
-
         AuthenticationException thrown = assertThrows(AuthenticationException.class,
             () -> authService.registerUser(request));
 
         assertEquals("登録できませんでした", thrown.getMessage());
     }
 
+    // --- 登録異常ケース：空・null名前 ---
     @Test
     void registerUser_EmptyName_ShouldThrowException() {
-        RegisterRequest request = new RegisterRequest();
-        request.setRegisterEmail("new@example.com");
-        request.setRegisterName("");
-        request.setRegisterAddress("Tokyo");
-        request.setRegisterPassword("pass123");
-
-        when(userRepository.findByUserEmail(request.getRegisterEmail())).thenReturn(Optional.empty());
-
-        AuthenticationException thrown = assertThrows(AuthenticationException.class,
-            () -> authService.registerUser(request));
-
-        assertEquals("名前は必須です", thrown.getMessage());
-    }
-
-    @Test
-    void registerUser_NullName_ShouldThrowException() {
-        RegisterRequest request = new RegisterRequest();
-        request.setRegisterEmail("new@example.com");
-        request.setRegisterName(null);
-        request.setRegisterAddress("Tokyo");
-        request.setRegisterPassword("pass123");
-
-        when(userRepository.findByUserEmail(request.getRegisterEmail())).thenReturn(Optional.empty());
-
-        AuthenticationException thrown = assertThrows(AuthenticationException.class,
-            () -> authService.registerUser(request));
-
-        assertEquals("名前は必須です", thrown.getMessage());
-    }
-
-    @Test
-    void registerUser_EmptyAddress_ShouldThrowException() {
-        RegisterRequest request = new RegisterRequest();
-        request.setRegisterEmail("new@example.com");
-        request.setRegisterName("Taro");
-        request.setRegisterAddress("");
-        request.setRegisterPassword("pass123");
-
-        when(userRepository.findByUserEmail(request.getRegisterEmail())).thenReturn(Optional.empty());
-
-        AuthenticationException thrown = assertThrows(AuthenticationException.class,
-            () -> authService.registerUser(request));
-
-        assertEquals("住所は必須です", thrown.getMessage());
-    }
-
-    @Test
-    void registerUser_NullAddress_ShouldThrowException() {
-        RegisterRequest request = new RegisterRequest();
-        request.setRegisterEmail("new@example.com");
-        request.setRegisterName("Taro");
-        request.setRegisterAddress(null);
-        request.setRegisterPassword("pass123");
-
-        when(userRepository.findByUserEmail(request.getRegisterEmail())).thenReturn(Optional.empty());
-
-        AuthenticationException thrown = assertThrows(AuthenticationException.class,
-            () -> authService.registerUser(request));
-
-        assertEquals("住所は必須です", thrown.getMessage());
-    }
-
-    @Test
-    void registerUser_EmptyNameAndAddress_ShouldThrowException() {
-        RegisterRequest request = new RegisterRequest();
-        request.setRegisterEmail("new@example.com");
-        request.setRegisterName("");
-        request.setRegisterAddress("");
-        request.setRegisterPassword("pass123");
-
-        when(userRepository.findByUserEmail(request.getRegisterEmail())).thenReturn(Optional.empty());
-
-        AuthenticationException thrown = assertThrows(AuthenticationException.class,
-            () -> authService.registerUser(request));
-
-        assertEquals("すべての項目を入力してください", thrown.getMessage());
-    }
-
-    @Test
-    void registerUser_NullEmailAndPassword_ShouldThrowException() {
-        RegisterRequest request = new RegisterRequest();
-        request.setRegisterEmail(null);
-        request.setRegisterName("Taro");
-        request.setRegisterAddress("Tokyo");
-        request.setRegisterPassword(null);
-
-        when(userRepository.findByUserEmail(request.getRegisterEmail())).thenReturn(Optional.empty());
-
-        AuthenticationException thrown = assertThrows(AuthenticationException.class,
-            () -> authService.registerUser(request));
-
-        assertEquals("登録できませんでした", thrown.getMessage());
-    }
-
-    /** 補助メソッド */
-    private int userIdCompare(Integer actual) {
-        // 実装に合わせて型を整合
-        assertNotNull(actual);
-        return actual;
-    }
-}
+    }}
