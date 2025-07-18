@@ -13,7 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException; // Spring Data J
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Locale.Category;
+import com.example.simplezakka.entity.Category;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -68,6 +68,7 @@ class ProductRepositoryTest {
     void saveAndFindById_Success() {
         // Arrange
         Product newProduct = createProduct("新商品C", 3000, 20);
+        newProduct.setCategory(category); 
 
         // Act
         Product savedProduct = productRepository.save(newProduct); // リポジトリ経由で保存
