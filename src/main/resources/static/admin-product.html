@@ -214,6 +214,10 @@
   <h1>商品情報・カテゴリ編集</h1>
 
   <div class="controls">
+    <div class="container d-flex align-items-center justify-content-between py-2 border-bottom">
+    <a href="/admin-top.html" class="fs-3 fw-bold text-decoration-none" id="back-btn">トップに戻る</a>
+  </div>
+    <div class="container d-flex align-items-center justify-content-between py-2 border-bottom">
     <button class="add-button" onclick="openModal()">＋ 新規商品情報登録</button>
     <button id="save-button">変更を保存</button>
   </div>
@@ -232,8 +236,10 @@
         <h3>新規商品登録</h3>
       </div>
 
-      <label for="new-category-id">カテゴリID *</label>
-      <input type="text" id="new-category-id" required>
+      <label for="new-category-select">カテゴリ名 *</label>
+      <select id="new-category-select" required>
+        <option value="">-- カテゴリを選択 --</option>
+        </select>
 
       <label for="new-product-name">商品名 *</label>
       <input type="text" id="new-product-name" placeholder="例: アロマディフューザー" required>

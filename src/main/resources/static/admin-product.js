@@ -1,6 +1,12 @@
+
+
+
 const saveBtn = document.getElementById("save-button");
 const productList = document.getElementById("product-list");
 const modal = document.getElementById("modal");
+
+let products = [];
+let categories = [];
 
 document.addEventListener("DOMContentLoaded", fetchProducts);
 
@@ -10,11 +16,11 @@ function renderProducts() {
     const card = document.createElement("div");
     card.className = "product-card";
     card.innerHTML = `
-      <input value="${p.categoryId}" placeholder="カテゴリID" onchange="products[${i}].categoryId = this.value">
+      <input value="${p.categoryName}" placeholder="カテゴリ名" onchange="products[${i}].categoryName = this.value">
       <input value="${p.productId}" placeholder="商品ID" onchange="products[${i}].productId = this.value">
       <img src="${p.image || 'https://via.placeholder.com/150'}" alt="画像">
-      <input value="${p.productName}" placeholder="商品名" onchange="products[${i}].name = this.value">
-      <input type="number" value="${p.productPrice}" placeholder="価格" onchange="products[${i}].price = this.value">
+      <input value="${p.productName}" placeholder="商品名" onchange="products[${i}].productName = this.value">
+      <input type="number" value="${p.productPrice}" placeholder="価格" onchange="products[${i}].productPrice = this.value">
       <input type="number" value="${p.stock}" placeholder="在庫数" onchange="products[${i}].stock = this.value">
       <textarea placeholder="商品説明" onchange="products[${i}].description = this.value">${p.description}</textarea>
       <button onclick="deleteProduct(${i})" style="background-color: #cc0000; color: white; padding 0.5em 1em;">削除</button>
@@ -38,7 +44,7 @@ async function deleteProduct(index) {
   if (confirm("この商品を削除しますか？")) {
     const productToDelete = products[index];
     try {
-      const response = await fetch(`/api/admin/products/${productToDelete.product.id}`, {
+      const response = await fetch(`/api/admin/products/${productToDelete.productId}`, {
         method: "DELETE"
       });
       if (response.ok) {
@@ -58,17 +64,17 @@ async function deleteProduct(index) {
 // 新規商品登録
 async function registerProduct() {
   const formData = {
-    categoryId: document.getElementById("new-category-id").value,
+    categoryName: document.getElementById("new-category-name").value,
     productName: document.getElementById("new-name").value,
     productPrice: parseInt(document.getElementById("new-price").value, 10),
-    desc: document.getElementById("new-description").value,
+    description: document.getElementById("new-description").value,
     stock: parseInt(document.getElementById("new-stock").value, 10),
     imageUrl: document.getElementById("new-image-url").value, // 画像アップロード処理
   };
 
   //バリデーション
-  if (!formData.categoryId || !formData.productName || !formData.productPrice || !formData.stock) {
-        alert("必須項目（カテゴリID, 商品名, 価格, 在庫）を入力してください。");
+  if (!formData.categoryName || !formData.productName || !formData.productPrice || !formData.stock) {
+        alert("必須項目（カテゴリ名, 商品名, 価格, 在庫）を入力してください。");
         return;
     }
     if (isNaN(formData.productPrice) || formData.productPrice <= 0) {
@@ -107,7 +113,7 @@ async function updateProduct(index) {
   const productToUpdate = products[index];
   const formData = {
     productId: productToUpdate.productId,
-    categoryId: productToUpdate.categoryId,
+    category名: productToUpdate.categoryName,
     productName: productToUpdate.productName,
     productPrice: productToUpdate.productPrice,
     description: productToUpdate.description,
@@ -116,7 +122,7 @@ async function updateProduct(index) {
   };
 
   バリデーション
-  if (!formData.categoryId || !formData.productName || !formData.productPrice || !formData.stock) {
+  if (!formData.categoryName || !formData.productName || !formData.productPrice || !formData.stock) {
         alert("更新する商品の必須項目が不足しています。");
         return;
     }
@@ -214,12 +220,12 @@ async function fetchProducts() {
 }
 
 function renderCategorySelect() {
-    const categorySelect = document.getElementById("new-category-id");
+    const categorySelect = document.getElementById("new-category-name");
     categorySelect.innerHTML = "<option value=''>選択してください</option>"; // デフォルトオプションを追加
     categories.forEach(cat => {
         const option = document.createElement("option");
-        option.value = cat.categoryId; // categoryIdを使用
-        option.textContent = `${cat.categoryId} - ${cat.categoryName}`; // categoryNameを使用
+        option.value = cat.categoryName; // categoryIdを使用
+        option.textContent = `${cat.categoryName} - ${cat.categoryName}`; // categoryNameを使用
         categorySelect.appendChild(option);
     });
 }
@@ -227,4 +233,21 @@ function renderCategorySelect() {
 const registerProductButton = document.getElementById("register-product-button");
 if (registerProductButton) {
     registerProductButton.addEventListener("click", registerProduct);
+
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+const dummyCategories = [
+  { id: "1", name: "インテリア" },
+  { id: "2", name: "キッチン用品" },
+  { id: "3", name: "バスグッズ" }
+];
+
+dummyCategories.forEach(category => {
+  const option = document.createElement("option");
+  option.value = category.id;
+  option.textContent = category.name;
+  document.getElementById("new-category-select").appendChild(option);
+});
+});
+
