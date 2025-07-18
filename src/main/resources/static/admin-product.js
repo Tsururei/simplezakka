@@ -1,3 +1,6 @@
+
+
+
 const saveBtn = document.getElementById("save-button");
 const productList = document.getElementById("product-list");
 const modal = document.getElementById("modal");
