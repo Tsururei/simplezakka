@@ -14,5 +14,7 @@ public class OrderDetailDto {
     private String shippingAddress;
     private List<OrderItemDto> items;
     private BigDecimal totalPrice;
-    private String orderStatus;
+    private String customerEmail;
+    private String orderDate;
+    private String status;
 }

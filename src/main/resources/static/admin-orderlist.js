@@ -1,19 +1,5 @@
 
-
-document.addEventListener("DOMContentLoaded", function (){
-});
-
-async function fetchOrders() {
-    const response = await fetch('http://localhost:8080/admin/order');
-    const orders = await response.json();
-    displayOrders(orders);
-  }
-
-  const tbody = document.querySelector("#orders-table tbody");
-  const modal = document.getElementById("order-modal");
-  const modalBody = document.getElementById("modal-body");
-
-  const STATUS_LABELS = {
+const STATUS_LABELS = {
   PENDING: '処理中',
   PAID: '決済済み',
   SHIPPED: '発送済み',
@@ -21,10 +7,26 @@ async function fetchOrders() {
   COMPLETED: '完了'
 };
 
+document.addEventListener("DOMContentLoaded", function (){
+   
+});
+
+async function fetchOrders() {
+    const response = await fetch('http://localhost:8080/admin/order');
+    const orders = await response.json();
+    window.orders = orders;
+    displayOrders(orders);
+  }
+
+  const tbody = document.querySelector("#orders-table tbody");
+  const modal = document.getElementById("order-modal");
+  const modalBody = document.getElementById("modal-body");
+
+
   function displayOrders(orders) {
     tbody.innerHTML = "";
     orders.forEach(order => {
-      const statusLabel = STATUS_LABELS[order.orderStatus] || '不明';
+      const statusLabel = STATUS_LABELS[order.status] || '不明';
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td><button class="order-id-btn" data-id="${order.orderId}">${order.orderId}</button></td>
@@ -38,24 +40,49 @@ async function fetchOrders() {
   }
 
 
-  function showModal(orderId) {
-    const order = orders.find(o => o.orderId === orderId);
+  async function showModal(orderId) {
+    const response = await fetch(`http://localhost:8080/admin/order/${orderId}`);
+    const order = await response.json();
     if (!order) return;
 
     modalBody.innerHTML = `
       <p><strong>注文ID:</strong> ${order.orderId}</p>
-      <p><strong>購入者名:</strong> ${order.customerName}</p>
+      <p><strong>購入者名:</strong> ${order.buyerName}</p>
       <p><strong>配送先住所:</strong> ${order.shippingAddress}</p>
-      <p><strong>購入代金:</strong> ¥${order.totalAmount.toLocaleString()}</p>
-      <p><strong>注文ステータス:</strong> ${order.status}</p>
+      <p><strong>購入代金:</strong> ¥${order.totalPrice.toLocaleString()}</p>
+      <p>
+       <strong>注文ステータス:</strong>
+       <select id="status-select">
+         <option value="PENDING" ${order.orderStatus === "PENDING" ? "selected" : ""}>処理中</option>
+         <option value="PAID" ${order.orderStatus === "PAID" ? "selected" : ""}>決済済み</option>
+         <option value="SHIPPED" ${order.orderStatus === "SHIPPED" ? "selected" : ""}>発送済み</option>
+         <option value="CANCELLED" ${order.orderStatus === "CANCELLED" ? "selected" : ""}>キャンセル</option>
+         <option value="COMPLETED" ${order.orderStatus === "COMPLETED" ? "selected" : ""}>完了</option>
+       </select>
+      </p>
       <p><strong>メールアドレス:</strong> ${order.customerEmail}</p>
       <p><strong>注文日時:</strong> ${order.orderDate}</p>
-      <p><strong>詳細:</strong> ${order.orderDetails.map(d => `${d.productName} ${d.quantity}個`).join(", ")}</p>
+      <p><strong>詳細:</strong> ${order.items.map(d => `${d.productName} ${d.quantity}個`).join(", ")}</p>
+      <button id="update-status-btn">ステータス更新</button>
     `;
+    document.getElementById("update-status-btn").addEventListener("click", async () => {
+    const newStatus = document.getElementById("status-select").value;
+
+    await fetch(`http://localhost:8080/admin/order/${orderId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ newStatus: newStatus })
+    });
+
+    alert("ステータスを更新しました");
+    modal.style.display = "none";
+    await fetchOrders(); // リストを再取得して反映
+  });
+
     modal.style.display = "flex";
   }
 
-  tbody.addEventListener("click", e => {
+  tbody.addEventListener('click', async e => {
     if (e.target.classList.contains("order-id-btn")) {
       const id = e.target.getAttribute("data-id");
       showModal(id);
@@ -71,3 +98,6 @@ async function fetchOrders() {
       modal.style.display = "none";
     }
   });
+
+ 
+  
