@@ -3,6 +3,7 @@ package com.example.simplezakka.service;
 import com.example.simplezakka.dto.cart.CartGuest;
 import com.example.simplezakka.dto.cart.CartItem;
 import com.example.simplezakka.dto.cart.CartDto;
+import com.example.simplezakka.dto.order.CustomerInfo;
 import com.example.simplezakka.dto.order.OrderItemDto;
 import com.example.simplezakka.dto.order.OrderRequest;
 import com.example.simplezakka.dto.order.OrderResponse;
@@ -37,7 +38,7 @@ public class UserOrderService {
     private final OrderDetailRepository orderDetailRepository;
     private final ProductRepository productRepository;
     private final DbCartrepository dbCartRepository;
-    private final UserRepository userReopsitory;
+    private final UserRepository userRepository;
 
     @Autowired
     private UserCartService userCartService;
@@ -51,14 +52,14 @@ public class UserOrderService {
         this.orderDetailRepository = orderDetailRepository;
         this.productRepository = productRepository;
         this.dbCartRepository = dbCartRepository;
-        this.userReopsitory = userRepository;
+        this.userRepository = userRepository;
 
     }
 
     @Transactional
 public UserOrderResponse placeOrder(Integer userId, OrderRequest orderRequest) {
     // ユーザー取得
-    User user = userReopsitory.findById(userId)
+    User user = userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("ユーザーが存在しません: " + userId));
 
     // カート取得
@@ -103,9 +104,13 @@ public UserOrderResponse placeOrder(Integer userId, OrderRequest orderRequest) {
     Order order = new Order();
     order.setOrderDate(LocalDateTime.now());
     order.setTotalAmount(totalPrice.intValue());
-    order.setCustomerName(user.getUserName());
-    order.setCustomerEmail(user.getUserEmail());
-    order.setShippingAddress(user.getUserAddress());
+    CustomerInfo customerInfo = orderRequest.getCustomerInfo();
+    order.setCustomerName(customerInfo.getCustomerName());
+    order.setCustomerEmail(customerInfo.getCustomerEmail());
+    order.setCustomerAddress(customerInfo.getCustomerAddress());
+    order.setShippingAddress(customerInfo.getShippingAddress());
+    order.setShippingName(customerInfo.getShippingName());
+    order.setPayMethod(customerInfo.getPayMethod());
     order.setStatus("PENDING");
 
     for (OrderDetail detail : orderDetails) {
@@ -133,13 +138,8 @@ public UserOrderResponse placeOrder(Integer userId, OrderRequest orderRequest) {
             .status(savedOrder.getStatus())
             .userName(user.getUserName())
             .userEmail(user.getUserEmail())
-            .shippingAddress(user.getUserAddress())
+            .shippingAddress(savedOrder.getShippingAddress())
             .orderItems(itemDtos)
             .build();
 }
-
-    public OrderResponse placeOrder(User user, CartGuest cart, OrderRequest orderRequest) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'placeOrder'");
-    }
 }
