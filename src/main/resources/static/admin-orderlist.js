@@ -1,4 +1,11 @@
 
+const STATUS_LABELS = {
+  PENDING: '処理中',
+  PAID: '決済済み',
+  SHIPPED: '発送済み',
+  CANCELLED: 'キャンセル',
+  COMPLETED: '完了'
+};
 
 document.addEventListener("DOMContentLoaded", function (){
    
@@ -15,13 +22,6 @@ async function fetchOrders() {
   const modal = document.getElementById("order-modal");
   const modalBody = document.getElementById("modal-body");
 
-  const STATUS_LABELS = {
-  PENDING: '処理中',
-  PAID: '決済済み',
-  SHIPPED: '発送済み',
-  CANCELLED: 'キャンセル',
-  COMPLETED: '完了'
-};
 
   function displayOrders(orders) {
     tbody.innerHTML = "";
@@ -50,7 +50,7 @@ async function fetchOrders() {
       <p><strong>購入者名:</strong> ${order.buyerName}</p>
       <p><strong>配送先住所:</strong> ${order.shippingAddress}</p>
       <p><strong>購入代金:</strong> ¥${order.totalPrice.toLocaleString()}</p>
-      <p><strong>注文ステータス:</strong> ${order.status}</p>
+      <p><strong>注文ステータス:</strong> ${order.orderStatus}</p>
       <p><strong>メールアドレス:</strong> ${order.customerEmail}</p>
       <p><strong>注文日時:</strong> ${order.orderDate}</p>
       <p><strong>詳細:</strong> ${order.items.map(d => `${d.productName} ${d.quantity}個`).join(", ")}</p>
