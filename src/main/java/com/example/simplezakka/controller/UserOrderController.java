@@ -4,6 +4,7 @@ import com.example.simplezakka.dto.cart.CartDto;
 import com.example.simplezakka.dto.cart.CartGuest;
 import com.example.simplezakka.dto.order.OrderRequest;
 import com.example.simplezakka.dto.order.OrderResponse;
+import com.example.simplezakka.dto.order.UserOrderResponse;
 import com.example.simplezakka.entity.User;
 import com.example.simplezakka.exception.CartNotFoundException;
 import com.example.simplezakka.exception.UserNotFoundException;
@@ -41,31 +42,18 @@ public class UserOrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> placeOrder(
-            @RequestHeader("Authorization") String token,
-            @Valid @RequestBody OrderRequest orderRequest) {
-
-        // JWTからユーザーIDを取得
-        String cleanedToken = token.replace("Bearer ", "");
-        Integer userId = jwtTokenProvider.getUserIdFromToken(cleanedToken);
-
+    public ResponseEntity<UserOrderResponse> placeOrder(
+        @RequestParam Integer userId,
+        @Valid @RequestBody OrderRequest orderRequest) {
+            
         // ユーザー情報取得
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserNotFoundException("ユーザーが見つかりません"));
 
-        // カート取得
-        CartDto cartDto = new CartDto();
-        cartDto.setUserId(userId);
-        CartGuest cart = userCartService.getCartFromDb(cartDto);
-
-        if (cart == null || cart.getItems().isEmpty()) {
-            throw new CartNotFoundException("カートが空または見つかりません");
-        }
-
         // 注文処理
-        OrderResponse response = userOrderService.placeOrder(user, cart, orderRequest);
-
+        UserOrderResponse response = userOrderService.placeOrder(user.getUserId(), orderRequest);
         return ResponseEntity.ok(response);
+
     }
 
 }
