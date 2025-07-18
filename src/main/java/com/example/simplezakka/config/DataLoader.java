@@ -56,6 +56,7 @@ public class DataLoader implements CommandLineRunner {
         }
 
         Category defaultCategory = loadOrCreateDefaultCategory();
+        Category secondCategory = loadOrCreateSecondCategory();
 
         List<Product> products = Arrays.asList(
             createProduct(
@@ -65,7 +66,7 @@ public class DataLoader implements CommandLineRunner {
                 20, 
                 "/images/desk-organizer.png", 
                 true,
-                defaultCategory
+                secondCategory
             ),
             createProduct(
                 "アロマディフューザー（ウッド）", 
@@ -74,7 +75,7 @@ public class DataLoader implements CommandLineRunner {
                 15, 
                 "/images/aroma-diffuser.png", 
                 true,
-                defaultCategory
+                secondCategory
             ),
             createProduct(
                 "コットンブランケット", 
@@ -83,7 +84,7 @@ public class DataLoader implements CommandLineRunner {
                 10, 
                 "/images/cotton-blanket.png", 
                 false,
-                defaultCategory
+                secondCategory
             ),
             createProduct(
                 "ステンレスタンブラー", 
@@ -101,7 +102,7 @@ public class DataLoader implements CommandLineRunner {
                 25, 
                 "/images/wall-clock.png", 
                 false,
-                defaultCategory
+                secondCategory
             ),
             createProduct(
                 "リネンクッションカバー", 
@@ -110,7 +111,7 @@ public class DataLoader implements CommandLineRunner {
                 40, 
                 "/images/cushion-cover.png", 
                 true,
-                defaultCategory
+                secondCategory
             ),
             createProduct(
                 "陶器フラワーベース", 
@@ -119,7 +120,7 @@ public class DataLoader implements CommandLineRunner {
                 15, 
                 "/images/flower-vase.png", 
                 false,
-                defaultCategory
+                secondCategory
             ),
             createProduct(
                 "木製コースター（4枚セット）", 
@@ -137,7 +138,7 @@ public class DataLoader implements CommandLineRunner {
                 35, 
                 "/images/tote-bag.png", 
                 true,
-                defaultCategory
+                secondCategory
             ),
             createProduct(
                 "ガラス保存容器セット", 
@@ -210,4 +211,14 @@ public class DataLoader implements CommandLineRunner {
             return categoryRepository.save(category);
         });
     }
+
+    private Category loadOrCreateSecondCategory() {
+        String secondCategoryId = "cate002";
+        return categoryRepository.findById(secondCategoryId).orElseGet(() -> {
+            Category category = new Category();
+            category.setCategoryId(secondCategoryId);
+            category.setCategoryName("インテリア");
+            return categoryRepository.save(category);
+    });
+}
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class Order {
 
     @Column(nullable = false)
     private String payMethod;
-        
+    
     @Column(nullable = false)
     private String status;
     

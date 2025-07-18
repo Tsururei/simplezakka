@@ -11,6 +11,7 @@ import com.example.simplezakka.repository.OrderRepository;
 import com.example.simplezakka.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.example.simplezakka.constant.OrderStatusConstants;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -73,12 +74,24 @@ public class AdminOrderService {
         );
     }
 
-    // ✅ 注文ステータスを更新
+   
     public void updateOrderStatus(String orderId, String newStatus) {
-        Order order = orderRepository.findById(Integer.valueOf(orderId))
+        
+
+        List<String> validStatuses = List.of(
+                 OrderStatusConstants.PENDING,
+                 OrderStatusConstants.PAID,
+                 OrderStatusConstants.SHIPPED,
+                 OrderStatusConstants.CANCELLED,
+                 OrderStatusConstants.COMPLETED
+                 );
+
+                 if (!validStatuses.contains(newStatus)) {
+                 throw new IllegalArgumentException("無効なステータスです: " + newStatus);
+                }
+Order order = orderRepository.findById(Integer.valueOf(orderId))
                 .orElseThrow(() -> new IllegalArgumentException("注文が見つかりません"));
 
-        // ✅ setStatus() が正しい setter メソッド名
         order.setStatus(newStatus);
         orderRepository.save(order);
     }

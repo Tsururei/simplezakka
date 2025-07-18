@@ -548,9 +548,14 @@ function displayProducts(products) {
         </div>
       </div>`;
 
-    allProductsContainer.insertAdjacentHTML('beforeend', cardHtml);
-    (product.name.includes('タンブラー') ? kitchenContainer : interiorContainer).insertAdjacentHTML('beforeend', cardHtml);
-  });
+allProductsContainer.insertAdjacentHTML('beforeend', cardHtml);
+
+  if (product.categoryId === 'cate001') {
+    kitchenContainer.insertAdjacentHTML('beforeend', cardHtml);
+  } else if (product.categoryId === 'cate002') {
+    interiorContainer.insertAdjacentHTML('beforeend', cardHtml);
+  }
+ });
 
   [allProductsContainer, interiorContainer, kitchenContainer].forEach(container => {
     container.querySelectorAll('.view-product').forEach(button => {
