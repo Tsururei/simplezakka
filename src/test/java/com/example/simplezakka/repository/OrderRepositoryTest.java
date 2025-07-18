@@ -34,7 +34,7 @@ class OrderRepositoryTest {
     private OrderDetailRepository orderDetailRepository;
 
     @Autowired // テストデータ準備用にインジェクト
-    private ProductRepository productRepository;
+    private ProductRepository repository;
 
     private Product product1;
     private Product product2;
@@ -47,18 +47,22 @@ class OrderRepositoryTest {
     @BeforeEach
     void setUp() {
     category = new Category();
+    category.setId(1);  // ここを追加！IDを手動セット
     category.setCategoryName("テストカテゴリ");
-    category = categoryRepository.save(category); // ID付き Category を保存
+    categoryRepository.save(category);
+    
         product1 = new Product();
         product1.setName("商品A");
         product1.setPrice(1000);
         product1.setStock(10);
+        product1.setCategory(category);
         entityManager.persist(product1); // TestEntityManagerで永続化
 
         product2 = new Product();
         product2.setName("商品B");
         product2.setPrice(2000);
         product2.setStock(5);
+        product2.setCategory(category);
         entityManager.persist(product2);
 
         entityManager.flush(); // DBに即時反映させ、IDなどを確定させる
@@ -120,7 +124,7 @@ class OrderRepositoryTest {
         assertThat(foundOrder.getOrderDetails().get(1).getQuantity()).isEqualTo(1);
 
         // 関連するOrderDetailも正しく永続化されていることを確認 (CascadeType.ALLの検証)
-        OrderDetail foundDetail1 = entityManager.find(OrderDetail.class, foundOrder.getOrderDetails().get(0).getOrderDetailId());
+        OrderDetail foundDetail1 = entityManager.find(OrderDetail.class, foundOrder.getOrderDetails().get(0).getDetailId());
         assertThat(foundDetail1).isNotNull();
         assertThat(foundDetail1.getOrder().getOrderId()).isEqualTo(foundOrder.getOrderId()); // Orderへの関連が設定されている
     }
@@ -231,7 +235,7 @@ class OrderRepositoryTest {
         Integer orderId = savedOrder.getOrderId();
         // 削除前のOrderDetailのIDを取得 (削除確認用)
         List<Integer> detailIds = savedOrder.getOrderDetails().stream()
-                                           .map(OrderDetail::getOrderDetailId)
+                                           .map(OrderDetail::getDetailId)
                                            .toList();
         assertThat(detailIds).isNotEmpty(); // 詳細が存在することを前提とする
         entityManager.clear();
