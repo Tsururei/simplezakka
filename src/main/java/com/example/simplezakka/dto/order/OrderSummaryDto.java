@@ -12,5 +12,5 @@ public class OrderSummaryDto {
     private String buyerName;
     private String orderDate;    // ※文字列形式（必要なら LocalDateTime にしても可）
     private BigDecimal totalPrice;
-    private String orderStatus;
+    private String status;
 }

@@ -16,5 +16,5 @@ public class OrderDetailDto {
     private BigDecimal totalPrice;
     private String customerEmail;
     private String orderDate;
-    private String orderStatus;
+    private String status;
 }

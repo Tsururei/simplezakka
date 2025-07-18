@@ -26,7 +26,7 @@ async function fetchOrders() {
   function displayOrders(orders) {
     tbody.innerHTML = "";
     orders.forEach(order => {
-      const statusLabel = STATUS_LABELS[order.orderStatus] || '不明';
+      const statusLabel = STATUS_LABELS[order.status] || '不明';
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td><button class="order-id-btn" data-id="${order.orderId}">${order.orderId}</button></td>
@@ -51,10 +51,35 @@ async function fetchOrders() {
       <p><strong>配送先住所:</strong> ${order.shippingAddress}</p>
       <p><strong>購入代金:</strong> ¥${order.totalPrice.toLocaleString()}</p>
       <p><strong>注文ステータス:</strong> ${order.orderStatus}</p>
+      <p>
+       <strong>注文ステータス:</strong>
+       <select id="status-select">
+         <option value="PENDING" ${order.orderStatus === "PENDING" ? "selected" : ""}>処理中</option>
+         <option value="PAID" ${order.orderStatus === "PAID" ? "selected" : ""}>決済済み</option>
+         <option value="SHIPPED" ${order.orderStatus === "SHIPPED" ? "selected" : ""}>発送済み</option>
+         <option value="CANCELLED" ${order.orderStatus === "CANCELLED" ? "selected" : ""}>キャンセル</option>
+         <option value="COMPLETED" ${order.orderStatus === "COMPLETED" ? "selected" : ""}>完了</option>
+       </select>
+      </p>
       <p><strong>メールアドレス:</strong> ${order.customerEmail}</p>
       <p><strong>注文日時:</strong> ${order.orderDate}</p>
       <p><strong>詳細:</strong> ${order.items.map(d => `${d.productName} ${d.quantity}個`).join(", ")}</p>
+      <button id="update-status-btn">ステータス更新</button>
     `;
+    document.getElementById("update-status-btn").addEventListener("click", async () => {
+    const newStatus = document.getElementById("status-select").value;
+
+    await fetch(`http://localhost:8080/admin/order/${orderId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ newStatus: newStatus })
+    });
+
+    alert("ステータスを更新しました");
+    modal.style.display = "none";
+    await fetchOrders(); // リストを再取得して反映
+  });
+
     modal.style.display = "flex";
   }
 
@@ -74,3 +99,6 @@ async function fetchOrders() {
       modal.style.display = "none";
     }
   });
+
+ 
+  
