@@ -13,16 +13,25 @@ async function fetchOrders() {
   const modal = document.getElementById("order-modal");
   const modalBody = document.getElementById("modal-body");
 
+  const STATUS_LABELS = {
+  PENDING: '処理中',
+  PAID: '決済済み',
+  SHIPPED: '発送済み',
+  CANCELLED: 'キャンセル',
+  COMPLETED: '完了'
+};
+
   function displayOrders(orders) {
     tbody.innerHTML = "";
     orders.forEach(order => {
+      const statusLabel = STATUS_LABELS[order.orderStatus] || '不明';
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td><button class="order-id-btn" data-id="${order.orderId}">${order.orderId}</button></td>
         <td>${order.buyerName}</td>
         <td>${order.orderDate}</td>
         <td>¥${order.totalPrice.toLocaleString()}</td>
-        <td>${order.status}</td>
+        <td>${statusLabel}</td>
       `;
       tbody.appendChild(tr);
     });
