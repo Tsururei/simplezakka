@@ -393,4 +393,103 @@ class OrderServiceTest {
         // 例外が適切に伝播することを確認する。
     }
 
+@Test
+@DisplayName("在庫確認後に商品が見つからない場合、IllegalStateExceptionがスローされる")
+void placeOrder_Fail_WhenProductDisappearsAfterStockCheck_ShouldThrowIllegalStateException() {
+    // Arrange: 在庫確認時は存在するが、在庫減算時にOptional.empty()を返すように設定
+    when(productRepository.findById(1))
+            .thenReturn(Optional.of(product1)) // 1回目: 在庫確認用
+            .thenReturn(Optional.empty());     // 2回目: 在庫減算時に消える
+    when(productRepository.findById(2)).thenReturn(Optional.of(product2)); // 商品2は正常
+
+    // Act & Assert
+    assertThatThrownBy(() -> orderService.placeOrder(cart, orderRequest, session))
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("在庫確認後に商品が見つかりません");
+}
+
+@Test
+@DisplayName("orderRequestが非nullだがcustomerInfoがnullの場合、NullPointerExceptionが発生する")
+void placeOrder_Fail_WhenCustomerInfoIsNull_ShouldThrowNPE() {
+    // Arrange
+    orderRequest.setCustomerInfo(null);
+
+    // Act & Assert
+    assertThatThrownBy(() -> orderService.placeOrder(cart, orderRequest, session))
+            .isInstanceOf(NullPointerException.class);
+
+    // 副作用の検証
+    verify(orderRepository, never()).save(any());
+    verify(cartService, never()).clearCart(any());
+}
+
+@Test
+@DisplayName("在庫数とカート数量がちょうど一致する場合、正常に注文が作成され在庫が0に減る")
+void placeOrder_Success_WhenStockEqualsCartQuantity() {
+    // Arrange: 商品1の在庫を2に設定し、カートも2個要求
+    product1.setStock(2);
+    CartGuest exactCart = new CartGuest();
+    CartItem exactItem = new CartItem("1", 1, "在庫一致商品", 1000, "/img1.png", 2, 2000);
+    exactCart.addItem(exactItem);
+
+    when(productRepository.findById(1)).thenReturn(Optional.of(product1));
+    when(productRepository.decreaseStock(eq(1), eq(2))).thenReturn(1);
+
+    // Act
+    OrderResponse response = orderService.placeOrder(exactCart, orderRequest, session);
+
+    // Assert
+    assertThat(response).isNotNull();
+    verify(productRepository, times(1)).decreaseStock(eq(1), eq(2));
+}
+
+@Test
+@DisplayName("商品価格が0円の場合でも、合計金額が正しく計算され注文が作成される")
+void placeOrder_Success_WhenProductPriceIsZero() {
+    // Arrange: 無償商品をカートに追加
+    Product freeProduct = new Product();
+    freeProduct.setProductId(10);
+    freeProduct.setName("無料サンプル");
+    freeProduct.setPrice(0);
+    freeProduct.setStock(5);
+
+    CartGuest freeCart = new CartGuest();
+    CartItem freeItem = new CartItem("10", 10, "無料サンプル", 0, "/img_free.png", 3, 0);
+    freeCart.addItem(freeItem);
+
+    when(productRepository.findById(10)).thenReturn(Optional.of(freeProduct));
+    when(productRepository.decreaseStock(eq(10), eq(3))).thenReturn(1);
+
+    // Act
+    OrderResponse response = orderService.placeOrder(freeCart, orderRequest, session);
+
+    // Assert
+    assertThat(response).isNotNull();
+    ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
+    verify(orderRepository).save(orderCaptor.capture());
+    Order savedOrder = orderCaptor.getValue();
+    assertThat(savedOrder.getTotalAmount()).isEqualTo(0);
+}
+
+@Test
+@DisplayName("CustomerInfoの一部の必須項目がnullの場合、そのままOrderに保存される")
+void placeOrder_Success_WhenCustomerInfoHasNullFields() {
+    // Arrange: customerNameをnullに設定
+    customerInfo.setCustomerName(null);
+
+    // 在庫減算は成功するように設定
+    when(productRepository.decreaseStock(eq(1), eq(2))).thenReturn(1);
+    when(productRepository.decreaseStock(eq(2), eq(1))).thenReturn(1);
+
+    // Act
+    OrderResponse response = orderService.placeOrder(cart, orderRequest, session);
+
+    // Assert
+    assertThat(response).isNotNull();
+    ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
+    verify(orderRepository).save(orderCaptor.capture());
+    Order savedOrder = orderCaptor.getValue();
+    assertThat(savedOrder.getCustomerName()).isNull();
+}
+
 }
