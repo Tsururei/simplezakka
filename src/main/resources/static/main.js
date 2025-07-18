@@ -392,19 +392,14 @@ async function submitUserOrder() {
     return;
   }
 
-  const payMethod = document.querySelector('input[name="pay_method"]:checked');
+  const payMethod = document.querySelector('input[name="payMethod"]:checked');
   if (!payMethod) {
     alert("決済方法を選択してください");
     return;
   }
 
   const selectedMethod = payMethod.value;
-  //ここからいらない？
-  const token = localStorage.getItem('accessToken');
-  let url = token ? '/api/user/orders' : '/api/orders';
-  let headers = { 'Content-Type': 'application/json' };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  //ここまで要らない？
+
   let latestCartItems = [];
   const userId = localStorage.getItem('userId');
   try {
@@ -429,22 +424,20 @@ async function submitUserOrder() {
     
   const orderData = {
     customerInfo: {
-      name: document.getElementById('customerName').value,
-      email: document.getElementById('customerEmail').value,
-      address: document.getElementById('address').value ||''
-    },
-    shippingInfo: {
-      name: document.getElementById('shippingName').value,
-      address: document.getElementById('shippingAddress').value
-    },
-    payment_method: selectedMethod,
+      customerName: document.getElementById('customerName').value,
+      customerAddress: document.getElementById('customerAddress').value,
+      customerEmail: document.getElementById('customerEmail').value,
+      shippingName: document.getElementById('shippingName').value,
+      shippingAddress: document.getElementById('shippingAddress').value,
+      payMethod: selectedMethod,
+        },
     items: latestCartItems
   };
 console.log('注文データ（送信前）:', orderData);
   try {
     console.log('送信データ:', orderData);
 
-    const response = await fetch(`${API_BASE}/user/orders`, {
+    const response = await fetch(`${API_BASE}/user/orders?userId=${userId} `, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'
       },
