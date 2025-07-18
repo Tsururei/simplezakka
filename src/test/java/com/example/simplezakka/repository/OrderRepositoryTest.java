@@ -47,7 +47,7 @@ class OrderRepositoryTest {
     @BeforeEach
     void setUp() {
     category = new Category();
-    category.setId(1);  // ここを追加！IDを手動セット
+    category.setCategoryId("1");
     category.setCategoryName("テストカテゴリ");
     categoryRepository.save(category);
     
@@ -87,6 +87,7 @@ class OrderRepositoryTest {
         detail1.setProductName(product1.getName());
         detail1.setPrice(BigDecimal.valueOf(product1.getPrice()));
         detail1.setQuantity(1);
+        detail1.setUnitPrice(BigDecimal.valueOf(product1.getPrice()));
         order.addOrderDetail(detail1); // Orderエンティティのヘルパーメソッドで詳細を追加
 
         OrderDetail detail2 = new OrderDetail();
@@ -94,6 +95,7 @@ class OrderRepositoryTest {
         detail2.setProductName(product2.getName());
         detail2.setPrice(BigDecimal.valueOf(product2.getPrice()));
         detail2.setQuantity(1);
+        detail2.setUnitPrice(BigDecimal.valueOf(product1.getPrice()));
         order.addOrderDetail(detail2);
         return order;
     }
@@ -127,6 +129,8 @@ class OrderRepositoryTest {
         OrderDetail foundDetail1 = entityManager.find(OrderDetail.class, foundOrder.getOrderDetails().get(0).getDetailId());
         assertThat(foundDetail1).isNotNull();
         assertThat(foundDetail1.getOrder().getOrderId()).isEqualTo(foundOrder.getOrderId()); // Orderへの関連が設定されている
+        
+        category.setCategoryId("1");    
     }
 
     @Test
@@ -147,6 +151,8 @@ class OrderRepositoryTest {
         assertThat(foundOrder.getCustomerName()).isEqualTo(order1.getCustomerName());
         // 関連エンティティ(OrderDetails)が取得できるかも確認（FetchTypeに依存するが、@DataJpaTest環境では通常取得可能）
         assertThat(foundOrder.getOrderDetails()).hasSize(2);
+
+        category.setCategoryId("1");
     }
 
     @Test
@@ -160,6 +166,8 @@ class OrderRepositoryTest {
 
         // Assert
         assertThat(foundOrderOpt).isNotPresent(); // Optionalが空であること
+
+        category.setCategoryId("1");
     }
 
     @Test
@@ -168,6 +176,7 @@ class OrderRepositoryTest {
         // Arrange
         Order order1 = createSampleOrder("全件顧客1");
         Order order2 = createSampleOrder("全件顧客2");
+        category.setCategoryId("1");
         entityManager.persist(order1);
         entityManager.persist(order2);
         entityManager.flush();
@@ -193,6 +202,8 @@ class OrderRepositoryTest {
 
         // Assert
         assertThat(orders).isEmpty(); // 空のリストが返ること
+
+        category.setCategoryId("1");
     }
 
     @Test
@@ -232,6 +243,7 @@ class OrderRepositoryTest {
         // Arrange
         Order order = createSampleOrder("削除対象顧客");
         Order savedOrder = entityManager.persistFlushFind(order);
+        category.setCategoryId("1");
         Integer orderId = savedOrder.getOrderId();
         // 削除前のOrderDetailのIDを取得 (削除確認用)
         List<Integer> detailIds = savedOrder.getOrderDetails().stream()
@@ -277,5 +289,7 @@ class OrderRepositoryTest {
         .isInstanceOf(DataIntegrityViolationException.class) // Spring Data JPAがラップした例外
         .hasCauseInstanceOf(PersistenceException.class); // JPAレイヤーの例外が原因
         // .hasMessageContaining("NULL not allowed for column \"CUSTOMER_NAME\""); // DB依存のエラーメッセージ確認は脆い場合がある
+
+        category.setCategoryId("1");
     }
 }
