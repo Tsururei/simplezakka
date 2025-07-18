@@ -1,5 +1,10 @@
+
+
+document.addEventListener("DOMContentLoaded", function (){
+});
+
 async function fetchOrders() {
-    const response = await fetch('/api/orders');
+    const response = await fetch('http://localhost:8080/admin/order');
     const orders = await response.json();
     displayOrders(orders);
   }
@@ -14,14 +19,15 @@ async function fetchOrders() {
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td><button class="order-id-btn" data-id="${order.orderId}">${order.orderId}</button></td>
-        <td>${order.customerName}</td>
+        <td>${order.buyerName}</td>
         <td>${order.orderDate}</td>
-        <td>¥${order.totalAmount.toLocaleString()}</td>
+        <td>¥${order.totalPrice.toLocaleString()}</td>
         <td>${order.status}</td>
       `;
       tbody.appendChild(tr);
     });
   }
+
 
   function showModal(orderId) {
     const order = orders.find(o => o.orderId === orderId);
