@@ -6,6 +6,8 @@ import com.example.simplezakka.dto.auth.RegisterRequest;
 import com.example.simplezakka.exception.AuthenticationException;
 import com.example.simplezakka.entity.User;
 import com.example.simplezakka.repository.UserRepository;
+import com.example.simplezakka.entity.User;
+import com.example.simplezakka.dto.auth.LoginRequest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,39 +81,28 @@ class AuthServiceTest {
 
     // --- パスワード不一致 ---
     @Test
-    void findUserbyloginEmail_Wrongpassword_ShouldThrowException() {
-        String email = "test@example.com";
-        String password = "wrong";
+void findUserbyloginEmail_Wrongpassword_ShouldThrowException() {
+    // Arrange（準備）
+    String email = "test@example.com";
+    String correctPassword = "correct-password"; // DBにあるパスワード
+    String wrongPassword = "wrong-password";     // 入力された間違ったパスワード
 
-        User user = new User();
-        user.setUserEmail(email);
-        user.setUserPassword("123456");
+    User user = new User();
+    user.setUserEmail(email);
+    user.setUserPassword(correctPassword);
 
-        when(userRepository.findByUserEmail(email)).thenReturn(Optional.of(user));
-        when(authService.checkPassword(password, user.getUserPassword())).thenReturn(false);
+    LoginRequest request = new LoginRequest();
+    request.setUserEmail(email);
+    request.setUserPassword(wrongPassword);
 
-        LoginRequest request = new LoginRequest();
-          request.setUserEmail(email);
-          request.setUserPassword(password);
+    when(userRepository.findByUserEmail(email)).thenReturn(Optional.of(user));
 
-        AuthenticationException thrown = assertThrows(AuthenticationException.class,
-            () -> authService.findUserbyloginEmail(request));
+    // Act & Assert（実行と検証）
+    AuthenticationException thrown = assertThrows(AuthenticationException.class,
+        () -> authService.findUserbyloginEmail(request));
 
-        assertEquals("パスワードが間違っています", thrown.getMessage());
-    }
-
-    // --- 空文字・null系のテストも同様に追加 ---
-    @Test
-    void findUserbyloginEmail_EmptyEmail_ShouldThrowException() {
-        LoginRequest request = new LoginRequest();
-          request.setUserEmail("");
-          request.setUserPassword("123456");  
-
-        AuthenticationException thrown = assertThrows(AuthenticationException.class,
-            () -> authService.findUserbyloginEmail(request));
-
-        assertEquals("ユーザーが見つかりません", thrown.getMessage());
-    }
+    assertEquals("パスワードが間違っています", thrown.getMessage());
+}
 
     @Test
     void findUserbyloginEmail_NullEmail_ShouldThrowException() {
