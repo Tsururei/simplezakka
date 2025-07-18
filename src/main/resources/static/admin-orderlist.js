@@ -50,7 +50,6 @@ async function fetchOrders() {
       <p><strong>購入者名:</strong> ${order.buyerName}</p>
       <p><strong>配送先住所:</strong> ${order.shippingAddress}</p>
       <p><strong>購入代金:</strong> ¥${order.totalPrice.toLocaleString()}</p>
-      <p><strong>注文ステータス:</strong> ${order.orderStatus}</p>
       <p>
        <strong>注文ステータス:</strong>
        <select id="status-select">
