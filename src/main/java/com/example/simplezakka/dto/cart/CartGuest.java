@@ -20,19 +20,17 @@ public class CartGuest implements Serializable {
     public void addItem(CartItem item) {
         String itemId = String.valueOf(item.getProductId());
         
-        // 既存のアイテムがあれば数量を加算
         if (items.containsKey(itemId)) {
             CartItem existingItem = items.get(itemId);
             existingItem.setQuantity(existingItem.getQuantity() + item.getQuantity());
             existingItem.setSubtotal(existingItem.getPrice() * existingItem.getQuantity());
         } else {
-            // 新しいアイテムを追加
+
             item.setId(itemId);
             item.setSubtotal(item.getPrice() * item.getQuantity());
             items.put(itemId, item);
         }
-        
-        // 合計計算
+
         calculateTotals();
     }
     
