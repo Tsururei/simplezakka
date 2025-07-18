@@ -18,20 +18,24 @@
     }
 
     button {
-      padding: 0.7em 9.0em;
+      padding: 0.7em 2.0em;
       font-size: 1rem;
       border-radius: 8px;
       border: 1px solid #999;
-      margin: 1em 0;
+      margin: 0.5em 0.5em 0.5em 0;
       background-color: #eee;
       cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ddd;
     }
 
     #product-list {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      max-height: 60vh;
+      max-height: 70vh;
       overflow-y: auto;
       border-top: 1px solid #ccc;
       padding-top: 1rem;
@@ -43,29 +47,70 @@
       width: 45%;
       padding: 1rem;
       box-sizing: border-box;
+      position: relative;
+    }
+
+    .product-card label {
+      display: block;
+      margin-bottom: 0.3em;
+      font-weight: bold;
+      color: #333;
     }
 
     .product-card input,
     .product-card textarea {
       width: 100%;
       margin-bottom: 1em;
-      padding: 0.3em;
-    }
-
-    #save-button {
-      background-color: #005577;
-      color: white;
+      padding: 0.5em;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
 
     .product-card img {
       width: 100%;
-      height: 400px; 
+      height: 200px;
       object-fit: contain;
-      border: 1px solid #ccc; 
-      border-radius: 8px;      
-      background-color: #f9f9f9; 
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
       padding: 4px;
       box-sizing: border-box;
+      margin-bottom: 1em;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+      color: white;
+      padding: 0.3em 0.8em;
+      font-size: 0.9rem;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+
+    .delete-btn:hover {
+      background-color: #c82333;
+    }
+
+    #save-button {
+      background-color: #28a745;
+      color: white;
+      padding: 0.8em 3em;
+    }
+
+    #save-button:hover {
+      background-color: #218838;
+    }
+
+    .add-button {
+      background-color: #007bff;
+      color: white;
+      padding: 0.8em 3em;
+    }
+
+    .add-button:hover {
+      background-color: #0056b3;
     }
 
     /* モーダル */
@@ -73,186 +118,145 @@
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.5);
       justify-content: center;
       align-items: center;
+      z-index: 1000;
     }
 
     .modal-content {
       background: white;
-      padding: 1.5rem;
+      padding: 2rem;
       width: 90%;
-      max-width: 400px;
+      max-width: 500px;
       border-radius: 8px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-content label {
+      display: block;
+      margin-bottom: 0.3em;
+      font-weight: bold;
+      color: #333;
     }
 
     .modal-content input,
     .modal-content textarea {
       width: 100%;
-      margin-bottom: 0.5em;
-    }
-
-    .modal-content button {
-      margin-top: 1em;
+      margin-bottom: 1em;
+      padding: 0.5em;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 1em;
     }
 
-    
-  </style>
+    .modal-buttons {
+      display: flex;
+      gap: 1em;
+      justify-content: flex-end;
+      margin-top: 1em;
+    }
 
+    .register-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .register-btn:hover {
+      background-color: #2651ae;
+    }
+
+    .cancel-btn {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .cancel-btn:hover {
+      background-color: #545b62;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 2em;
+      color: #666;
+    }
+
+    .error {
+      color: #dc3545;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 0.5em;
+      border-radius: 4px;
+      margin-bottom: 1em;
+    }
+
+    .success {
+      color: #155724;
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      padding: 0.5em;
+      border-radius: 4px;
+      margin-bottom: 1em;
+    }
+  </style>
 </head>
 
-
 <body>
+  <h1>商品情報・カテゴリ編集</h1>
 
-<h1>商品情報・カテゴリ編集</h1>
-
-<br>
-
-<button onclick="openModal()">＋ 新規商品情報登録</button>
-
-<p>削除編集はこちら↓</p>
-
-<button type="button" id="save-button">変更を保存</button>
-
-<script>
-  const saveBtn = document.getElementById("save-button");
-
-  saveBtn.addEventListener("click", async () => {
-    const dataToSave = products;
-
-    try {
-      const response = await fetch("/api/save", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSave),
-      });
-
-      if (response.ok) {
-        // 保存成功 → ページをリロード
-        location.reload();
-      } 
-      else {
-        alert("保存に失敗しました");
-      }
-    } 
-    catch (error) {
-      console.error("エラー:", error);
-      alert("通信エラーが発生しました");
-    }
-  });
-</script>
-
-<div id="product-list">
-  <!-- 商品カードがここに表示される -->
-</div>
-
-<!-- モーダル -->
-<div id="modal" class="modal">
-
-  <div class="modal-content">
-
-    <div class="modal-header">
-      <h3>新規商品登録</h3>
-    </div>
-
-    <input type="text" id="new-category-id" placeholder="カテゴリID">
-    <input type="text" id="new-product-id" placeholder="商品ID">
-    <input type="file" id="new-image">
-    <input type="text" id="new-name" placeholder="商品名">
-    <input type="number" id="new-price" placeholder="価格">
-    <textarea id="new-desc" placeholder="商品説明"></textarea>
-    <button onclick="registerProduct()">登録</button>
-    <button onclick="closeModal()">キャンセル</button>
+  <div class="controls">
+    <button class="add-button" onclick="openModal()">＋ 新規商品情報登録</button>
+    <button id="save-button">変更を保存</button>
   </div>
 
-</div>
+  <div id="message-area"></div>
+  <div id="loading" class="loading">読み込み中...</div>
 
-<script>
-  const productList = document.getElementById("product-list");
-  const modal = document.getElementById("modal");
+  <div id="product-list">
+    <!-- 商品カードがここに表示される -->
+  </div>
 
-  let products = []; //初期は空
+  <!-- モーダル -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>新規商品登録</h3>
+      </div>
 
-async function fetchProducts() {
-  try {
-    const response = await fetch("/api/admin/products"); //apiのURL
-    if (!response.ok){
-      throw new Error("商品情報の取得に失敗しました");
-    } 
-    products = await response.json();
-    renderProducts();
-  } catch (error) {
-    console.error("商品データ取得エラー:", error);
-    alert("商品情報の取得に失敗しました");
-  }
-}
-  
-function renderProducts() { 
-  productList.innerHTML = "";
-    products.forEach((p, i) => {
-      const card = document.createElement("div");
-      card.className = "product-card";
-      card.innerHTML = `
-        <label>カテゴリID</label>
-        <input value="${p.categoryId}" placeholder="カテゴリID" onchange="products[${i}].categoryId = this.value">
+      <label for="new-category-id">カテゴリID *</label>
+      <input type="text" id="new-category-id" required>
 
-        <label>商品ID</label>
-        <input value="${p.productId}" placeholder="商品ID" onchange="products[${i}].productId = this.value">
-        
-        <label>画像</label>
-        <img src="${p.image || 'https://via.placeholder.com/150'}" alt="画像">
-        
-        <label>商品名</label>
-        <input value="${p.name}" placeholder="商品名" onchange="products[${i}].name = this.value">
-        
-        <label>価格（円）</label>
-        <input type="number" value="${p.price}" placeholder="価格" onchange="products[${i}].price = this.value">
-        
-        <label>商品説明</label>
-        <textarea placeholder="商品説明" onchange="products[${i}].desc = this.value">${p.desc}</textarea>
-      `;
-      productList.appendChild(card);
-    });
-  }
+      <label for="new-product-name">商品名 *</label>
+      <input type="text" id="new-product-name" placeholder="例: アロマディフューザー" required>
 
-  function openModal() {
-    modal.style.display = "flex";
-  }
+      <label for="new-product-price">価格（円） *</label>
+      <input type="number" id="new-product-price" placeholder="例: 1200" required>
 
-  function closeModal() {
-    modal.style.display = "none";
-    document.querySelectorAll("#modal input, #modal textarea").forEach(e => e.value = "");
-  }
+      <label for="new-stock">在庫数 *</label>
+      <input type="number" id="new-stock" placeholder="例: 50" required>
 
-  function registerProduct() {
-    const categoryId = document.getElementById("new-category-id").value;
-    const productId = document.getElementById("new-product-id").value;
-    const name = document.getElementById("new-name").value;
-    const price = document.getElementById("new-price").value;
-    const desc = document.getElementById("new-desc").value;
-    
+      <label for="new-image-url">画像URL</label>
+      <input type="url" id="new-image-url" placeholder="例: https://example.com/image.jpg">
 
-    if (categoryId && productId && name && price) {
-      products.push({ categoryId, productId, name, price, desc, image });
-      renderProducts();
-      closeModal();
-    } 
-    else {
-      alert("必須項目を入力してください");
-    }
-  }
+      <label for="new-description">商品説明</label>
+      <textarea id="new-description" placeholder="商品の詳細説明" rows="4"></textarea>
 
-  fetchProducts();
-</script>
+      <div class="modal-buttons">
+        <button class="register-btn" id="register-product-button">登録</button>
+        <button class="cancel-btn" onclick="closeModal()">キャンセル</button>
+      </div>
+    </div>
+  </div>
 
-</body>
-
-</html>
+  <script src="admin-product.js"></script>
+  </body>
+  </html>
