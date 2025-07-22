@@ -173,7 +173,7 @@ class AuthServiceTest {
         assertNotNull(response);
         assertEquals("access-token", response.getAccessToken());
         assertEquals("refresh-token", response.getRefreshToken());
-        assertEquals(Long.valueOf(1L), response.getUserId());
+        assertEquals(Integer.valueOf(1), response.getUserId());
     }
 
     // --- 登録異常ケース：既存メール ---
