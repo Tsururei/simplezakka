@@ -40,6 +40,10 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
+        Category category = new Category();
+        category.setCategoryId("1"); 
+        category.setCategoryName("テストカテゴリ");
+
         product1 = new Product();
         product1.setProductId(1);
         product1.setName("商品1");
@@ -47,7 +51,8 @@ class ProductServiceTest {
         product1.setImageUrl("/img1.png");
         product1.setDescription("説明1");
         product1.setStock(10);
-
+        product1.setCategory(category);
+        
         product2 = new Product();
         product2.setProductId(2);
         product2.setName("商品2");
@@ -55,6 +60,7 @@ class ProductServiceTest {
         product2.setImageUrl("/img2.png");
         product2.setDescription("説明2");
         product2.setStock(5);
+        product2.setCategory(category);
 
         productWithNullFields = new Product();
         productWithNullFields.setProductId(3);
@@ -63,6 +69,9 @@ class ProductServiceTest {
         productWithNullFields.setStock(8);
         productWithNullFields.setDescription(null);
         productWithNullFields.setImageUrl(null);
+        productWithNullFields.setCategory(category);
+ 
+     
     }
 
     // === findAllProducts ===
