@@ -20,6 +20,11 @@ async function tryRegisiter() {
     errDiv.style.display = 'block';
     return;
   }
+    if (!registerEmail.includes('@')) {
+    errDiv.innerText = 'メールアドレスの形式が正しくありません。';
+    errDiv.style.display = 'block';
+    return;
+  }
   if (registerPassword.length < 8) {
     errDiv.innerText = 'パスワードは8文字以上にしてください。';
     errDiv.style.display = 'block';
