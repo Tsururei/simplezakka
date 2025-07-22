@@ -17,7 +17,7 @@ public class DbCartrepositoryTest {
     private DbCartrepository cartRepository;
 
     @Test
-    @DisplayName("saveしてfindByUserIdで取得できること")
+    @DisplayName("saveしてfindByUserIdで取得")
     void saveAndFindByUserId_Success() {
         // given
         Cart cart = new Cart();
@@ -33,14 +33,14 @@ public class DbCartrepositoryTest {
     }
 
     @Test
-    @DisplayName("存在しないuserIdのfindByUserIdは空Optionalを返す")
+    @DisplayName("存在しないuserIdのfindByUserIdは空のOptionalを返す")
     void findByUserId_WhenNotExists_ShouldReturnEmpty() {
         Optional<Cart> foundCart = cartRepository.findByUserId(999);
         assertThat(foundCart).isEmpty();
     }
 
     @Test
-    @DisplayName("存在するuserIdのdeleteByUserIdで削除される")
+    @DisplayName("存在するuserIdをdeleteByUserIdで削除")
     void deleteByUserId_WhenExists_ShouldDeleteCart() {
         // given
         Cart cart = new Cart();
