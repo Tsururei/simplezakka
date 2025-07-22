@@ -39,9 +39,19 @@ class ProductControllerTest {
     @BeforeEach
     void setUp() {
         // --- テストデータ準備 ---
-        productListItem1 = new ProductListItem(1, "リスト商品1", 100, "/list1.png");
-        productListItem2 = new ProductListItem(2, "リスト商品2", 200, "/list2.png");
+        productListItem1 = new ProductListItem();
+        productListItem1.setProductId(1);
+        productListItem1.setName("リスト商品1");
+        productListItem1.setPrice(100);
+        productListItem1.setImageUrl("/list1.png");
 
+        productListItem2 = new ProductListItem();
+        productListItem2.setProductId(2); 
+        productListItem2.setName("リスト商品2");
+        productListItem2.setPrice(200);
+        productListItem2.setImageUrl("/list2.png");
+ 
+        
         productDetail1 = new ProductDetail(1, "詳細商品1", 100, "詳細説明1", 10, "/detail1.png");
         productDetailWithNulls = new ProductDetail(3, "詳細商品3", 300, null, 5, null); // descriptionとimageUrlがnull
 
