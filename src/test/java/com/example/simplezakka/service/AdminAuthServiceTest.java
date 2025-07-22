@@ -105,4 +105,3 @@ class AdminAuthServiceTest {
         assertEquals("パスワードが正しくありません", ex.getMessage());
     }
 }
-
