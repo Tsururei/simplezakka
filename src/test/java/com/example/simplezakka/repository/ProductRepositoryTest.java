@@ -339,7 +339,7 @@ class ProductRepositoryTest {
         .hasCauseInstanceOf(PersistenceException.class);
     }
 
-     @Test
+    @Test
     @DisplayName("必須項目(stock)がnullで保存しようとすると例外発生")
     void saveProduct_WithNullStock_ShouldThrowException() {
         // Arrange
