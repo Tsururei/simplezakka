@@ -338,7 +338,7 @@ async function updateUserItemQuantity(itemId, quantity) {
 async function removeUserItem(itemId) {
     const userId = localStorage.getItem('userId');
   try {
-    const response = await fetch(`${API_BASE}/cart/useritems/${itemId}`, { method: 'DELETE' });
+    const response = await fetch(`${API_BASE}/usercart/items/${itemId}`, { method: 'DELETE' });
     if (!response.ok) throw new Error('商品の削除に失敗しました');
     const cart = await response.json();
     displayUserCart(cart);
