@@ -1,14 +1,16 @@
 package com.example.simplezakka.controller;
 
-import com.example.simplezakka.dto.cart.Cart;
+import com.example.simplezakka.dto.cart.CartGuest;
 import com.example.simplezakka.dto.cart.CartItemInfo;
 import com.example.simplezakka.dto.cart.CartItemQuantityDto;
 import com.example.simplezakka.service.CartService;
+import com.example.simplezakka.entity.Cart;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/cart")
@@ -20,16 +22,16 @@ public class CartController {
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
-    
+
     @GetMapping
-    public ResponseEntity<Cart> getCart(HttpSession session) {
-        Cart cart = cartService.getCartFromSession(session);
+    public ResponseEntity<CartGuest> getCart(HttpSession session) {
+        CartGuest cart = cartService.getCartFromSession(session);
         return ResponseEntity.ok(cart);
     }
     
     @PostMapping
-    public ResponseEntity<Cart> addItem(@Valid @RequestBody CartItemInfo cartItemInfo, HttpSession session) {
-        Cart cart = cartService.addItemToCart(
+    public ResponseEntity<CartGuest> addItem(@Valid @RequestBody CartItemInfo cartItemInfo, HttpSession session) {
+        CartGuest cart = cartService.addItemToCart(
                 cartItemInfo.getProductId(),
                 cartItemInfo.getQuantity(),
                 session
@@ -43,17 +45,17 @@ public class CartController {
     }
     
     @PutMapping("/items/{itemId}")
-    public ResponseEntity<Cart> updateItem(
+    public ResponseEntity<CartGuest> updateItem(
             @PathVariable String itemId,
             @Valid @RequestBody CartItemQuantityDto quantityDto,
             HttpSession session) {
-        Cart cart = cartService.updateItemQuantity(itemId, quantityDto.getQuantity(), session);
+        CartGuest cart = cartService.updateItemQuantity(itemId, quantityDto.getQuantity(), session);
         return ResponseEntity.ok(cart);
     }
     
     @DeleteMapping("/items/{itemId}")
-    public ResponseEntity<Cart> removeItem(@PathVariable String itemId, HttpSession session) {
-        Cart cart = cartService.removeItemFromCart(itemId, session);
+    public ResponseEntity<CartGuest> removeItem(@PathVariable String itemId, HttpSession session) {
+        CartGuest cart = cartService.removeItemFromCart(itemId, session);
         return ResponseEntity.ok(cart);
     }
 }

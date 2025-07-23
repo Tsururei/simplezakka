@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>管理者注文情報確認画面</title>
+  <link rel="stylesheet" href="admin-orderlist.css">
+</head>
+
+
+
+<body>
+  <h1>WELCOME TO "TEINEI"</h1>
+  <h2>注文情報確認</h2>
+  <h3>注文情報一覧</h3>
+    <div class="container d-flex align-items-center justify-content-between py-2 border-bottom">
+    <a href="/admin-top.html" class="fs-3 fw-bold text-decoration-none" id="back-btn">トップに戻る</a>
+
+ <table id="orders-table">
+  <thead>
+    <tr>
+      <th>注文ID</th>
+      <th>購入者名</th>
+      <th>注文日時</th>
+      <th>購入代金</th>
+      <th>注文ステータス</th>
+    </tr>
+  </thead>
+  <tbody>
+    
+  </tbody>
+ </table>
+
+ <div id="order-modal" class="modal">
+  <div class="modal-content">
+    <h2>注文詳細情報</h2>
+    <div id="modal-body">
+    </div>
+  </div>
+ </div>
+
+
+
+ <script src="admin-orderlist.js"></script>
+</body>

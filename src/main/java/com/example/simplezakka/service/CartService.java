@@ -1,6 +1,6 @@
 package com.example.simplezakka.service;
 
-import com.example.simplezakka.dto.cart.Cart;
+import com.example.simplezakka.dto.cart.CartGuest;
 import com.example.simplezakka.dto.cart.CartItem;
 import com.example.simplezakka.entity.Product;
 import com.example.simplezakka.repository.ProductRepository;
@@ -14,7 +14,6 @@ import java.util.Optional;
 public class CartService {
 
     private static final String CART_SESSION_KEY = "cart";
-    
     private final ProductRepository productRepository;
     
     @Autowired
@@ -22,21 +21,21 @@ public class CartService {
         this.productRepository = productRepository;
     }
     
-    public Cart getCartFromSession(HttpSession session) {
-        Cart cart = (Cart) session.getAttribute(CART_SESSION_KEY);
+    public CartGuest getCartFromSession(HttpSession session) {
+        CartGuest cart = (CartGuest) session.getAttribute(CART_SESSION_KEY);
         if (cart == null) {
-            cart = new Cart();
+            cart = new CartGuest();
             session.setAttribute(CART_SESSION_KEY, cart);
         }
         return cart;
     }
     
-    public Cart addItemToCart(Integer productId, Integer quantity, HttpSession session) {
+    public CartGuest addItemToCart(Integer productId, Integer quantity, HttpSession session) {
         Optional<Product> productOpt = productRepository.findById(productId);
         
         if (productOpt.isPresent()) {
             Product product = productOpt.get();
-            Cart cart = getCartFromSession(session);
+            CartGuest cart = getCartFromSession(session);
             
             CartItem item = new CartItem();
             item.setProductId(product.getProductId());
@@ -54,15 +53,15 @@ public class CartService {
         return null;
     }
     
-    public Cart updateItemQuantity(String itemId, Integer quantity, HttpSession session) {
-        Cart cart = getCartFromSession(session);
+    public CartGuest updateItemQuantity(String itemId, Integer quantity, HttpSession session) {
+        CartGuest cart = getCartFromSession(session);
         cart.updateQuantity(itemId, quantity);
         session.setAttribute(CART_SESSION_KEY, cart);
         return cart;
     }
     
-    public Cart removeItemFromCart(String itemId, HttpSession session) {
-        Cart cart = getCartFromSession(session);
+    public CartGuest removeItemFromCart(String itemId, HttpSession session) {
+        CartGuest cart = getCartFromSession(session);
         cart.removeItem(itemId);
         session.setAttribute(CART_SESSION_KEY, cart);
         return cart;

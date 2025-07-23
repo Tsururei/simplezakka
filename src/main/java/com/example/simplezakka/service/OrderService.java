@@ -1,6 +1,6 @@
 package com.example.simplezakka.service;
 
-import com.example.simplezakka.dto.cart.Cart;
+import com.example.simplezakka.dto.cart.CartGuest;
 import com.example.simplezakka.dto.cart.CartItem;
 import com.example.simplezakka.dto.order.CustomerInfo;
 import com.example.simplezakka.dto.order.OrderRequest;
@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.math.BigDecimal;
 
 @Service
 public class OrderService {
@@ -40,7 +41,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderResponse placeOrder(Cart cart, OrderRequest orderRequest, HttpSession session) {
+    public OrderResponse placeOrder(CartGuest cart, OrderRequest orderRequest, HttpSession session) {
         if (cart == null || cart.getItems().isEmpty()) {
             return null;
         }
@@ -58,10 +59,13 @@ public class OrderService {
         CustomerInfo customerInfo = orderRequest.getCustomerInfo();
         order.setOrderDate(LocalDateTime.now());
         order.setTotalAmount(cart.getTotalPrice());
-        order.setCustomerName(customerInfo.getName());
-        order.setCustomerEmail(customerInfo.getEmail());
-        order.setShippingAddress(customerInfo.getAddress());
-        order.setShippingPhoneNumber(customerInfo.getPhoneNumber());
+        order.setCustomerName(customerInfo.getCustomerName());
+        order.setCustomerAddress(customerInfo.getCustomerAddress());
+        order.setCustomerEmail(customerInfo.getCustomerEmail());
+        order.setShippingName(customerInfo.getShippingName());
+        order.setShippingAddress(customerInfo.getShippingAddress());
+        order.setPayMethod(customerInfo.getPayMethod());
+    
         order.setStatus("PENDING");
 
         // 注文明細作成と在庫減算
@@ -71,9 +75,10 @@ public class OrderService {
             );
 
             OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setProduct(product);
+            orderDetail.setProductId(product.getProductId());
             orderDetail.setProductName(product.getName());
-            orderDetail.setPrice(product.getPrice());
+            orderDetail.setPrice(BigDecimal.valueOf(product.getPrice()));
+            orderDetail.setUnitPrice(BigDecimal.valueOf(product.getPrice()));
             orderDetail.setQuantity(cartItem.getQuantity());
 
             order.addOrderDetail(orderDetail);
@@ -88,7 +93,7 @@ public class OrderService {
                     "商品ID: " + product.getProductId() +
                     ", 商品名: " + product.getName() +
                     ", 要求数量: " + cartItem.getQuantity()
-                    // 必要であれば、考えられる原因（競合など）を示すメッセージを追加
+    
                 );
             }
         }

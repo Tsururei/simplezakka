@@ -2,7 +2,9 @@ package com.example.simplezakka.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,15 +28,21 @@ public class Order {
     
     @Column(nullable = false)
     private String customerName;
+
+    @Column(nullable = false)
+    private String customerAddress;
     
     @Column(nullable = false)
     private String customerEmail;
+
+    @Column(nullable = false)
+    private String shippingName;
     
     @Column(nullable = false)
     private String shippingAddress;
-    
+
     @Column(nullable = false)
-    private String shippingPhoneNumber;
+    private String payMethod;
     
     @Column(nullable = false)
     private String status;

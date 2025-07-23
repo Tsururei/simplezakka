@@ -2,7 +2,11 @@ package com.example.simplezakka.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_details")
@@ -12,22 +16,25 @@ public class OrderDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderDetailId;
-    
-    @ManyToOne
-    @JoinColumn(name = "order_id", nullable = false)
+    private Integer detailId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false) // 外部キー（ordersテーブルのorder_idと紐づけ）
     private Order order;
-    
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
-    
+
+    @Column(nullable = false)
+    private Integer productId;
+
     @Column(nullable = false)
     private String productName;
-    
+
     @Column(nullable = false)
-    private Integer price;
-    
+    private BigDecimal price;
+
     @Column(nullable = false)
-    private Integer quantity;
+    private int quantity;
+
+    @Column(nullable = false)
+    private BigDecimal unitPrice;
+
 }

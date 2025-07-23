@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -30,11 +31,18 @@ public class Product {
     
     private String imageUrl;
     
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+    
     private Boolean isRecommended;
     
     private LocalDateTime createdAt;
     
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ProductImage> images;
     
     @PrePersist
     protected void onCreate() {
