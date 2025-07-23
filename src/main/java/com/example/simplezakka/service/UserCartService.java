@@ -122,7 +122,7 @@ public class UserCartService {
         cart.setCartId(cartGuest.getCartId());
         cart.setUserId(cartGuest.getUserId());
         cart.setCreatedAt(cartGuest.getCreatedAt());
-        cart.setUpdatedAt(cartGuest.getUpdatedAt());
+        cart.setUpdatedAt(LocalDateTime.now());
 
         List<CartItemEntity> cartItems = cartGuest.getItems().values().stream()
         .map(dtoItem -> {
@@ -144,6 +144,7 @@ public class UserCartService {
         CartGuest cartGuest = getCartFromDb(cartDto);
         cartGuest.updateQuantity(itemId, quantity);
         Cart cart = convertToCartEntity(cartGuest);
+        cart.setUpdatedAt(LocalDateTime.now());
         dbCartRepository.save(cart);
         return cartGuest;
     }
@@ -152,6 +153,7 @@ public class UserCartService {
         CartGuest cartGuest = getCartFromDb(cartDto);
         cartGuest.removeItem(itemId);
         Cart cart = convertToCartEntity(cartGuest);
+        cart.setUpdatedAt(LocalDateTime.now());
         dbCartRepository.save(cart);
         return cartGuest;
     }
@@ -160,6 +162,7 @@ public class UserCartService {
         CartGuest cartGuest = getCartFromDb(cartDto);
         cartGuest.clear();
         Cart cart = convertToCartEntity(cartGuest);
+        cart.setUpdatedAt(LocalDateTime.now());
         dbCartRepository.save(cart);
         return cartGuest;
     }
