@@ -20,7 +20,7 @@ public class JwtTokenProvider {
     public String generateAccessToken(User user) {
         return Jwts.builder()
             .setSubject(String.valueOf(user.getUserId()))
-            .setExpiration(new Date(System.currentTimeMillis() - ACCESS_TOKEN_VALIDITY))
+            .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
     }
@@ -28,7 +28,7 @@ public class JwtTokenProvider {
     public String generateRefreshToken(User user) {
         return Jwts.builder()
             .setSubject(String.valueOf(user.getUserId()))
-            .setExpiration(new Date(System.currentTimeMillis() - REFRESH_TOKEN_VALIDITY))
+            .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
             .signWith(getSigningKey(), SignatureAlgorithm.HS256)
             .compact();
     }
