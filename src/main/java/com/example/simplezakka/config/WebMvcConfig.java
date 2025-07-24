@@ -20,6 +20,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthInterceptor(jwtTokenProvider, refreshTokenService))
-                .addPathPatterns("/user/**", "/usercart/**", "/user/orders/**");
+                .addPathPatterns("/api/user/**", "/api/usercart/**", "/api/user/orders/**");
     }
 }

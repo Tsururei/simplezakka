@@ -4,18 +4,39 @@ let allProductsContainer, kitchenContainer, interiorContainer;
 let cartItems = [];
 
 const API_BASE = '/api';
-const token = localStorage.getItem('accessToken');
-const isGuest = !token;
+const isGuest = !localStorage.getItem('accessToken');
 
 async function fetchWithAuth(url, options = {}) {
+  const accessToken = localStorage.getItem('accessToken');
+  const refreshToken = localStorage.getItem('refreshToken');
 const headers = {
     ...(options.headers || {}),
-    'Authorization': `Bearer ${token}`
+    'Authorization': `Bearer ${accessToken}`,
+    'X-Refresh-Token': refreshToken
   };
-  return fetch(url, {
-    ...options,
-    headers
-  });
+
+ let response = await fetch(url, { ...options, headers });
+
+  if (response.status !== 401) {
+    return response;
+  }
+
+  const newToken = response.headers.get('X-New-Access-Token');
+  if (newToken) {
+    localStorage.setItem('accessToken', newToken);
+    headers['Authorization'] = `Bearer ${newToken}`;
+    return fetch(url, { ...options, headers });
+  } else {
+    redirectToLogin();
+    return response;
+  }
+}
+
+  function redirectToLogin() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userId');
+    window.location.href = '/index.html';
 }
 
 

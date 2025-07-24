@@ -23,8 +23,12 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         String accessToken = request.getHeader("Authorization");
         String refreshToken = request.getHeader("X-Refresh-Token");
+            if (accessToken == null) {
+        return true;
+        }
+        String token = accessToken.substring(7);
         try {
-            tokenProvider.getUserIdFromToken(accessToken);
+            tokenProvider.getUserIdFromToken(token);
             return true;
         } catch (ExpiredJwtException e) {
             if (tokenProvider.isTokenValid(refreshToken)) {
