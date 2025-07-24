@@ -36,3 +36,34 @@ content-type: application/json
     }
   ]
 }
+###管理者ログイン（正常系）
+POST http://localhost:8080/admin/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+email=admin@example.com&password=adminpass
+
+###管理者ログアウト（正常系）
+POST http://localhost:8080/admin/auth/logout
+Cookie: {{login.response.headers.Set-Cookie}}
+
+### ログイン失敗（登録されていないメールアドレス）
+POST http://localhost:8080/admin/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+email=unknown@test.com&password=adminpass
+
+### ログイン失敗（パスワード不一致）
+POST http://localhost:8080/admin/auth/login
+Content-Type: application/x-www-form-urlencoded
+
+email=admin@example.com&password=wrongpasswor
+
+
+
+### ステータス更新時にDBエラーが発生する（異常系）
+PATCH http://localhost:8080/admin/order/9999
+Content-Type: application/json
+
+{
+  "newStatus": "SHIPPED"
+}

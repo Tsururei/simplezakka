@@ -2,6 +2,11 @@ package com.example.simplezakka.controller;
 
 import com.example.simplezakka.entity.Admin;
 import com.example.simplezakka.repository.AdminRepository;
+
+import jakarta.validation.Valid;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -28,10 +33,20 @@ public class AdminEditController {
 
 
     @PostMapping
-    public Admin createAdmin(@RequestBody Admin admin) {
+    public ResponseEntity<?> createAdmin(@Valid @RequestBody Admin admin, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+        String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+        return ResponseEntity.badRequest().body(errorMessage);
+    }
+        if (repo.findByAdminEmail(admin.getAdminEmail()).isPresent()) {
+        return ResponseEntity.badRequest().body("メールアドレスは既に登録されています");
+    }
+    
     admin.setAdminId(UUID.randomUUID().toString());     
-    admin.setAdminDate(LocalDateTime.now());            
-    return repo.save(admin);                           
+    admin.setAdminDate(LocalDateTime.now());   
+    
+    Admin savedAdmin = repo.save(admin);
+    return ResponseEntity.ok(savedAdmin);                          
     }
 
     

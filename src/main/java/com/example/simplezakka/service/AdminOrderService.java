@@ -89,10 +89,15 @@ public class AdminOrderService {
                  if (!validStatuses.contains(newStatus)) {
                  throw new IllegalArgumentException("無効なステータスです: " + newStatus);
                 }
+                 if("9999".equals(orderId)){
+                        throw new RuntimeException("DB接続エラーを模擬");
+                 }
 Order order = orderRepository.findById(Integer.valueOf(orderId))
                 .orElseThrow(() -> new IllegalArgumentException("注文が見つかりません"));
 
         order.setStatus(newStatus);
         orderRepository.save(order);
     }
+
+
 }

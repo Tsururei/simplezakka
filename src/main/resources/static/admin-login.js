@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
+ 
+  const messageElem = document.getElementById('login-message');
+  const urlParams = new URLSearchParams(window.location.search);
+  const message = urlParams.get('message');
+  if (message === 'please_login' && messageElem) {
+    messageElem.textContent = 'ログインしてください';
+  }
+ 
   const form = document.getElementById('login-form');
 
   if (!form) {
