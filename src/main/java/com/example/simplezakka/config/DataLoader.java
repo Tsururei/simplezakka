@@ -169,6 +169,18 @@ public class DataLoader implements CommandLineRunner {
         "管理者 花子",
         "adminpass"
     );
+
+    createAdminIfNotExists(
+        "admin3@example.com",
+        "管理者 桜",
+        "adminpass"
+    );
+
+    createAdminIfNotExists(
+        "admin4@example.com",
+        "管理者 次郎",
+        "adminpass"
+    );
 }
 
 private void createAdminIfNotExists(String email, String name, String rawPassword) {
