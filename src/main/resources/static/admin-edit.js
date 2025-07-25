@@ -15,6 +15,19 @@ const newPassword = document.getElementById("new-password");
 
 let deleteTargetId = null;
 
+ const passwordInput = document.getElementById('new-password');
+  const showPasswordCheckbox = document.getElementById('show-password');
+
+  // チェックボックスが存在すればイベント追加
+  if (showPasswordCheckbox) {
+    showPasswordCheckbox.addEventListener('change', function () {
+      if (this.checked) {
+        passwordInput.type = 'text';
+      } else {
+        passwordInput.type = 'password';
+      }
+    });
+  }
 
 async function fetchAdmins() {
   try {
