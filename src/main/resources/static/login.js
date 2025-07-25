@@ -1,30 +1,45 @@
-document.getElementById('login-btn').addEventListener('click', async function(event) {
-  event.preventDefault(); 
-  tryLogin();
-});
+document.addEventListener('DOMContentLoaded', function () {
+  // ✅ チェックボックスによるパスワード表示切り替え
+  const passwordInput = document.getElementById('userPasswordInput');
+  const showPasswordCheckbox = document.getElementById('show-password');
 
+  if (showPasswordCheckbox && passwordInput) {
+    showPasswordCheckbox.addEventListener('change', function () {
+      passwordInput.type = this.checked ? 'text' : 'password';
+    });
+  }
 
-document.getElementById('register-link').addEventListener('click', function() {
+  // ✅ ログインボタン
+  document.getElementById('login-btn').addEventListener('click', async function(event) {
+    event.preventDefault(); 
+    tryLogin();
+  });
+
+  // ✅ 新規登録
+  document.getElementById('register-link').addEventListener('click', function() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userId');  
-  window.location.href = 'register.html';
+    window.location.href = 'register.html';
   });
 
-document.getElementById('guestlogin-btn').addEventListener('click', function() {
+  // ✅ ゲストログイン
+  document.getElementById('guestlogin-btn').addEventListener('click', function() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('userId');
     window.location.href = 'home.html';
   });
+});
 
 async function tryLogin() {
   const userEmail = document.getElementById('userEmailInput').value;
   const userPassword = document.getElementById('userPasswordInput').value;
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('userId');
-    
+
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('userId');
+
   const response = await fetch('http://localhost:8080/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -41,4 +56,4 @@ async function tryLogin() {
     const err = await response.text();
     alert(err);
   }
-};
+}
