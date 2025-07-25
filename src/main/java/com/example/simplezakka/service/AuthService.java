@@ -77,7 +77,7 @@ public class AuthService {
         }
 
         if (userRepository.findByUserEmail(email).isPresent()) {
-            throw new AuthenticationException("登録できませんでした");
+            throw new AuthenticationException("メールアドレスが重複しています");
         }
 
         User user = new User();

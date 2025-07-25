@@ -53,9 +53,12 @@ public class AuthController {
             session.setAttribute("refreshToken", tokens.getRefreshToken());
             return ResponseEntity.ok(tokens); 
         } catch (AuthenticationException e) {
-            session.setAttribute("registerError","登録失敗" + e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                             .body("接続失敗: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body(e.getMessage());  // 例: "メールアドレスが重複しています"
+        } catch (Exception e) {
+            // DB障害など予期しない接続エラー時
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("接続に失敗しました: " + e.getMessage());
         }
     }
 
