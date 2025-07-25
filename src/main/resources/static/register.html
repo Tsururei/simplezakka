@@ -30,9 +30,17 @@
           <label for="password" class="form-label">パスワード（英数字8文字以上）</label>
           <input type="password" class="form-control" id="user_password" name="user_password" required />
         </div>
+        <div class="form-check mb-3">
+          <input type="checkbox" class="form-check-input" id="show-password" />
+          <label class="form-check-label" for="show-password">パスワードを表示する</label>
+        </div>
         <div class="mb-3">
           <label for="password" class="form-label">パスワード確認</label>
           <input type="password" class="form-control" id="confirm_password" required />
+        </div>
+        <div class="form-check mb-3">
+          <input type="checkbox" class="form-check-input" id="show-confirm-password" />
+          <label class="form-check-label" for="show-password">パスワードを表示する</label>
         </div>
         <div class="mb-3">
           <button type="submit" class="btn btn-primary w-100" id="register-btn">登録</button>

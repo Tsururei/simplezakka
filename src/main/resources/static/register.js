@@ -3,6 +3,25 @@ document.getElementById('register-btn').addEventListener('click', async function
   tryRegisiter();
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  const passwordInput = document.getElementById('user_password');
+  const confirmPasswordInput = document.getElementById('confirm_password');
+  const showPasswordCheckbox = document.getElementById('show-password');
+  const showConfirmPasswordCheckbox = document.getElementById('show-confirm-password');
+
+  if (showPasswordCheckbox && passwordInput) {
+    showPasswordCheckbox.addEventListener('change', function () {
+      passwordInput.type = this.checked ? 'text' : 'password';
+    });
+  }
+
+  if (showConfirmPasswordCheckbox && confirmPasswordInput) {
+    showConfirmPasswordCheckbox.addEventListener('change', function () {
+      confirmPasswordInput.type = this.checked ? 'text' : 'password';
+    });
+  }
+});
+
 async function tryRegisiter() {
   const registerName = document.getElementById('user_name').value.trim();
   const registerAddress = document.getElementById('user_address').value.trim();
