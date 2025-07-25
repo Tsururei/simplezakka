@@ -3,6 +3,8 @@ package com.example.simplezakka.controller;
 import com.example.simplezakka.dto.admin.AdminSession;
 import com.example.simplezakka.service.AdminAuthService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -37,8 +39,15 @@ public class AdminAuthController {
     }
     
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpSession session) {
+    public ResponseEntity<?> logout(HttpSession session, HttpServletResponse response) {
         session.invalidate();
+
+        Cookie cookie = new Cookie("JSESSIONID", "");
+    cookie.setPath("/");
+    cookie.setMaxAge(0);
+    cookie.setHttpOnly(true);
+    response.addCookie(cookie);
+
         return ResponseEntity.ok().build();
     }
 }
