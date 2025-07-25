@@ -1,0 +1,218 @@
+### カート取得
+GET http://localhost:8080/api/cart
+
+### カートに追加
+POST http://localhost:8080/api/cart
+content-type: application/json
+
+{
+    "productId": 1, 
+    "quantity": 2
+}
+
+### 商品2を追加 (4-2分)
+POST http://localhost:8080/api/cart
+content-type: application/json
+
+{
+    "productId": 2,
+    "quantity": 3
+}
+
+### 存在しない商品をカートに追加
+POST http://localhost:8080/api/cart
+content-type: application/json
+
+{
+    "productId": 11,
+    "quantity": 1
+}
+
+
+
+### カートに追加　(4-5分)
+POST http://localhost:8080/api/cart
+content-type: application/json
+
+{
+    "productId": 1, 
+    "quantity": 21
+}
+
+
+
+
+### 注文 4-1 201 
+POST http://localhost:8080/api/orders
+content-type: application/json
+
+
+{"customerInfo":{
+        "customerName": "テスト",
+        "customerAddress": "購入者住所",
+        "customerEmail": "t@e.com",
+        "shippingName": "配送先氏名",
+        "shippingAddress": "住所",
+        "payMethod": "cod"}
+}
+
+### 注文 4-2 201
+POST http://localhost:8080/api/orders
+content-type: application/json
+
+{
+  "customerInfo": {
+    "customerName": "顧客 一郎",
+    "customerEmail": "ichiro@test.com",
+    "customerAddress": "東京都千代田区テスト1-1",
+    "shippingName": "顧客 一郎",
+    "shippingAddress": "東京都千代田区テスト1-1",
+    "payMethod": "CASH_ON_DELIVERY"
+  }
+}
+
+### 注文 4-3 400
+POST http://localhost:8080/api/orders
+content-type: application/json
+
+
+{"customerInfo":{
+        "customerName": "テスト",
+        "customerAddress": "購入者住所",
+        "customerEmail": "t@e.com",
+        "shippingName": "配送先氏名",
+        "shippingAddress": "住所",
+        "payMethod": "cod"}
+}
+
+
+### 注文 4-4　400
+POST http://localhost:8080/api/orders
+content-type: application/json
+
+
+{"customerInfo":{
+        "customerName": "テスト",
+        "customerAddress": "購入者住所",
+        "customerEmail": "t@e.com",
+        "shippingName": "配送先氏名",
+        "shippingAddress": "住所",
+        "payMethod": "cod"}
+}
+
+
+### 注文 4-5 500
+
+POST http://localhost:8080/api/orders
+content-type: application/json
+
+{
+  "customerInfo": {
+    "customerName": "顧客 一郎",
+    "customerEmail": "ichiro@test.com",
+    "customerAddress": "東京都千代田区テスト1-1",
+    "shippingName": "顧客 一郎",
+    "shippingAddress": "東京都千代田区テスト1-1",
+    "payMethod": "CASH_ON_DELIVERY"
+  }
+}
+
+### 注文 4-6 500
+POST http://localhost:8080/api/orders
+content-type: application/json
+
+{
+  "customerInfo": {
+    "customerName": "テスト",
+    "customerAddress": "購入者住所",
+    "customerEmail": "t@e.com",
+    "shippingName": "配送先氏名",
+    "shippingAddress": "住所",
+    "payMethod": "cod"
+  },
+  "items": [
+    {
+      "productId": 11,
+      "quantity": 1
+    }
+  ]
+}
+
+### 注文 4-7 400
+POST http://localhost:8080/api/orders
+content-type: application/json
+
+{
+  "customerInfo": {
+    "customerName": "",
+    "customerAddress": "購入者住所",
+    "customerEmail": "t@e.com",
+    "shippingName": "配送先氏名",
+    "shippingAddress": "住所",
+    "payMethod": "cod"
+  }
+}
+
+### 注文 4-8 400
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerInfo": {
+    "customerName": "テスト",
+    "customerAddress": "購入者住所",
+    "customerEmail": "invalid-email",
+    "shippingName": "配送先氏名",
+    "shippingAddress": "住所",
+    "payMethod": "cod"
+  }
+}
+
+### 注文 4-9 400 もしくは500
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+### 注文 4-10 500
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerInfo": {
+    "customerName": "テスト",
+    "customerAddress": "購入者住所",
+    "customerEmail": "t@e.com",
+    "shippingName": "配送先氏名",
+    "shippingAddress": "住所",
+    "payMethod": "cod"
+  }
+}
+
+### 注文 4-11 500
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerInfo": {
+    "customerName": "テスト",
+    "customerAddress": "購入者住所",
+    "customerEmail": "t@e.com",
+    "shippingName": "配送先氏名",
+    "shippingAddress": "住所",
+    "payMethod": "cod"
+  }
+}
+
+### 注文 4-12 500
+POST http://localhost:8080/api/orders
+Content-Type: application/json
+
+{
+  "customerInfo": {
+    "customerName": "テスト",
+    "customerAddress": "購入者住所",
+    "customerEmail": "t@e.com",
+    "shippingName": "配送先氏名",
+    "shippingAddress": "住所",
+    "payMethod": "cod"
+  }
+}
