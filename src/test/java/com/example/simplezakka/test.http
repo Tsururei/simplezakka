@@ -58,6 +58,111 @@ Content-Type: application/x-www-form-urlencoded
 
 email=admin@example.com&password=wrongpasswor
 
+### 管理者一覧を取得（正常系）
+GET http://localhost:8080/api/admins
+Accept: application/json
+
+### 管理者の新規登録（正常系）
+POST http://localhost:8080/api/admins
+Content-Type: application/json
+
+{
+  "adminName": "新規管理者",
+  "adminEmail": "newadmin@example.com",
+  "adminPassword": "newpassword"
+}
+
+### 既存の管理者を削除（正常系）
+DELETE http://localhost:8080/api/admins/{{0b04e2d2-0596-4480-8b07-b1cc9a4aa424}}
+
+### No. 異常系：管理者登録時に名前が空白
+POST http://localhost:8080/api/admins
+Content-Type: application/json
+
+{
+  "adminName": "",
+  "adminEmail": "blank@example.com",
+  "adminPassword": "blankpass"
+}
+
+### 管理者登録時にメールアドレスが空白（異常系）
+POST http://localhost:8080/api/admins
+Content-Type: application/json
+
+{
+  "adminName": "管理者",
+  "adminEmail": "",
+  "adminPassword": "blankpass"
+}
+
+### 管理者登録時にパスワードが空白（異常系）
+POST http://localhost:8080/api/admins
+Content-Type: application/json
+
+{
+  "adminName": "管理者",
+  "adminEmail": "admin@example.com",
+  "adminPassword": ""
+}
+
+### 既に登録済みのメールアドレスで新規管理者を登録（異常系）
+POST http://localhost:8080/api/admins
+Content-Type: application/json
+
+{
+  "adminName": "重複ユーザー",
+  "adminEmail": "admin@example.com",
+  "adminPassword": "password"
+}
+
+### 管理者：注文一覧を取得する（正常系）
+GET http://localhost:8080/admin/order
+Content-Type: application/json
+Cookie: JSESSIONID=YOUR_SESSION_ID_HERE
+
+### 管理者：注文詳細を取得する（正常系）
+GET http://localhost:8080/admin/order/1
+Content-Type: application/json
+Cookie: JSESSIONID=YOUR_SESSION_ID_HERE
+
+### 管理者：注文ステータスを更新する（正常系）
+PATCH http://localhost:8080/admin/order/1
+Content-Type: application/json
+Cookie: JSESSIONID=YOUR_SESSION_ID_HERE
+
+{
+  "newStatus": "PAID"
+}
+
+###注文ステータスを PENDING → SHIPPED に更新
+PATCH http://localhost:8080/admin/order/1
+Content-Type: application/json
+Cookie: JSESSIONID=YOUR_SESSION_ID_HERE
+
+{
+  "newStatus": "SHIPPED"
+}
+
+### 管理者：注文詳細を取得する（正常系）（変更確認用）
+GET http://localhost:8080/admin/order/1
+Content-Type: application/json
+Cookie: JSESSIONID=YOUR_SESSION_ID_HERE
+
+### 管理者：存在しない注文IDで注文詳細取得を試みる（異常系）
+
+GET http://localhost:8080/admin/order/1000
+Content-Type: application/json
+Cookie: JSESSIONID=YOUR_SESSION_ID_HERE
+
+### 無効なステータスキー名で更新リクエスト（400 Bad Request期待）
+
+PATCH http://localhost:8080/admin/order/1
+Content-Type: application/json
+Cookie: JSESSIONID=YOUR_SESSION_ID_HERE
+
+{
+  "newStatus": "INVALID_STATUS"
+}
 
 
 ### ステータス更新時にDBエラーが発生する（異常系）
@@ -67,3 +172,27 @@ Content-Type: application/json
 {
   "newStatus": "SHIPPED"
 }
+
+### カートに商品を追加
+POST http://localhost:8080/api/usercart?userId=1
+Content-Type: application/json
+
+{
+  "productId": 7,
+  "quantity": 6
+}
+
+### 注文を実行
+POST http://localhost:8080/api/usercart/orders/userId=1
+Content-Type: application/json
+{
+  "customerInfo": {
+    "customerName": "消費者　太郎",
+    "customerAddress": "購入者住所",
+    "customerEmail": "t@e.com",
+    "shippingName": "配送先氏名",
+    "shippingAddress": "住所",
+    "payMethod": "cod"
+  }
+}
+GET /api/cart?userId=1
