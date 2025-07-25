@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', function () {
+ 
+  const messageElem = document.getElementById('login-message');
+  const urlParams = new URLSearchParams(window.location.search);
+  const message = urlParams.get('message');
+  if (message === 'please_login' && messageElem) {
+    messageElem.textContent = 'ログインしてください';
+  }
+
+  // パスワード表示切替の要素を取得
+  const passwordInput = document.getElementById('password');
+  const showPasswordCheckbox = document.getElementById('show-password');
+
+  // チェックボックスが存在すればイベント追加
+  if (showPasswordCheckbox) {
+    showPasswordCheckbox.addEventListener('change', function () {
+      if (this.checked) {
+        passwordInput.type = 'text';
+      } else {
+        passwordInput.type = 'password';
+      }
+    });
+  }
+  
   const form = document.getElementById('login-form');
 
   if (!form) {

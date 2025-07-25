@@ -13,13 +13,15 @@
   <h2>管理者ログイン画面</h2>
 
   <div class="login-container">
+    <div id="login-message" style="color: red; margin-bottom: 1em;"></div>
     <form id="login-form"> 
       <label for="email">E-MAIL</label>
       <input type="email" id="email" name="email" required />
 
       <label for="password">PASSWORD</label>
       <input type="password" id="password" name="password" required />
-
+      <label><input type="checkbox" id="show-password" />パスワードを表示する</label>
+      
       <button id="login-button" type="submit">ログイン</button>
     </form>
   </div>

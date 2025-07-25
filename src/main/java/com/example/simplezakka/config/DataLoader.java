@@ -154,22 +154,40 @@ public class DataLoader implements CommandLineRunner {
         productRepository.saveAll(products);
     }
     
-    private void loadSampleAdmin(){
-        String email = "admin@example.com";
-        if(adminRepository.findByAdminEmail(email).isPresent()){
-            return;//すでに登録済みならスキップ
-        }
+    
+     private void loadSampleAdmin() {
+    // 管理者 太郎
+    createAdminIfNotExists(
+        "admin@example.com",
+        "管理者 太郎",
+        "adminpass"
+    );
 
-        Admin admin = Admin.builder()
-                .adminId(UUID.randomUUID().toString())
-                .adminName("管理者 太郎")
-                .adminEmail(email)
-                .adminPassword(("adminpass")) // 平文のまま保存
-                .adminDate(LocalDateTime.now())
-                .build();
+    // 管理者 花子
+    createAdminIfNotExists(
+        "admin2@example.com",
+        "管理者 花子",
+        "adminpass"
+    );
+}
 
-            adminRepository.save(admin);
+private void createAdminIfNotExists(String email, String name, String rawPassword) {
+    if (adminRepository.findByAdminEmail(email).isPresent()) {
+        return; // すでに登録済みならスキップ
     }
+
+    Admin admin = Admin.builder()
+            .adminId(UUID.randomUUID().toString())
+            .adminName(name)
+            .adminEmail(email)
+            .adminPassword(rawPassword) // 平文で保存（ログイン用にハッシュ化してもOK）
+            .adminDate(LocalDateTime.now())
+            .build();
+
+    adminRepository.save(admin);
+}
+
+        
 
     private void loadSampleUser(){
         String email = "user@example.com";
