@@ -11,6 +11,8 @@ public class ProductAdminView {
     private Integer productId;
     private String productName;
     private Integer productPrice;
+    private String categoryId;
     private String categoryName;
     private int imageCount;
+    private Integer stock;
 }

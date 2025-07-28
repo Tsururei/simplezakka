@@ -1,3 +1,5 @@
+// admin-product.js
+
 const categories = [
   { id: "cate002", name: "インテリア" },
   { id: "cate001", name: "キッチン用品" },
@@ -6,21 +8,38 @@ const categories = [
 let products = [];
 let editingProductId = null;
 
-// 初期処理
 document.addEventListener("DOMContentLoaded", () => {
+  const imageFileInput = document.getElementById("new-image-file");
+  const imageUrlInput = document.getElementById("new-image-url");
+
+  if (imageFileInput) {
+    imageFileInput.addEventListener("change", () => {
+      const file = imageFileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const preview = document.getElementById("image-preview");
+          if (preview) preview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        if (imageUrlInput) imageUrlInput.value = "";
+      }
+    });
+  }
+
   populateCategorySelect();
   fetchProducts();
 
-  // モーダル登録ボタン
-  document.getElementById("register-product-button").addEventListener("click", onSaveProduct);
-
-  // 「＋ 新規商品情報登録」ボタン
-  document.querySelector(".add-button").addEventListener("click", () => openModal());
+  document.getElementById("register-product-button")?.addEventListener("click", onSaveProduct);
+  document.querySelector(".add-button")?.addEventListener("click", () => openModal());
+  document.getElementById("save-button")?.addEventListener("click", () => {
+    alert("一覧の一括保存機能が未実装です。");
+  });
 });
 
-// カテゴリプルダウン初期化
 function populateCategorySelect() {
   const select = document.getElementById("new-category-select");
+  if (!select) return;
   select.innerHTML = '<option value="">-- カテゴリを選択 --</option>';
   categories.forEach(cat => {
     const option = document.createElement("option");
@@ -30,7 +49,6 @@ function populateCategorySelect() {
   });
 }
 
-// 商品一覧取得して表示
 async function fetchProducts() {
   showLoading(true);
   clearMessage();
@@ -47,15 +65,13 @@ async function fetchProducts() {
   }
 }
 
-// 商品一覧描画
 function renderProductList() {
   const list = document.getElementById("product-list");
+  if (!list) return;
   list.innerHTML = "";
 
   products.forEach(product => {
-    const imgHtml = product.imageUrl
-      ? `<img src="${product.imageUrl}" alt="商品画像">`
-      : ''; // 画像がなければ空文字（必要なら代替画像パスを入れてもOK）
+    const imgHtml = product.imageUrl ? `<img src="${product.imageUrl}" alt="商品画像">` : "";
 
     const card = document.createElement("div");
     card.className = "product-card";
@@ -67,26 +83,23 @@ function renderProductList() {
       <label>在庫数</label><div>${product.stock}</div>
       <label>カテゴリ</label><div>${getCategoryName(product.categoryId)}</div>
       <label>説明</label><div>${escapeHtml(product.description || "")}</div>
-      <button class="delete-btn" onclick="deleteProduct('${product.productId}')">削除</button>
-      <button class="edit-btn" onclick="openModal('${product.productId}')">編集</button>
+      <button class="delete-btn" onclick="deleteProduct(${product.productId})">削除</button>
+      <button class="edit-btn" onclick="openModal(${product.productId})">編集</button>
     `;
 
     list.appendChild(card);
   });
 }
 
-// カテゴリ名取得（IDから）
 function getCategoryName(categoryId) {
   const cat = categories.find(c => c.id === categoryId);
   return cat ? cat.name : "未設定";
 }
 
-// モーダルを開く（productIdがあれば編集モード）
 function openModal(productId = null) {
-  console.log("openModal called with productId:", productId);
   clearMessage();
-
   const modal = document.getElementById("modal");
+  if (!modal) return;
   const header = modal.querySelector(".modal-header h3");
   const select = document.getElementById("new-category-select");
   const nameInput = document.getElementById("new-product-name");
@@ -95,29 +108,26 @@ function openModal(productId = null) {
   const descInput = document.getElementById("new-description");
   const imgInput = document.getElementById("new-image-url");
 
-  if (productId) {
-    // 編集モード
-    editingProductId = productId;
-    header.textContent = "商品情報編集";
+  if (!select || !nameInput || !priceInput || !stockInput || !descInput || !imgInput || !header) return;
 
-    const product = products.find(p => p.productId === productId);
+  if (productId !== null) {
+    editingProductId = Number(productId);
+    header.textContent = "商品情報編集";
+    const product = products.find(p => Number(p.productId) === editingProductId);
     if (!product) {
       alert("商品が見つかりません");
+      editingProductId = null;
       return;
     }
-
     select.value = product.categoryId || "";
     nameInput.value = product.productName || "";
     priceInput.value = product.productPrice || "";
     stockInput.value = product.stock || "";
     descInput.value = product.description || "";
     imgInput.value = product.imageUrl || "";
-
   } else {
-    // 新規登録モード
     editingProductId = null;
     header.textContent = "新規商品登録";
-
     select.value = "";
     nameInput.value = "";
     priceInput.value = "";
@@ -125,57 +135,66 @@ function openModal(productId = null) {
     descInput.value = "";
     imgInput.value = "";
   }
-
   modal.style.display = "flex";
 }
 
-// モーダルを閉じる
 function closeModal() {
-  document.getElementById("modal").style.display = "none";
+  const modal = document.getElementById("modal");
+  if (modal) modal.style.display = "none";
   clearMessage();
 }
 
-// 保存ボタン押下時処理
 async function onSaveProduct() {
   clearMessage();
 
-  const categoryId = document.getElementById("new-category-select").value;
-  const productName = document.getElementById("new-product-name").value.trim();
-  const productPrice = parseInt(document.getElementById("new-product-price").value, 10);
-  const stock = parseInt(document.getElementById("new-stock").value, 10);
-  const description = document.getElementById("new-description").value.trim();
-  const imageUrl = document.getElementById("new-image-url").value.trim();
+  const categoryId = document.getElementById("new-category-select")?.value;
+  const productName = document.getElementById("new-product-name")?.value.trim();
+  const productPrice = parseInt(document.getElementById("new-product-price")?.value, 10);
+  const stock = parseInt(document.getElementById("new-stock")?.value, 10);
+  const description = document.getElementById("new-description")?.value.trim();
+  const imageUrl = document.getElementById("new-image-url")?.value.trim();
+  const imageFile = document.getElementById("new-image-file")?.files[0];
 
-  // バリデーション
   if (!categoryId || !productName || isNaN(productPrice) || productPrice <= 0 || isNaN(stock) || stock < 0) {
     showMessage("必須項目を正しく入力してください（カテゴリ、商品名、価格、在庫）", "error");
     return;
   }
 
-  const payload = {
-    categoryId,
-    productName,
-    productPrice,
-    stock,
-    description,
-    imageUrl
-  };
+  let formData;
+  if (imageFile) {
+    formData = new FormData();
+    formData.append("categoryId", categoryId);
+    formData.append("productName", productName);
+    formData.append("productPrice", productPrice);
+    formData.append("stock", stock);
+    formData.append("description", description);
+    formData.append("imageFile", imageFile);
+  } else {
+    formData = JSON.stringify({
+      categoryId,
+      productName,
+      productPrice,
+      stock,
+      description,
+      imageUrl
+    });
+  }
 
   try {
     let response;
-    if (editingProductId) {
-      // 編集PUT
-      response = await fetch(`/api/admin/products/${editingProductId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+    const url = editingProductId ? `/api/admin/products/${editingProductId}` : "/api/admin/products";
+    const method = editingProductId ? "PUT" : "POST";
+
+    if (imageFile) {
+      response = await fetch(url, {
+        method,
+        body: formData,
       });
     } else {
-      // 新規POST
-      response = await fetch("/api/admin/products", {
-        method: "POST",
+      response = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: formData,
       });
     }
 
@@ -187,28 +206,22 @@ async function onSaveProduct() {
     alert(editingProductId ? "商品を更新しました" : "商品を登録しました");
     closeModal();
     fetchProducts();
-
   } catch (error) {
     showMessage(error.message, "error");
   }
 }
 
-// 商品削除
 async function deleteProduct(productId) {
   if (!confirm("本当にこの商品を削除しますか？")) return;
-
   clearMessage();
   showLoading(true);
-
   try {
     const response = await fetch(`/api/admin/products/${productId}`, {
       method: "DELETE"
     });
     if (!response.ok) throw new Error("削除に失敗しました");
-
     alert("商品を削除しました");
     fetchProducts();
-
   } catch (error) {
     showMessage(error.message, "error");
   } finally {
@@ -216,29 +229,27 @@ async function deleteProduct(productId) {
   }
 }
 
-// メッセージ表示 helper
 function showMessage(msg, type = "success") {
   const area = document.getElementById("message-area");
+  if (!area) return;
   area.textContent = msg;
   area.className = type === "error" ? "error" : "success";
 }
 
-// メッセージクリア helper
 function clearMessage() {
-  const messageArea = document.getElementById("message-area");
-  if (messageArea) {
-    messageArea.textContent = "";
-    messageArea.className = "";
-  }
+  const area = document.getElementById("message-area");
+  if (!area) return;
+  area.textContent = "";
+  area.className = "";
 }
 
-// ローディング表示 helper
 function showLoading(isLoading) {
-  document.getElementById("loading").style.display = isLoading ? "block" : "none";
+  const loading = document.getElementById("loading");
+  if (loading) loading.style.display = isLoading ? "block" : "none";
 }
 
-// HTML特殊文字エスケープ（XSS対策に推奨）
 function escapeHtml(text) {
+  if (!text) return "";
   return text
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -249,3 +260,4 @@ function escapeHtml(text) {
 
 window.openModal = openModal;
 window.closeModal = closeModal;
+window.deleteProduct = deleteProduct;
