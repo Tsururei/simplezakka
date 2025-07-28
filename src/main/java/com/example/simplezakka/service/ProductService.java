@@ -117,7 +117,8 @@ public class ProductService {
         product.getCategory().getCategoryId(),
         product.getCategory().getCategoryName(), 
         product.getImages().size(),   
-        product.getStock()            
+        product.getStock(),
+        product.getImageUrl()            
     );
 }
 

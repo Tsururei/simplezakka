@@ -170,6 +170,7 @@ async function onSaveProduct() {
   const stock = parseInt(document.getElementById("new-stock")?.value, 10);
   const description = document.getElementById("new-description")?.value.trim();
   const imageFile = document.getElementById("new-image-file")?.files[0];
+  const imageUrl = document.getElementById("new-image-url")?.value.trim() || "";
 
   if (!categoryId || !productName || isNaN(productPrice) || productPrice <= 0 || isNaN(stock) || stock < 0) {
     showMessage("必須項目を正しく入力してください（カテゴリ、商品名、価格、在庫）", "error");
@@ -182,7 +183,7 @@ const formJson = {
   productPrice,
   stock,
   description,
-  imageUrl: "" // 必要に応じて
+  imageUrl// 必要に応じて
 };
 
 const formData = new FormData();
