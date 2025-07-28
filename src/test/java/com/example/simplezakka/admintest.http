@@ -6,7 +6,7 @@ email=admin@example.com&password=adminpass
 
 ###管理者ログアウト（正常系）
 POST http://localhost:8080/admin/auth/logout
-Cookie: {{login.response.headers.Set-Cookie}}
+
 
 ### ログイン失敗（登録されていないメールアドレス）
 POST http://localhost:8080/admin/auth/login
