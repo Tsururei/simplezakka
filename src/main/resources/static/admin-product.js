@@ -8,6 +8,8 @@ const categories = [
 let products = [];
 let editingProductId = null;
 
+// DOMContentLoaded
+
 document.addEventListener("DOMContentLoaded", () => {
   const imageFileInput = document.getElementById("new-image-file");
   const imageUrlInput = document.getElementById("new-image-url");
@@ -24,6 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
         reader.readAsDataURL(file);
         if (imageUrlInput) imageUrlInput.value = "";
       }
+    });
+  }
+
+  if (imageUrlInput) {
+    imageUrlInput.addEventListener("input", () => {
+      const preview = document.getElementById("image-preview");
+      if (preview) preview.src = imageUrlInput.value;
+      const fileInput = document.getElementById("new-image-file");
+      if (fileInput) fileInput.value = "";
     });
   }
 
@@ -106,9 +117,11 @@ function openModal(productId = null) {
   const priceInput = document.getElementById("new-product-price");
   const stockInput = document.getElementById("new-stock");
   const descInput = document.getElementById("new-description");
-  const imgInput = document.getElementById("new-image-url");
+  const imgUrlInput = document.getElementById("new-image-url");
+  const fileInput = document.getElementById("new-image-file");
+  const preview = document.getElementById("image-preview");
 
-  if (!select || !nameInput || !priceInput || !stockInput || !descInput || !imgInput || !header) return;
+  if (!select || !nameInput || !priceInput || !stockInput || !descInput || !imgUrlInput || !header) return;
 
   if (productId !== null) {
     editingProductId = Number(productId);
@@ -124,7 +137,9 @@ function openModal(productId = null) {
     priceInput.value = product.productPrice || "";
     stockInput.value = product.stock || "";
     descInput.value = product.description || "";
-    imgInput.value = product.imageUrl || "";
+    imgUrlInput.value = product.imageUrl || "";
+    if (preview) preview.src = product.imageUrl || "";
+    if (fileInput) fileInput.value = "";
   } else {
     editingProductId = null;
     header.textContent = "新規商品登録";
@@ -133,7 +148,9 @@ function openModal(productId = null) {
     priceInput.value = "";
     stockInput.value = "";
     descInput.value = "";
-    imgInput.value = "";
+    imgUrlInput.value = "";
+    if (preview) preview.src = "";
+    if (fileInput) fileInput.value = "";
   }
   modal.style.display = "flex";
 }
