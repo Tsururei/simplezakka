@@ -169,7 +169,6 @@ async function onSaveProduct() {
   const productPrice = parseInt(document.getElementById("new-product-price")?.value, 10);
   const stock = parseInt(document.getElementById("new-stock")?.value, 10);
   const description = document.getElementById("new-description")?.value.trim();
-  const imageUrl = document.getElementById("new-image-url")?.value.trim();
   const imageFile = document.getElementById("new-image-file")?.files[0];
 
   if (!categoryId || !productName || isNaN(productPrice) || productPrice <= 0 || isNaN(stock) || stock < 0) {
@@ -177,43 +176,29 @@ async function onSaveProduct() {
     return;
   }
 
-  let formData;
-  if (imageFile) {
-    formData = new FormData();
-    formData.append("categoryId", categoryId);
-    formData.append("productName", productName);
-    formData.append("productPrice", productPrice);
-    formData.append("stock", stock);
-    formData.append("description", description);
-    formData.append("imageFile", imageFile);
-  } else {
-    formData = JSON.stringify({
-      categoryId,
-      productName,
-      productPrice,
-      stock,
-      description,
-      imageUrl
-    });
-  }
+const formJson = {
+  categoryId,
+  productName,
+  productPrice,
+  stock,
+  description,
+  imageUrl: "" // 必要に応じて
+};
+
+const formData = new FormData();
+formData.append("form", new Blob([JSON.stringify(formJson)], { type: "application/json" }));
+if (imageFile) {
+  formData.append("imageFile", imageFile);
+}
 
   try {
-    let response;
     const url = editingProductId ? `/api/admin/products/${editingProductId}` : "/api/admin/products";
     const method = editingProductId ? "PUT" : "POST";
 
-    if (imageFile) {
-      response = await fetch(url, {
-        method,
-        body: formData,
-      });
-    } else {
-      response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: formData,
-      });
-    }
+    const response = await fetch(url, {
+      method,
+      body: formData,  // Content-Typeは自動セットされる
+    });
 
     if (!response.ok) {
       const errorData = await response.json();

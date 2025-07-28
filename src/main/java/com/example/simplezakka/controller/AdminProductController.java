@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+
 
 import com.example.simplezakka.dto.product.ProductAdminView;
 import com.example.simplezakka.dto.product.ProductForm;
@@ -26,23 +30,30 @@ public class AdminProductController {
     
     private final ProductService productService;
 
-    @PostMapping
-    public ResponseEntity<?> createProduct(@RequestBody ProductForm form) {
-        Product created = productService.create(form);
-        return ResponseEntity.ok(created);
-    }
+@PostMapping
+public ResponseEntity<?> createProduct(
+    @RequestPart("form") ProductForm form,
+    @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
+) throws IOException {
+    Product created = productService.create(form, imageFile);
+    return ResponseEntity.ok(created);
+}
+
 
     @GetMapping
     public ResponseEntity<List<ProductAdminView>> getProductList() {
         return ResponseEntity.ok(productService.getAllForAdmin());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody ProductForm form) {
-        Product updated = productService.update(id, form);
-        return ResponseEntity.ok(updated);
-    }
-
+@PutMapping("/{id}")
+public ResponseEntity<?> updateProduct(
+    @PathVariable Integer id,
+    @RequestPart("form") ProductForm form,
+    @RequestPart(value = "imageFile", required = false) MultipartFile imageFile
+) throws IOException {
+    Product updated = productService.update(id, form, imageFile);
+    return ResponseEntity.ok(updated);
+}
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Integer id) {
         productService.delete(id);

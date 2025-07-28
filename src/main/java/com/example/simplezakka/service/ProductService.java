@@ -1,5 +1,6 @@
 package com.example.simplezakka.service;
 
+import java.io.IOException;
 import com.example.simplezakka.dto.product.ProductAdminView;
 import com.example.simplezakka.dto.product.ProductDetail;
 import com.example.simplezakka.dto.product.ProductListItem;
@@ -11,8 +12,14 @@ import com.example.simplezakka.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +38,17 @@ public class ProductService {
         this.categoryRepository = categoryRepository;
    }
     
+       public String storeFile(MultipartFile file) throws IOException {
+        String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path uploadPath = Paths.get("uploads");
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        Path filePath = uploadPath.resolve(filename);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        return "/uploads/" + filename; // Webアクセス用のURLパスとして返す
+    }
+
     public List<ProductListItem> findAllProducts() {
         return productRepository.findAll().stream()
                 .map(this::convertToListItem)
@@ -63,13 +81,19 @@ public class ProductService {
         return productDetail;
     }
        
-    public Product create(ProductForm form) {
+    public Product create(ProductForm form, MultipartFile imageFile) throws IOException {
         Product product = new Product();
         product.setName(form.getProductName());
         product.setPrice(form.getProductPrice());
         product.setDescription(form.getDescription());
         product.setStock(form.getStock());
-        product.setImageUrl(form.getImageUrl());
+
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imageUrl = storeFile(imageFile);
+            product.setImageUrl(imageUrl);
+        } else {
+            product.setImageUrl(form.getImageUrl());
+        }
 
         Category category = categoryRepository.findById(form.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("カテゴリが見つかりません"));
@@ -77,6 +101,7 @@ public class ProductService {
 
         return productRepository.save(product);
     }
+
 
     public List<ProductAdminView> getAllForAdmin() {
         return productRepository.findAll().stream()
@@ -104,22 +129,29 @@ public class ProductService {
     }
 }
 
-    public Product update(Integer id, ProductForm form) {
-    Product existingProduct = productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("更新対象の商品が見つかりません: ID " + id));
+    public Product update(Integer id, ProductForm form, MultipartFile imageFile) throws IOException {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("更新対象の商品が見つかりません: ID " + id));
 
-    existingProduct.setName(form.getProductName()); 
-    existingProduct.setPrice(form.getProductPrice()); 
-    existingProduct.setDescription(form.getDescription());
-    existingProduct.setStock(form.getStock());
-    existingProduct.setImageUrl(form.getImageUrl());
+        existingProduct.setName(form.getProductName());
+        existingProduct.setPrice(form.getProductPrice());
+        existingProduct.setDescription(form.getDescription());
+        existingProduct.setStock(form.getStock());
 
-    Category category = categoryRepository.findById(form.getCategoryId())
-            .orElseThrow(() -> new RuntimeException("更新対象のカテゴリが見つかりません: " + form.getCategoryId()));
-    existingProduct.setCategory(category);
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imageUrl = storeFile(imageFile);
+            existingProduct.setImageUrl(imageUrl);
+        } else {
+            existingProduct.setImageUrl(form.getImageUrl());
+        }
 
-    return productRepository.save(existingProduct); 
-}
+        Category category = categoryRepository.findById(form.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("更新対象のカテゴリが見つかりません: " + form.getCategoryId()));
+        existingProduct.setCategory(category);
+
+        return productRepository.save(existingProduct);
+    }
+
 
     @Transactional 
 public List<Product> saveAll(List<ProductForm> productForms) {
