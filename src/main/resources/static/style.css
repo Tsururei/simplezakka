@@ -83,13 +83,19 @@ header.fixed-top .btn-outline-success:hover {
 
 body {
   padding-top: 200px; /* ヘッダーの高さに合わせて調整 */
+    min-height: 100vh;
 }
 
 /* フッター */
 footer {
-    background-color: #f8f5f2;
-    color: #5a4634;
-    border-top: 1px solid #e6e2dd;
+  background-color: #f8f5f2;
+  color: #5a4634;
+  border-top: 1px solid #e6e2dd;
+  padding: 1rem 0;
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  line-height: 1.5;
 }
 
 /* ホーム上、マイページボタンをオリーブグリーンに */
@@ -120,7 +126,19 @@ footer {
 }
 
 #category-tab-content {
-  overflow-y: auto;
-  max-height: calc(100vh - 200px); 
-  padding-bottom: 2rem;
+    padding-bottom: 2rem;
+    min-height: 60vh; 
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex-grow: 1; 
+  padding-top: 200px; /* ← fixedなheaderの高さ分 */
 }
