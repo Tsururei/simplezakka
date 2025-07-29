@@ -1,15 +1,99 @@
 .product-card {
     height: 100%;
     transition: transform 0.3s;
+    background-color: #f8f5f2; /* ナチュラル系の淡いベージュ */
+    border: 1px solid #e6e2dd; /* 薄いベージュの枠線 */
+    border-radius: 8px; /* 柔らかい印象を出す角丸 */
 }
 
 .product-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 8px rgba(150, 120, 80, 0.2); /* ベージュ系の淡い影 */
+    background-color: #f3ede7; /* ホバー時に少し濃いベージュ */
 }
 
 .cart-badge {
     position: relative;
     top: -8px;
     right: 5px;
+    background-color: #d4b48c; /* 赤ではなくナチュラル系ベージュブラウン */
+    color: #fff; /* バッジの文字は白にして見やすく */
+}
+
+/* タイトルのフォントを少しおしゃれに */
+header .fs-1 {
+    font-family: 'Georgia', serif; /* 高級感あるセリフ体 */
+    letter-spacing: 1px; /* 少し文字間を空ける */
+}
+
+
+/* ヘッダー全体 */
+header.fixed-top {
+    background-color: #f8f5f2; /* 淡いベージュ */
+    border-bottom: 1px solid #e6e2dd;
+}
+
+/* ヘッダー内の文字 */
+header.fixed-top a,
+header.fixed-top span {
+    color: #5a4634; /* ダークブラウン系の文字色 */
+}
+
+/* ログアウト・カートボタン */
+header.fixed-top .btn-outline-primary,
+header.fixed-top .btn-outline-success {
+    border-color: #6b8e23;      /* オリーブグリーン */
+    color: #6b8e23;
+}
+
+header.fixed-top .btn-outline-primary:hover,
+header.fixed-top .btn-outline-success:hover {
+    background-color: #6b8e23;
+    color: #fff;
+}
+
+/* カテゴリタブ */
+.nav-tabs .nav-link {
+    background-color: #f8f5f2;
+    border: 1px solid #e6e2dd;
+    color: #5a4634;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #d4b48c; /* アクティブなタブは濃いベージュ */
+    color: #fff;
+}
+
+/* フッター */
+footer {
+    background-color: #f8f5f2;
+    color: #5a4634;
+    border-top: 1px solid #e6e2dd;
+}
+
+/* ホーム上、マイページボタンをオリーブグリーンに */
+#mypage-btn {
+    color: #6b8e23; /* オリーブグリーン文字色 */
+    text-decoration: none; /* 下線を消す */
+}
+
+#mypage-btn:hover {
+    color: #ffffff; /* ホバー時は白文字 */
+    background-color: #6b8e23; /* 背景オリーブグリーン */
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+/* マイページ上、商品一覧へ戻るボタンをオリーブグリーンに */
+#back-home-btn {
+    color: #6b8e23; /* オリーブグリーン文字 */
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+#back-home-btn:hover {
+    color: #ffffff;
+    background-color: #6b8e23; /* 背景オリーブグリーン */
 }
