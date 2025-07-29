@@ -18,7 +18,7 @@ body {
 .background-flow {
   position: fixed;
   left: 0;
-  width: 34920px;
+  width: 31040px;
   display: flex;
   z-index: -1;
   animation: scrollRow 400s linear infinite;
@@ -33,5 +33,5 @@ body {
 
 @keyframes scrollRow {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(-17460px) }
+  100% { transform: translateX(-15520px) }
 }
