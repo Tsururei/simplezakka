@@ -6,13 +6,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ログイン - TEINEI</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-  
+  <link href="login.css" rel="stylesheet">
+
 </head>
 <body class="bg-light d-flex align-items-center justify-content-center vh-100">
- 
-  <div class="card p-4" style="min-width: 300px; max-width: 400px;">
-    <h1 class="mb-4 text-center">WELCOME TO "TEINEI"</h1>
-    <h2 class="mb-4 text-center">ログイン</h2>
+   
+  <div class="background-flow row-1">
+    
+  <img src="/images/desk-organizer.png" alt="シンプルデスクオーガナイザー" />
+  <img src="/images/aroma-diffuser.png" alt="アロマディフューザー" />
+  <img src="/images/cotton-blanket.png" alt="コットンブランケット" />
+  <img src="/images/tumbler.png" alt="ステンレスタンブラー" />
+  <img src="/images/wall-clock.png" alt="ミニマルウォールクロック" />
+  <img src="/images/cushion-cover.png" alt="リネンクッションカバー" />
+  <img src="/images/flower-vase.png" alt="陶器フラワーベース" />
+  <img src="/images/wooden-coaster.png" alt="木製コースター" />
+  <img src="/images/tote-bag.png" alt="キャンバストートバッグ" />
+  <img src="/images/glass-container.png" alt="ガラス保存容器セット" />
+  <img src="/images/organic-soap.png" alt="天然石鹸セット" />
+  <img src="/images/porcelain-plate-set.png" alt="磁器プレートセット" />
+  <img src="/images/wood-serving-board.png" alt="木製サービングボード" />
+  <img src="/images/mini-green.png" alt="ミニ観葉植物（鉢付き）" />
+  <img src="/images/brass-candle-holder.png" alt="真鍮キャンドルホルダー" />
+  <img src="/images/reading-lamp.png" alt="北欧デザイン読書灯" />
+  <img src="/images/hand-cream.png" alt="ハンドクリーム" />
+
+  
+  <img src="/images/desk-organizer.png" alt="シンプルデスクオーガナイザー" />
+  <img src="/images/aroma-diffuser.png" alt="アロマディフューザー" />
+  <img src="/images/cotton-blanket.png" alt="コットンブランケット" />
+  <img src="/images/tumbler.png" alt="ステンレスタンブラー" />
+  <img src="/images/wall-clock.png" alt="ミニマルウォールクロック" />
+  <img src="/images/cushion-cover.png" alt="リネンクッションカバー" />
+  <img src="/images/flower-vase.png" alt="陶器フラワーベース" />
+  <img src="/images/wooden-coaster.png" alt="木製コースター" />
+  <img src="/images/tote-bag.png" alt="キャンバストートバッグ" />
+  <img src="/images/glass-container.png" alt="ガラス保存容器セット" />
+  <img src="/images/organic-soap.png" alt="天然石鹸セット" />
+  <img src="/images/porcelain-plate-set.png" alt="磁器プレートセット" />
+  <img src="/images/wood-serving-board.png" alt="木製サービングボード" />
+  <img src="/images/mini-green.png" alt="ミニ観葉植物（鉢付き）" />
+  <img src="/images/brass-candle-holder.png" alt="真鍮キャンドルホルダー" />
+  <img src="/images/reading-lamp.png" alt="北欧デザイン読書灯" />
+  <img src="/images/hand-cream.png" alt="ハンドクリーム" />
+
+  
+
+  
+  </div>
+
+  <div class="card p-4" style="min-width: 300px; max-width: 400px; background-color: rgba(255,255,255,0.8);">
+
+    <h1 class="mb-4 text-center" style="font-family: Georgia, serif; color: #5a4634;">WELCOME TO "TEINEI"</h1>
+
+    <h2 class="mb-4 text-center" style="font-family: Georgia, serif; color: #5a4634;">ログイン</h2>
       <form action="/api/auth/login" method="POST">
         <div class="mb-3">
         <label for="email" class="form-label">メールアドレス</label>
@@ -29,7 +76,10 @@
       </div>
 
       <div class="mb-3">
-        <button type="submit" class="btn btn-primary w-100" id="login-btn">ログイン</button>
+        <button type="submit" class="btn w-100" id="login-btn" style="background-color: #5a4634; color: #fff; border: none;">
+  ログイン
+</button>
+
       </div>
       <div class="mb-2">
         <button type="button" class="btn btn-link w-100" id="register-link">新規会員登録</button>

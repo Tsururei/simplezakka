@@ -17,25 +17,14 @@
     <div class="container">
         <!-- Welcome メッセージ（中央・大きめ） -->
       <span class="fs-1 fw-bold">
-        マイページ </span>
+        MY PAGE </span>
     </div>
 
-      <!--問い合わせ先情報（右寄せ・小さめ）-->
-      <div class="py-1 border-bottom">
-        <div class="container position-relative" style="min-height: 40px;"><!-- 高さ調整-->
-            <!--position    position-absolute で右寄せ -->
-        <div style="position: absolute; right: 0; top: 15%; transform: translateY(-50%); font-size: 0.9rem; text-align: right;">
-                <strong>お問い合わせ先</strong><br>
-                <strong>090-1234-5678</strong><br>
-                <strong>sample@example.com</strong>
-              
-        </div>
-      </div>
   </div>
 
   <!-- 2行目：マイページ・カート -->
   <div class="container d-flex align-items-center justify-content-between py-2 border-bottom">
-    <a href="/home.html" class="fs-5 fw-bold text-decoration-none">商品一覧へ戻る</a>
+    <a href="/home.html" class="fs-5 fw-bold text-decoration-none" id="back-home-btn">商品一覧へ戻る</a>
     <div>
         <a href="#" class="btn btn-outline-primary me-2" id="logout-btn">ログアウト</a>
     </div>
@@ -73,4 +62,14 @@
 <script src="mypage.js"></script>
 
 </body>
+
+<!-- フッター -->
+<footer class="bg-light text-center text-muted py-3 border-top mt-5">
+  <div class="container">
+    <p class="mb-0"><strong>お問い合わせ先</strong><br>
+    090-1234-5678<br>
+    sample@example.com</p>
+  </div>
+</footer>
+
 </html>
