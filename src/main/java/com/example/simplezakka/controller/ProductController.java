@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -37,4 +39,11 @@ public class ProductController {
         }
         return ResponseEntity.ok(product);
     }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<ProductListItem>> getProductsByCategoryId(@PathVariable String categoryId) {
+        List<ProductListItem> products = productService.findProductsByCategoryId(categoryId); 
+        return ResponseEntity.ok(products);
+    }
+    
 }

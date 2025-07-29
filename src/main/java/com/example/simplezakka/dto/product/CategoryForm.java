@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class CategoryForm {
     private String categoryName;
+    private String categoryId; 
 }

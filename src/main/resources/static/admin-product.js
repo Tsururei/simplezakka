@@ -1,9 +1,15 @@
 // admin-product.js
 
-const categories = [
-  { id: "cate002", name: "インテリア" },
-  { id: "cate001", name: "キッチン用品" },
-];
+async function fetchCategories() {
+  try {
+    const res = await fetch("/api/admin/categories");
+    if (!res.ok) throw new Error("カテゴリ一覧の取得に失敗しました");
+    categories = await res.json();
+    populateCategorySelect();
+  } catch (err) {
+    showMessage(err.message, "error");
+  }
+}
 
 let products = [];
 let editingProductId = null;
@@ -38,7 +44,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  populateCategorySelect();
+ 
+  fetchCategories();
   fetchProducts();
 
   document.getElementById("register-product-button")?.addEventListener("click", onSaveProduct);
@@ -54,11 +61,12 @@ function populateCategorySelect() {
   select.innerHTML = '<option value="">-- カテゴリを選択 --</option>';
   categories.forEach(cat => {
     const option = document.createElement("option");
-    option.value = cat.id;
-    option.textContent = cat.name;
+    option.value = cat.categoryId;
+    option.textContent = cat.categoryName;
     select.appendChild(option);
   });
 }
+
 
 async function fetchProducts() {
   showLoading(true);
@@ -103,8 +111,8 @@ function renderProductList() {
 }
 
 function getCategoryName(categoryId) {
-  const cat = categories.find(c => c.id === categoryId);
-  return cat ? cat.name : "未設定";
+  const cat = categories.find(c => c.categoryId === categoryId);
+  return cat ? cat.categoryName : "未設定";
 }
 
 function openModal(productId = null) {

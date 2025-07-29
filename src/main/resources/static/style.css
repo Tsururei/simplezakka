@@ -114,3 +114,8 @@ footer {
     color: #ffffff;
     background-color: #6b8e23; /* 背景オリーブグリーン */
 }
+
+#category-tab-content {
+  overflow-y: auto;
+  max-height: calc(100vh - 160px); 
+  padding-bottom: 2rem;
