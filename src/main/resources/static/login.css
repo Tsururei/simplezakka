@@ -4,6 +4,7 @@ body {
   animation: gradientFlow 15s ease infinite;
 }
 
+
 @keyframes gradientFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -12,19 +13,20 @@ body {
 .background-flow {
   position: fixed;
   left: 0;
-  width: 200vw;
+  width: 5100px;
   display: flex;
   z-index: -1;
-  animation: scrollRow 60s linear infinite;
+  animation: scrollRow 80s linear infinite;
 }
 
+
 .row-1 {
-  top: 15%;
+  top: 0.005%;
 }
 
 
 
 @keyframes scrollRow {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(-200vw); }
+  100% { transform: translateX(-2550px) }
 }
