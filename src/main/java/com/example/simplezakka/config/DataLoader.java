@@ -58,7 +58,7 @@ public class DataLoader implements CommandLineRunner {
         Category defaultCategory = loadOrCreateDefaultCategory();
         Category secondCategory = loadOrCreateSecondCategory();
         Category thirdCategory = loadOrCreateThirdCategory();
-        Category fourthCategory = loadOrCreateThirdCategory();
+        Category fourthCategory = loadOrCreateFourthCategory();
 
         List<Product> products = Arrays.asList(
             createProduct(
