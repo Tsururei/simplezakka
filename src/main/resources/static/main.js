@@ -44,7 +44,6 @@ const headers = {
 
 document.addEventListener('DOMContentLoaded', async function () {
   await commonInit();
-  showTab('all');
 
     if (isGuest) {
     await initGuest();
@@ -69,6 +68,7 @@ async function commonInit() {
 
   // 商品取得処理
   await fetchProducts();
+
 }
 
 
