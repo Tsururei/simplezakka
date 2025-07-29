@@ -23,7 +23,7 @@ body {
   width: 34920px;
   display: flex;
   z-index: -1;
-  animation: scrollRow 150s linear infinite;
+  animation: scrollRow 400s linear infinite;
 }
 
 

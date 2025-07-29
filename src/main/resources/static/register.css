@@ -9,22 +9,29 @@ body {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+.background-flow img {
+  width: 950px;  
+  height: auto;
+  margin: 0 10px;
+}
+
 .background-flow {
   position: fixed;
   left: 0;
-  width: 200vw;
+  width: 34920px;
   display: flex;
   z-index: -1;
-  animation: scrollRow 70s linear infinite;
+  animation: scrollRow 400s linear infinite;
 }
 
+
 .row-1 {
-  top: 25%;
+  top: 0.005%;
 }
 
 
 
 @keyframes scrollRow {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(-200vw); }
+  100% { transform: translateX(-17460px) }
 }
