@@ -13,11 +13,28 @@
 }
 
 .cart-badge {
+    background-color: #d4b48c; /* ナチュラル系ベージュブラウン */
+    color: #fff;
+
+    /* 中央揃え設定 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* pill型のサイズ設定 */
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+    border-radius: 50px; /* 丸みを強調してpill型に */
+
+    /* 位置調整（カートアイコン右上に） */
     position: relative;
     top: -8px;
     right: 5px;
-    background-color: #d4b48c; /* 赤ではなくナチュラル系ベージュブラウン */
-    color: #fff; /* バッジの文字は白にして見やすく */
 }
 
 /* タイトルのフォントを少しおしゃれに */
