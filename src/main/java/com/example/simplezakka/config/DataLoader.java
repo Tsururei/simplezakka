@@ -57,6 +57,8 @@ public class DataLoader implements CommandLineRunner {
 
         Category defaultCategory = loadOrCreateDefaultCategory();
         Category secondCategory = loadOrCreateSecondCategory();
+        Category thirdCategory = loadOrCreateThirdCategory();
+
 
         List<Product> products = Arrays.asList(
             createProduct(
@@ -219,7 +221,7 @@ public class DataLoader implements CommandLineRunner {
                 30,
                 "/images/hand-cream.png",
                 true,
-                secondCategory
+                thirdCategory
             )
         );
         
@@ -321,6 +323,19 @@ private void createAdminIfNotExists(String email, String name, String rawPasswor
             category.setCategoryId(secondCategoryId);
             category.setCategoryName("インテリア");
             return categoryRepository.save(category);
+        });
+    }
+    private Category loadOrCreateThirdCategory() {
+    String thirdCategoryId = "cate003";
+    return categoryRepository.findById(thirdCategoryId).orElseGet(() -> {
+        Category category = new Category();
+        category.setCategoryId(thirdCategoryId);
+        category.setCategoryName("コスメティック");
+        return categoryRepository.save(category);
     });
 }
+
 }
+
+
+
