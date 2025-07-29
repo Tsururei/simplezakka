@@ -58,7 +58,7 @@ public class DataLoader implements CommandLineRunner {
         Category defaultCategory = loadOrCreateDefaultCategory();
         Category secondCategory = loadOrCreateSecondCategory();
         Category thirdCategory = loadOrCreateThirdCategory();
-
+        Category fourthCategory = loadOrCreateThirdCategory();
 
         List<Product> products = Arrays.asList(
             createProduct(
@@ -334,7 +334,16 @@ private void createAdminIfNotExists(String email, String name, String rawPasswor
         return categoryRepository.save(category);
     });
 }
+    private Category loadOrCreateFourthCategory() {
+    String fourthCategoryId = "cate004";  
+    return categoryRepository.findById(fourthCategoryId).orElseGet(() -> {
+        Category category = new Category();
+        category.setCategoryId(fourthCategoryId);  
+        category.setCategoryName("coming soon");
+        return categoryRepository.save(category);
+    });
 
+}
 }
 
 
