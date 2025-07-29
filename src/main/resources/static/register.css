@@ -15,7 +15,7 @@ body {
   width: 200vw;
   display: flex;
   z-index: -1;
-  animation: scrollRow 80s linear infinite;
+  animation: scrollRow 70s linear infinite;
 }
 
 .row-1 {
