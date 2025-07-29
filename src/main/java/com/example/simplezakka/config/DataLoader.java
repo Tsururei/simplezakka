@@ -148,6 +148,69 @@ public class DataLoader implements CommandLineRunner {
                 "/images/glass-container.png", 
                 false,
                 defaultCategory
+            ),
+            createProduct(
+                "天然石鹸セット", 
+                "ラベンダーやオリーブオイルを使った手作り石けんの3個セット。", 
+                2800, 
+                50, 
+                "/images/organic-soap.png", 
+                false,
+                defaultCategory
+            ),
+            createProduct(
+                "磁器プレートセット", 
+                "シンプルで上質な磁器プレートのセット(S/M/L)。和洋どちらにも合います。", 
+                2500, 
+                20, 
+                "/images/porcelain-plate-set.png", 
+                false,
+                defaultCategory
+            ),
+            createProduct(
+                "木製サービングボード", 
+                "チーズやパンをおしゃれに盛り付けられるアカシア木製プレート。",
+                3500,
+                25,
+                "/images/wood-serving-board.png",
+                true,
+                defaultCategory
+            ),
+            createProduct(
+                "ミニ観葉植物（鉢付き）", 
+                "白陶器の鉢に入ったおしゃれなミニ観葉植物。デスクや棚に最適です。",
+                2500,
+                20,
+                "/images/mini-green.png",
+                true,
+                defaultCategory
+            ),
+            createProduct(
+                "真鍮キャンドルホルダー",
+                "アンティーク調の真鍮素材を使用したキャンドルホルダー。空間を柔らかく照らします。",
+                3200,
+                20,
+                "/images/brass-candle-holder.png",
+                true,
+                secondCategory
+            ),
+            createProduct(
+                "北欧デザイン読書灯",
+                "落ち着いた光で読書時間を快適にする、ミニマルなデザインの読書灯。省エネLED搭載",
+                5000,
+                20,
+                "/images/reading-lamp.png",
+                true,
+                secondCategory
+                ),
+            createProduct(
+                "ハンドクリーム",
+                "厳選された植物由来成分配合のハンドクリーム。べたつかず、しっとりとした潤いを与え、手肌を保護します。",
+                1800,
+                30,
+                "/images/hand-cream.png",
+                true,
+                secondCategory
             )
         );
         
