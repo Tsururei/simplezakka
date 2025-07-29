@@ -10,13 +10,20 @@ body {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+.background-flow img {
+  width: 950px;  
+  height: auto;
+  margin: 0 10px;
+}
+
 .background-flow {
   position: fixed;
   left: 0;
-  width: 5100px;
+  width: 34920px;
   display: flex;
   z-index: -1;
-  animation: scrollRow 80s linear infinite;
+  animation: scrollRow 150s linear infinite;
 }
 
 
@@ -28,5 +35,5 @@ body {
 
 @keyframes scrollRow {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(-2550px) }
+  100% { transform: translateX(-17460px) }
 }
