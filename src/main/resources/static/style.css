@@ -81,6 +81,10 @@ header.fixed-top .btn-outline-success:hover {
     color: #fff;
 }
 
+body {
+  padding-top: 200px; /* ヘッダーの高さに合わせて調整 */
+}
+
 /* フッター */
 footer {
     background-color: #f8f5f2;
@@ -117,6 +121,6 @@ footer {
 
 #category-tab-content {
   overflow-y: auto;
-  max-height: calc(100vh - 160px); 
+  max-height: calc(100vh - 200px); 
   padding-bottom: 2rem;
 }
