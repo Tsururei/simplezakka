@@ -45,6 +45,25 @@ async function fetchOrders() {
     const order = await response.json();
     if (!order) return;
 
+    const itemsTableHtml = `
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th>商品名</th>
+          <th>数量</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${order.items.map(item => `
+          <tr>
+            <td>${item.productName}</td>
+            <td>${item.quantity}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+
     modalBody.innerHTML = `
       <p><strong>注文ID:</strong> ${order.orderId}</p>
       <p><strong>購入者名:</strong> ${order.buyerName}</p>
@@ -62,7 +81,7 @@ async function fetchOrders() {
       </p>
       <p><strong>メールアドレス:</strong> ${order.customerEmail}</p>
       <p><strong>注文日時:</strong> ${order.orderDate}</p>
-      <p><strong>詳細:</strong> ${order.items.map(d => `${d.productName} ${d.quantity}個`).join(", ")}</p>
+      <p><strong>詳細:</strong></p> ${itemsTableHtml}
       <button id="update-status-btn">ステータス更新</button>
     `;
     document.getElementById("update-status-btn").addEventListener("click", async () => {
