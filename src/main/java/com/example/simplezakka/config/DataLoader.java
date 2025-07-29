@@ -195,6 +195,15 @@ public class DataLoader implements CommandLineRunner {
                 secondCategory
             ),
             createProduct(
+                "オーク材のスツール",
+                "北欧デザインのオーク無垢材を使用したスツール。座るだけでなくディスプレイ台にも使えます。",
+                8800,
+                5,
+                "/images/oak-stool.png",
+                false,
+                defaultCategory
+            ),
+            createProduct(
                 "北欧デザイン読書灯",
                 "落ち着いた光で読書時間を快適にする、ミニマルなデザインの読書灯。省エネLED搭載",
                 5000,
