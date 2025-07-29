@@ -54,6 +54,13 @@ public class ProductService {
                 .map(this::convertToListItem)
                 .collect(Collectors.toList());
     }
+
+    public List<ProductListItem> findProductsByCategoryId(String categoryId) {
+        List<Product> products = productRepository.findByCategory_CategoryId(categoryId);
+        return products.stream()
+                .map(this::convertToListItem)
+                .collect(Collectors.toList());
+    }
     
     public ProductDetail findProductById(Integer productId) {
         Optional<Product> productOpt = productRepository.findById(productId);

@@ -1,6 +1,8 @@
 // グローバル変数宣言
 let productModal, cartModal, checkoutModal, orderCompleteModal;
-let allProductsContainer, kitchenContainer, interiorContainer;
+let allProductsContainer;
+let categoryTabs = {};
+let categoryMap = {};
 let cartItems = [];
 
 const API_BASE = '/api';
@@ -42,6 +44,7 @@ const headers = {
 
 document.addEventListener('DOMContentLoaded', async function () {
   await commonInit();
+  showTab('all');
 
     if (isGuest) {
     await initGuest();
@@ -58,24 +61,16 @@ async function commonInit() {
   checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
   orderCompleteModal = new bootstrap.Modal(document.getElementById('orderCompleteModal'));
 
-  // 商品一覧コンテナを取得（グローバル変数）
+  //カテゴリタブ生成呼び出し
+  await fetchCategoriesAndBuildTabs();
+
+  //全商品タブ
   allProductsContainer = document.querySelector('#all-products .all-products');
-  kitchenContainer = document.querySelector('#kitchen .kitchen-products');
-  interiorContainer = document.querySelector('#interior .interior-products');
-
-  // タブクリックで関数呼び出し
-  document.getElementById('all-tab').addEventListener('click', () => showTab('all'));
-  document.getElementById('kitchen-tab').addEventListener('click', () => showTab('kitchen'));
-  document.getElementById('interior-tab').addEventListener('click', () => showTab('interior'));
-
-  // 最初に全商品を表示
-  showTab('all');
 
   // 商品取得処理
   await fetchProducts();
-
-
 }
+
 
 
 async function initGuest() {
@@ -499,55 +494,75 @@ console.log('注文データ（送信前）:', orderData);
 }
 
 //ここに分岐外に書くべき共通処理
-function showTab(tabName) {
-  document.querySelectorAll('.tab-pane').forEach(pane => {
-    pane.classList.remove('show', 'active');
-    pane.style.display = 'none';
-  });
+  //タブの生成
+  async function fetchCategoriesAndBuildTabs() {
+  try {
+    const response = await fetch(`${API_BASE}/admin/categories`);
+    if (!response.ok) throw new Error('カテゴリの取得に失敗しました');
+    const categories = await response.json();
 
-//詳細ボタンの処理
-  [allProductsContainer.parentElement, kitchenContainer.parentElement, interiorContainer.parentElement]
-    .forEach(el => el.style.display = 'none');
+    const tabList = document.getElementById('category-tab-list'); 
+    const tabContent = document.getElementById('category-tab-content');
+    tabList.innerHTML = '';
+    tabContent.innerHTML = '';
+    categoryTabs = {};
+    categoryMap = {};
 
-  let container;
-  switch (tabName) {
-    case 'all':
-      container = allProductsContainer.parentElement;
-      document.getElementById('all-products').classList.add('show', 'active');
-      break;
-    case 'kitchen':
-      container = kitchenContainer.parentElement;
-      document.getElementById('kitchen').classList.add('show', 'active');
-      break;
-    case 'interior':
-      container = interiorContainer.parentElement;
-      document.getElementById('interior').classList.add('show', 'active');
-      break;
+    const allTabBtn = document.createElement('li');
+    allTabBtn.className = 'nav-item';
+    allTabBtn.innerHTML = `
+      <button class="nav-link active" id="tab-all-tab" data-bs-toggle="tab" data-bs-target="#tab-all" type="button">
+        全商品
+      </button>
+    `;
+    tabList.appendChild(allTabBtn);
+
+    const allTabContent = document.createElement('div');
+    allTabContent.className = 'tab-pane fade show active';
+    allTabContent.id = 'tab-all';
+    allTabContent.innerHTML = `<div class="row category-products" id="products-all"></div>`;
+    tabContent.appendChild(allTabContent); 
+
+    categoryTabs['all'] = allTabContent.querySelector('#products-all');  
+
+    categories.forEach((category) => {
+      const tabId = `tab-${category.categoryId}`;
+      categoryMap[category.categoryId] = category.categoryName;
+
+      // タブボタンを生成
+      const tabBtn = document.createElement('li');
+      tabBtn.className = 'nav-item';
+      tabBtn.innerHTML = `
+        <button class="nav-link" id="${tabId}-tab" data-bs-toggle="tab" data-bs-target="#${tabId}" type="button">
+          ${category.categoryName}
+        </button>
+      `;
+      tabList.appendChild(tabBtn);
+
+      // コンテナ（表示エリア）を生成
+      const container = document.createElement('div');
+      container.className = `tab-pane fade`;
+      container.id = tabId;
+      container.innerHTML = `<div class="row category-products" id="products-${category.categoryId}"></div>`;
+      tabContent.appendChild(container);
+
+      // グローバルにコンテナ参照を保持
+      categoryTabs[category.categoryId] = container.querySelector(`#products-${category.categoryId}`);
+    });
+
+  } catch (error) {
+    console.error('カテゴリ取得エラー:', error);
+    alert('カテゴリの読み込みに失敗しました');
   }
-  if (container) container.style.display = 'flex';
-
-  document.querySelectorAll('.nav-link').forEach(tab => tab.classList.remove('active'));
-  document.getElementById(`${tabName}-tab`).classList.add('active');
 }
 
-document.getElementById('interior-tab').addEventListener('click', function () {
-  // 全タブの中身（.tab-pane）を非表示に
-  document.querySelectorAll('.tab-pane').forEach(pane => {
-    pane.classList.remove('show', 'active');
-  });
 
-  // インテリアの商品一覧を表示
-  document.getElementById('interior').classList.add('show', 'active');
-
-
-  // tab切り替え共通部分
-  document.querySelectorAll('.nav-link').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  this.classList.add('active'); 
-
+// タブが切り替わった時のイベント（必要なら何か動的処理入れる用）
+document.getElementById('category-tab-list').addEventListener('shown.bs.tab', (event) => {
+  const activatedTabId = event.target.getAttribute('data-bs-target').substring(1); // 例: 'tab-all' や 'tab-3'
+  // console.log(`タブ切り替え：${activatedTabId}`);
+  // ここに必要なら動的処理を入れる（今は不要なので空でもOK）
 });
-
 
   // 商品取得処理
   async function fetchProducts() {
@@ -564,33 +579,32 @@ document.getElementById('interior-tab').addEventListener('click', function () {
 
 
 function displayProducts(products) {
-  allProductsContainer.innerHTML = '';
-  kitchenContainer.innerHTML = '';
-  interiorContainer.innerHTML = '';
+    Object.values(categoryTabs).forEach(container => {
+    container.innerHTML = '';
+  });
 
-  products.forEach(product => {
-    const cardHtml = `
-      <div class="col">
-        <div class="card product-card">
+    products.forEach(product => {
+      const cardHtml = `
+      <div class="col-12 col-sm-6 col-lg-4 mb-4">
+        <div class="card product-card h-100">
           <img src="${product.imageUrl || 'https://via.placeholder.com/300x200'}" class="card-img-top" alt="${product.name}">
-          <div class="card-body">
+          <div class="card-body d-flex flex-column">
             <h5 class="card-title">${product.name}</h5>
             <p class="card-text">¥${product.price.toLocaleString()}</p>
-            <button class="btn btn-outline-primary view-product" data-id="${product.productId}">詳細を見る</button>
+            <button class="btn btn-outline-primary mt-auto view-product" data-id="${product.productId}">詳細を見る</button>
           </div>
         </div>
       </div>`;
 
-allProductsContainer.insertAdjacentHTML('beforeend', cardHtml);
-
-  if (product.categoryId === 'cate001') {
-    kitchenContainer.insertAdjacentHTML('beforeend', cardHtml);
-  } else if (product.categoryId === 'cate002') {
-    interiorContainer.insertAdjacentHTML('beforeend', cardHtml);
-  }
+    if (categoryTabs['all']) {
+      categoryTabs['all'].insertAdjacentHTML('beforeend', cardHtml);
+    }
+    if (categoryTabs[product.categoryId]) {
+      categoryTabs[product.categoryId].insertAdjacentHTML('beforeend', cardHtml);
+    }
  });
 
-  [allProductsContainer, interiorContainer, kitchenContainer].forEach(container => {
+    Object.values(categoryTabs).forEach(container => {
     container.querySelectorAll('.view-product').forEach(button => {
       button.addEventListener('click', () => fetchProductDetail(button.dataset.id));
     });

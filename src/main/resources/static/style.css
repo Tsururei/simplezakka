@@ -13,3 +13,9 @@
     top: -8px;
     right: 5px;
 }
+
+#category-tab-content {
+  overflow-y: auto;
+  max-height: calc(100vh - 160px); /* ヘッダー固定分を引く */
+  padding-bottom: 2rem; /* スクロール時に余白あると見やすい */
+}

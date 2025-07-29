@@ -48,74 +48,21 @@
     </div>
   </div>
 
-  <!-- カテゴリタブ -->
-  <div class="border-top">
-   <div class="container">
-    <ul class="nav nav-tabs" role="tablist">
-     <li class="nav-item" role="presentation">
-        <button class="nav-link active"
-                id="all-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#all"
-                type="button"
-                role="tab"
-                aria-controls="all"
-                aria-selected="true">
-                全商品
-        </button>
-     </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" 
-                id="kitchen-tab" 
-                data-bs-toggle="tab" 
-                data-bs-target="#kitchen" 
-                type="button" 
-                role="tab" 
-                aria-controls="kitchen" 
-                aria-selected="false">
-                キッチン用品
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" 
-                id="interior-tab" 
-                data-bs-toggle="tab" 
-                data-bs-target="#interior" 
-                type="button" 
-                role="tab" 
-                aria-controls="interior" 
-                aria-selected="false">
-               インテリア
-        </button>
-      </li>
+<!-- カテゴリタブ -->
+<div class="border-top">
+  <div class="container">
+    <ul id="category-tab-list" class="nav nav-tabs" role="tablist">
+      <!-- ここにJSで動的にタブを挿入 -->
     </ul>
   </div>
-
-</header>
-
-
+</div>
 
 <!-- タブ切り替えコンテンツ -->
-<div class="tab-content container pt-4">
-    <!-- 全商品 -->
-  <div class="tab-pane fade show active" id="all-products" role="tabpanel" aria-labelledby="all-tab">
-    <div class="all-products row row-cols-1 row-cols-md-3 g-4 mb-5">
-      <!-- JavaScriptで全商品カードをここに表示 -->
-    </div>
-  </div>
-  <!-- キッチン用品 -->
-  <div class="tab-pane fade" id="kitchen" role="tabpanel" aria-labelledby="kitchen-tab">
-    <div class="kitchen-products row row-cols-1 row-cols-md-3 g-4 mb-5">
-      <!-- JavaScriptでキッチン用品の商品カードをここに表示 -->
-    </div>
-  </div>
-  <!-- インテリア -->
-  <div class="tab-pane fade" id="interior" role="tabpanel" aria-labelledby="interior-tab">
-    <div class="interior-products row row-cols-1 row-cols-md-3 g-4 mb-5">
-      <!-- JavaScriptでインテリアの商品カードをここに表示 -->
-    </div>
-  </div>
+<div id="category-tab-content" class="tab-content container pt-4">
+  <!-- ここにJSで動的にタブの中身を挿入 -->
 </div>
+
+</header>
 
 <!-- 商品詳細モーダル -->
 <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">

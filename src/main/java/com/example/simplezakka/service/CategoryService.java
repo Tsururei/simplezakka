@@ -23,7 +23,7 @@ public class CategoryService {
     }
     public Category create(CategoryForm form) {
         Category category = new Category();
-        category.setCategoryId(UUID.randomUUID().toString());
+        category.setCategoryId(form.getCategoryId());
         category.setCategoryName(form.getCategoryName());
         return categoryRepository.save(category);
     }
@@ -39,6 +39,14 @@ public class CategoryService {
         return categoryRepository.findAll().stream()
                 .map(c -> new CategoryView(c.getCategoryId(), c.getCategoryName()))
                 .collect(Collectors.toList());
+    }
+
+    public void delete(String categoryId) {
+    if (categoryRepository.existsById(categoryId)) {
+        categoryRepository.deleteById(categoryId);
+    } else {
+        throw new RuntimeException("削除対象のカテゴリが見つかりません: ID " + categoryId);
+    }
     }
 }    
 
