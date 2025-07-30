@@ -1,4 +1,3 @@
-const API_URL = 'https://54.248.170.138:8080/tasks';
 const API_BASE = '/api';
 
 document.addEventListener('DOMContentLoaded', function () {
