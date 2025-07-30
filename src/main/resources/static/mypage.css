@@ -81,10 +81,7 @@ header.fixed-top .btn-outline-success:hover {
     color: #fff;
 }
 
-body {
-  padding-top: 200px; /* ヘッダーの高さに合わせて調整 */
-    min-height: 100vh;
-}
+
 
 /* フッター */
 footer {
@@ -140,5 +137,4 @@ html, body {
 
 main {
   flex-grow: 1; 
-  padding-top: 200px; 
 }

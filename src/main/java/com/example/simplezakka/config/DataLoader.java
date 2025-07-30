@@ -67,7 +67,6 @@ public class DataLoader implements CommandLineRunner {
                 3500, 
                 20, 
                 "/images/desk-organizer.png", 
-                true,
                 secondCategory
             ),
             createProduct(
@@ -76,7 +75,6 @@ public class DataLoader implements CommandLineRunner {
                 4200, 
                 15, 
                 "/images/aroma-diffuser.png", 
-                true,
                 secondCategory
             ),
             createProduct(
@@ -85,7 +83,6 @@ public class DataLoader implements CommandLineRunner {
                 5800, 
                 10, 
                 "/images/cotton-blanket.png", 
-                false,
                 secondCategory
             ),
             createProduct(
@@ -94,7 +91,6 @@ public class DataLoader implements CommandLineRunner {
                 2800, 
                 30, 
                 "/images/tumbler.png", 
-                false,
                 defaultCategory
             ),
             createProduct(
@@ -103,7 +99,6 @@ public class DataLoader implements CommandLineRunner {
                 3200, 
                 25, 
                 "/images/wall-clock.png", 
-                false,
                 secondCategory
             ),
             createProduct(
@@ -112,7 +107,6 @@ public class DataLoader implements CommandLineRunner {
                 2500, 
                 40, 
                 "/images/cushion-cover.png", 
-                true,
                 secondCategory
             ),
             createProduct(
@@ -121,7 +115,6 @@ public class DataLoader implements CommandLineRunner {
                 4000, 
                 15, 
                 "/images/flower-vase.png", 
-                false,
                 secondCategory
             ),
             createProduct(
@@ -130,7 +123,6 @@ public class DataLoader implements CommandLineRunner {
                 1800, 
                 50, 
                 "/images/wooden-coaster.png", 
-                false,
                 defaultCategory
             ),
             createProduct(
@@ -139,7 +131,6 @@ public class DataLoader implements CommandLineRunner {
                 3600, 
                 35, 
                 "/images/tote-bag.png", 
-                true,
                 secondCategory
             ),
             createProduct(
@@ -148,7 +139,7 @@ public class DataLoader implements CommandLineRunner {
                 4500, 
                 20, 
                 "/images/glass-container.png", 
-                false,
+
                 defaultCategory
             ),
             createProduct(
@@ -157,7 +148,6 @@ public class DataLoader implements CommandLineRunner {
                 2800, 
                 50, 
                 "/images/organic-soap.png", 
-                false,
                 defaultCategory
             ),
             createProduct(
@@ -166,7 +156,6 @@ public class DataLoader implements CommandLineRunner {
                 2500, 
                 20, 
                 "/images/porcelain-plate-set.png", 
-                false,
                 defaultCategory
             ),
             createProduct(
@@ -175,7 +164,6 @@ public class DataLoader implements CommandLineRunner {
                 3500,
                 25,
                 "/images/wood-serving-board.png",
-                true,
                 defaultCategory
             ),
             createProduct(
@@ -184,7 +172,6 @@ public class DataLoader implements CommandLineRunner {
                 2500,
                 20,
                 "/images/mini-green.png",
-                true,
                 defaultCategory
             ),
             createProduct(
@@ -193,7 +180,6 @@ public class DataLoader implements CommandLineRunner {
                 3200,
                 20,
                 "/images/brass-candle-holder.png",
-                true,
                 secondCategory
             ),
             createProduct(
@@ -202,7 +188,6 @@ public class DataLoader implements CommandLineRunner {
                 8800,
                 5,
                 "/images/oak-stool.png",
-                false,
                 defaultCategory
             ),
             createProduct(
@@ -211,7 +196,6 @@ public class DataLoader implements CommandLineRunner {
                 5000,
                 20,
                 "/images/reading-lamp.png",
-                true,
                 secondCategory
                 ),
             createProduct(
@@ -220,7 +204,6 @@ public class DataLoader implements CommandLineRunner {
                 1800,
                 30,
                 "/images/hand-cream.png",
-                true,
                 thirdCategory
             )
         );
@@ -292,14 +275,13 @@ private void createAdminIfNotExists(String email, String name, String rawPasswor
             userRepository.save(user);
     }
 
-    private Product createProduct(String name, String description, Integer price, Integer stock, String imageUrl, Boolean isRecommended, Category category) {
+    private Product createProduct(String name, String description, Integer price, Integer stock, String imageUrl, Category category) {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
         product.setPrice(price);
         product.setStock(stock);
         product.setImageUrl(imageUrl);
-        product.setIsRecommended(isRecommended);
         product.setCreatedAt(LocalDateTime.now());
         product.setUpdatedAt(LocalDateTime.now());
         product.setCategory(category);
