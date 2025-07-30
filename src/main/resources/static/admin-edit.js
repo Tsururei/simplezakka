@@ -64,6 +64,16 @@ tbody.addEventListener("click", e => {
 
 confirmBtn.addEventListener("click", async () => {
   if (!deleteTargetId) return;
+
+  const resAdmins = await fetch("http://localhost:8080/api/admins");
+  const admins = await resAdmins.json();
+  if (admins.length <= 1) {
+    alert("少なくとも1人の管理者が必要です。削除できません。");
+    deleteModal.style.display = "none";
+    deleteTargetId = null;
+    return;
+  }
+  
   try {
     const res = await fetch(`http://localhost:8080/api/admins/${deleteTargetId}`, {
       method: "DELETE",
