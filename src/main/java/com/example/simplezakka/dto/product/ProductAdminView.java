@@ -16,4 +16,5 @@ public class ProductAdminView {
     private int imageCount;
     private Integer stock;
     private String imageUrl;
+    private String description;
 }
