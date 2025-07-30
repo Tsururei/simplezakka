@@ -1,5 +1,8 @@
+const API_BASE = '/api';
+
 document.addEventListener('DOMContentLoaded', function () {
- 
+
+  
   const messageElem = document.getElementById('login-message');
   const urlParams = new URLSearchParams(window.location.search);
   const message = urlParams.get('message');

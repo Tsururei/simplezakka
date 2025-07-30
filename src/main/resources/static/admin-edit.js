@@ -1,3 +1,5 @@
+const API_BASE = '/api';
+
 const tbody = document.querySelector("#admin-edit-table tbody");
 
 const deleteModal = document.getElementById("delete-confirm-modal");

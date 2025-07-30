@@ -1,3 +1,5 @@
+const API_BASE = '/api';
+
 document.getElementById('logout-btn').addEventListener('click', async function () {
   tryLogout();
 });

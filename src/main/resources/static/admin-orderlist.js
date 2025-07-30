@@ -1,3 +1,4 @@
+const API_BASE = '/api';
 
 const STATUS_LABELS = {
   PENDING: '処理中',

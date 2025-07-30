@@ -1,3 +1,5 @@
+const API_BASE = '/api';
+
 const tbody = document.querySelector("#admin-category-table tbody");
 
 const deleteModal = document.getElementById("delete-confirm-modal");
@@ -16,7 +18,7 @@ let deleteTargetId = null;
 
 async function fetchCategories() {
   try {
-    const res = await fetch("http://localhost:8080/api/admin/categories"); 
+    const res = await fetch(`${API_BASE}/admin/categories`); 
     if (!res.ok) throw new Error("管理者一覧の取得に失敗しました");
     const categories = await res.json();
     displayCategories(categories);
@@ -48,7 +50,7 @@ tbody.addEventListener("click", e => {
 confirmBtn.addEventListener("click", async () => {
   if (!deleteTargetId) return;
   try {
-    const res = await fetch(`http://localhost:8080/api/admin/categories/${deleteTargetId}`, {
+    const res = await fetch(`${API_BASE}/admin/categories/${deleteTargetId}`, {
       method: "DELETE",
     });
     if (!res.ok) throw new Error("削除に失敗しました");
@@ -84,7 +86,7 @@ registerConfirmBtn.addEventListener("click", async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:8080/api/admin/categories", {
+    const res = await fetch(`${API_BASE}/admin/categories`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
