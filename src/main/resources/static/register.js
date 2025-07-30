@@ -1,3 +1,6 @@
+const API_URL = 'https://54.248.170.138:8080/tasks';
+const API_BASE = '/api';
+
 document.getElementById('register-btn').addEventListener('click', async function(event) {
   event.preventDefault();
   tryRegisiter();
@@ -55,7 +58,7 @@ async function tryRegisiter() {
     return;
   }
 
-    const response = await fetch('http://localhost:8080/api/auth/register', {
+    const response = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
