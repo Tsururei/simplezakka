@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     params.append('password', password);
 
     try {
-      const response = await fetch('http://localhost:8080/admin/auth/login', {
+      const response = await fetch(`${API_BASE}/admin/auth/login`, {
         method: 'POST',
         credentials: 'include',
         headers: {

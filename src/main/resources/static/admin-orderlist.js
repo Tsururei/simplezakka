@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function (){
 });
 
 async function fetchOrders() {
-    const response = await fetch('http://localhost:8080/admin/order');
+    const response = await fetch(`${API_BASE}/admin/order`);
     const orders = await response.json();
     window.orders = orders;
     displayOrders(orders);
@@ -42,7 +42,7 @@ async function fetchOrders() {
 
 
   async function showModal(orderId) {
-    const response = await fetch(`http://localhost:8080/admin/order/${orderId}`);
+    const response = await fetch(`${API_BASE}/admin/order/${orderId}`);
     const order = await response.json();
     if (!order) return;
 
@@ -88,7 +88,7 @@ async function fetchOrders() {
     document.getElementById("update-status-btn").addEventListener("click", async () => {
     const newStatus = document.getElementById("status-select").value;
 
-    await fetch(`http://localhost:8080/admin/order/${orderId}`, {
+    await fetch(`${API_BASE}/admin/order/${orderId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ newStatus: newStatus })
