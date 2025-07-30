@@ -20,6 +20,7 @@ import java.util.UUID;
 public class AdminEditController {
 
     private final AdminRepository repo;
+    private int count;
 
     public AdminEditController(AdminRepository repo) {
         this.repo = repo;
@@ -51,7 +52,14 @@ public class AdminEditController {
 
     
     @DeleteMapping("/{id}")
-    public void deleteAdmin(@PathVariable String id) {  
-        repo.deleteById(id);
+public ResponseEntity<?> deleteAdmin(@PathVariable String id) {
+    long adminCount = repo.count();
+
+    if (adminCount <= 1) {
+        return ResponseEntity.badRequest().body("少なくとも1人の管理者は必要です。削除できません。");
     }
+
+    repo.deleteById(id);
+    return ResponseEntity.ok("管理者を削除しました");
+}
 }
