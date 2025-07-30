@@ -140,5 +140,5 @@ html, body {
 
 main {
   flex-grow: 1; 
-  padding-top: 200px; /* ← fixedなheaderの高さ分 */
+  padding-top: 200px; 
 }
