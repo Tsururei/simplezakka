@@ -1,3 +1,6 @@
+const API_URL = 'https://54.248.170.138:8080/tasks';
+const API_BASE = '/api';
+
 document.addEventListener('DOMContentLoaded', function () {
   // ✅ チェックボックスによるパスワード表示切り替え
   const passwordInput = document.getElementById('userPasswordInput');
@@ -40,7 +43,7 @@ async function tryLogin() {
   localStorage.removeItem('refreshToken');
   localStorage.removeItem('userId');
 
-  const response = await fetch('http://localhost:8080/api/auth/login', {
+  const response = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ userEmail, userPassword })
