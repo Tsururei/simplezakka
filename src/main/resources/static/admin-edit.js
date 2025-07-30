@@ -33,7 +33,7 @@ let deleteTargetId = null;
 
 async function fetchAdmins() {
   try {
-    const res = await fetch("http://localhost:8080/api/admins"); 
+    const res = await fetch(`${API_BASE}//api/admins`); 
     if (!res.ok) throw new Error("管理者一覧の取得に失敗しました");
     const admins = await res.json();
     displayAdmins(admins);
@@ -67,7 +67,7 @@ tbody.addEventListener("click", e => {
 confirmBtn.addEventListener("click", async () => {
   if (!deleteTargetId) return;
 
-  const resAdmins = await fetch("http://localhost:8080/api/admins");
+  const resAdmins = await fetch(`${API_BASE}//api/admins`);
   const admins = await resAdmins.json();
   if (admins.length <= 1) {
     alert("少なくとも1人の管理者が必要です。削除できません。");
@@ -77,7 +77,7 @@ confirmBtn.addEventListener("click", async () => {
   }
   
   try {
-    const res = await fetch(`http://localhost:8080/api/admins/${deleteTargetId}`, {
+    const res = await fetch(`${API_BASE}/api/admins/${deleteTargetId}`, {
       method: "DELETE",
     });
     if (!res.ok) throw new Error("削除に失敗しました");
@@ -115,7 +115,7 @@ registerConfirmBtn.addEventListener("click", async () => {
   }
 
   try {
-    const res = await fetch("http://localhost:8080/api/admins", {
+    const res = await fetch(`${API_BASE}/api/admins`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

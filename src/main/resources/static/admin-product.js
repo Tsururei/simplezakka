@@ -1,8 +1,8 @@
-// admin-product.js
+const API_BASE = '/api';
 
 async function fetchCategories() {
   try {
-    const res = await fetch("/api/admin/categories");
+    const res = await fetch(`${API_BASE}/admin/categories`);
     if (!res.ok) throw new Error("カテゴリ一覧の取得に失敗しました");
     categories = await res.json();
     populateCategorySelect();
@@ -73,7 +73,7 @@ async function fetchProducts() {
   clearMessage();
 
   try {
-    const response = await fetch("/api/admin/products");
+    const response = await fetch(`${API_BASE}/admin/products`);
     if (!response.ok) throw new Error("商品一覧の取得に失敗しました");
     products = await response.json();
     renderProductList();
@@ -201,7 +201,7 @@ if (imageFile) {
 }
 
   try {
-    const url = editingProductId ? `/api/admin/products/${editingProductId}` : "/api/admin/products";
+    const url = editingProductId ? `${API_BASE}/admin/products/${editingProductId}` : "/api/admin/products";
     const method = editingProductId ? "PUT" : "POST";
 
     const response = await fetch(url, {
@@ -227,7 +227,7 @@ async function deleteProduct(productId) {
   clearMessage();
   showLoading(true);
   try {
-    const response = await fetch(`/api/admin/products/${productId}`, {
+    const response = await fetch(`${API_BASE}/admin/products/${productId}`, {
       method: "DELETE"
     });
     if (!response.ok) throw new Error("削除に失敗しました");
