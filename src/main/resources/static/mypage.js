@@ -1,4 +1,5 @@
 const API_BASE = '/api';
+
 const token = localStorage.getItem('accessToken');
 const isGuest = !token;
 
@@ -40,7 +41,7 @@ try{
 });
 
 async function tryLogout() {
-  const response = await fetch('http://localhost:8080/api/auth/logout', {
+  const response = await fetch(`${API_BASE}/auth/logout`, {
     method: 'POST',
     credentials: 'include'
   });
